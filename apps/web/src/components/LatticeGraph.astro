@@ -79,20 +79,25 @@
 	const GRAB_RADIUS = 24
 	const CLICK_SLOP = 5
 
-	/** A hexagon around a hub, plus two outliers — small enough to read, dense enough to ripple. */
+	const RING = 6
+
+	/** A ring where every node is wired to its two neighbours on each side. */
 	function seed(): Graph {
-		const ring = Array.from({ length: 6 }, (_, i) => {
-			const angle = (i / 6) * Math.PI * 2
+		const nodes = Array.from({ length: RING }, (_, i) => {
+			const angle = (i / RING) * Math.PI * 2
 			return { x: Math.cos(angle) * REST, y: Math.sin(angle) * REST, vx: 0, vy: 0, pinned: false }
 		})
-		const graph: Graph = {
-			nodes: [{ x: 0, y: 0, vx: 0, vy: 0, pinned: false }, ...ring],
-			edges: [],
+		const edges: Graph['edges'] = []
+		for (let i = 0; i < RING; i++) {
+			for (const hop of [1, 2]) {
+				const to = (i + hop) % RING
+				// Each hop gets the length it spans in the regular ring, so the seed sits
+				// unstrained; one rest length for both hops would light every chord up.
+				const span = 2 * REST * Math.sin((Math.PI * hop) / RING)
+				edges.push([i, to, span])
+			}
 		}
-		for (let i = 1; i <= 6; i++) {
-			graph.edges.push([0, i], [i, (i % 6) + 1])
-		}
-		return addNode(addNode(graph, { x: REST * 2, y: -REST }, 2), { x: -REST * 2, y: REST }, 2)
+		return { nodes, edges }
 	}
 
 	function setup(root: HTMLElement) {
@@ -140,11 +145,11 @@
 			const cx = width / 2
 			const cy = height / 2
 
-			for (const [a, b] of graph.edges) {
+			for (const [a, b, rest = REST] of graph.edges) {
 				const from = graph.nodes[a]
 				const to = graph.nodes[b]
 				// Strained edges brighten, so load redistributing through the structure is visible.
-				const strain = Math.min(1, Math.abs(Math.hypot(to.x - from.x, to.y - from.y) - REST) / REST)
+				const strain = Math.min(1, Math.abs(Math.hypot(to.x - from.x, to.y - from.y) - rest) / rest)
 				context.strokeStyle = strain > 0.05 ? palette.strain : palette.edge
 				context.globalAlpha = 0.35 + strain * 0.65
 				context.lineWidth = 1 + strain * 1.5
