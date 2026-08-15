@@ -1,0 +1,43 @@
+---
+title: cyber-truss
+description: The convergence layer — holds a repository in its settled state across every change
+template: splash
+hero:
+  tagline: The convergence layer — holds a repository in its settled state across every change
+  actions:
+    - text: Getting Started
+      link: /cyber-truss/getting-started/
+      icon: right-arrow
+    - text: GitHub
+      link: https://github.com/cyberuni/cyber-truss
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why a layer under SDD
+
+SDD is a mission engine: it runs from a change request to a handoff, then retires.
+Convergence is a property of the repository *state* — held continuously, across every
+change, including changes no mission produced. A per-mission engine cannot structurally
+hold a per-repo invariant. `cyber-truss` is the layer that does.
+
+<CardGrid>
+  <Card title="The lattice" icon="puzzle">
+    The concept the system is about — a graph whose topology must converge, whatever
+    its drawing looks like.
+    [Read the concepts →](/cyber-truss/concepts/lattice/)
+  </Card>
+  <Card title="CLI" icon="seti:shell">
+    `truss` commands for terminals and scripts.
+    [View CLI reference →](/cyber-truss/cli/)
+  </Card>
+  <Card title="Agent-friendly output" icon="rocket">
+    Structured `--json`, definitive empty states, and exit codes a caller can branch on.
+  </Card>
+  <Card title="Status" icon="warning">
+    Scaffold stage. The name is settled; the design under it is still being argued in
+    [discussion #16](https://github.com/cyberuni/.github/discussions/16).
+  </Card>
+</CardGrid>

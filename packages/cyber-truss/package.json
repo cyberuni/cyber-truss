@@ -1,0 +1,52 @@
+{
+	"name": "cyber-truss",
+	"version": "0.0.0",
+	"description": "The convergence layer — holds a repository in its settled state across every change",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cyberuni/cyber-truss.git"
+	},
+	"author": "unional <homawong@gmail.com>",
+	"license": "MIT",
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"skills",
+		"plugin.json",
+		".claude-plugin",
+		".cursor-plugin",
+		".codex-plugin"
+	],
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"bin": {
+		"truss": "./dist/cli.js"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsx src/cli.ts",
+		"format": "biome format --write .",
+		"test": "vitest run src",
+		"test:watch": "vitest",
+		"truss": "tsx src/cli.ts",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"commander": "^14.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^25.9.1",
+		"tsdown": "^0.22.14",
+		"tsx": "^4.23.8",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.10"
+	},
+	"engines": {
+		"node": ">=22"
+	}
+}

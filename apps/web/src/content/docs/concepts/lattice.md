@@ -1,0 +1,40 @@
+---
+title: The lattice
+description: The concept cyber-truss is about
+---
+
+**The system is `cyber-truss`. The concept is the lattice.**
+
+A truss is a rigid net of members in which load applied at *any* point redistributes
+through the whole structure. That is the mental image: change entering anywhere, and
+the whole repository settling around it.
+
+*Lattice* is the concept the system is about, used in prose and specs but never as the
+wordmark. Three readings carry weight:
+
+1. **Crystal lattice** — the structure shape-memory alloys return to.
+2. **A graph of interconnected nodes** — drag one, release, and the whole thing settles.
+3. **Order-theoretic lattice** — has a *join*, a unique least upper bound for any two
+   elements. This is the CRDT result: merge into a join-semilattice is confluent *by
+   construction*.
+
+## The graph is unique; the drawing is not
+
+Two runs producing different *layouts* of the same graph is not a failure. Two runs
+producing a different **edge set** is.
+
+> Scenarios, actors, and edges are topology and must converge. Prose, section order,
+> and file organisation are coordinates and are free.
+
+## Settling should be downhill
+
+Levinthal's paradox: a protein cannot search all its conformations, yet folds in
+milliseconds — because the energy landscape is funnel-shaped. The system does not
+*search* for the settled state; the landscape shape makes reaching it the path of least
+resistance. **Settling should be downhill; staying strained should be uphill.**
+
+## Where this is argued
+
+The full naming and design argument lives in
+[cyberuni/.github discussion #16](https://github.com/cyberuni/.github/discussions/16),
+which is explicitly a work in progress.

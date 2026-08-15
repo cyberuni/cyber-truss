@@ -1,0 +1,29 @@
+{
+	"$schema": "https://raw.githubusercontent.com/cyberuni/universal-plugin/refs/heads/main/schema/v1.json",
+	"name": "cyber-truss",
+	"version": "0.0.0",
+	"description": "The convergence layer — holds a repository in its settled state across every change",
+	"author": { "name": "unional" },
+	"homepage": "https://github.com/cyberuni/cyber-truss",
+	"repository": "https://github.com/cyberuni/cyber-truss.git",
+	"license": "MIT",
+	"keywords": ["truss", "lattice", "convergence", "cli", "agent", "sdd"],
+	"vendors": ["claude-code", "cursor", "codex", "copilot-cli"],
+	"vendorExtensions": {
+		"claude-code": {},
+		"cursor": {
+			"category": "development",
+			"tags": ["truss", "convergence", "sdd"]
+		},
+		"codex": {
+			"interface": {
+				"displayName": "Cyber Truss",
+				"category": "development"
+			}
+		},
+		"copilot-cli": {
+			"category": "development",
+			"tags": ["truss", "convergence", "sdd"]
+		}
+	}
+}
