@@ -11,18 +11,30 @@
 		role="img"
 		aria-label="A graph of interconnected nodes. Drag a node and release it to see the whole structure settle, or click empty space to add a node."
 	></canvas>
-	<div class="lattice-controls">
-		<button type="button" data-lattice-reset>Reset</button>
-	</div>
+	<button type="button" class="lattice-reset" data-lattice-reset aria-label="Reset the lattice" title="Reset the lattice">
+		<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">
+			<path
+				d="M13.5 8a5.5 5.5 0 1 1-1.61-3.89"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				stroke-linecap="round"
+			></path>
+			<path d="M13.5 1.5V5H10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+	</button>
 	<figcaption>
 		Drag a node and let go: it snaps back, the energy ripples outward, and the whole
-		graph settles into a new shape — same edges, different drawing. Click empty space
-		to add a node.
+		graph settles into a new shape — same edges, different drawing. An edge brightens
+		as it is pulled away from its rest length, so the pale edges are the ones under
+		load and the dim ones are slack — watch the brightness travel outward as the
+		strain redistributes. Click empty space to add a node.
 	</figcaption>
 </figure>
 
 <style>
 	.lattice {
+		position: relative;
 		margin: 1.5rem 0;
 		border: 1px solid var(--sl-color-gray-5);
 		border-radius: 0.5rem;
@@ -42,30 +54,34 @@
 		cursor: grabbing;
 	}
 
-	.lattice-controls {
-		display: flex;
-		gap: 0.5rem;
-		padding: 0.5rem 0.75rem;
-		border-top: 1px solid var(--sl-color-gray-5);
-	}
-
-	.lattice-controls button {
-		font: inherit;
-		font-size: var(--sl-text-sm);
-		padding: 0.25rem 0.75rem;
+	.lattice-reset {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		display: grid;
+		place-items: center;
+		width: 1.9rem;
+		height: 1.9rem;
+		padding: 0;
 		border: 1px solid var(--sl-color-gray-5);
 		border-radius: 0.25rem;
-		background: var(--sl-color-gray-6);
-		color: var(--sl-color-white);
+		background: var(--sl-color-black);
+		color: var(--sl-color-gray-3);
 		cursor: pointer;
+		/* Sits over the canvas, so stay quiet until the reader goes looking for it. */
+		opacity: 0.55;
+		transition: opacity 0.15s, color 0.15s;
 	}
 
-	.lattice-controls button:hover {
-		background: var(--sl-color-gray-5);
+	.lattice-reset:hover,
+	.lattice-reset:focus-visible {
+		opacity: 1;
+		color: var(--sl-color-white);
 	}
 
 	.lattice figcaption {
-		padding: 0 0.75rem 0.75rem;
+		padding: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
 		font-size: var(--sl-text-sm);
 		color: var(--sl-color-gray-3);
 	}
