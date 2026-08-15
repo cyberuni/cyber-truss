@@ -9,7 +9,7 @@ function graph(nodes: [number, number][], edges: [number, number][] = []): Graph
 }
 
 /** Springs alone, so spring behaviour can be specified without repulsion in the way. */
-const spring = { restLength: 100, repulsion: 0 }
+const spring = { restLength: 100, repulsion: 0, gravity: 0 }
 
 function distance(g: Graph, a: number, b: number) {
 	return Math.hypot(g.nodes[a].x - g.nodes[b].x, g.nodes[a].y - g.nodes[b].y)
@@ -93,7 +93,7 @@ describe(step.name, () => {
 			[0.5, 0],
 		])
 
-		for (let i = 0; i < 50; i++) g = step(g, { restLength: 100 })
+		for (let i = 0; i < 50; i++) g = step(g, { restLength: 100, gravity: 0 })
 
 		expect(distance(g, 0, 1)).toBeGreaterThan(10)
 	})
@@ -104,11 +104,61 @@ describe(step.name, () => {
 			[500, 0],
 		])
 
-		const after = step(far, { restLength: 100 })
+		const after = step(far, { restLength: 100, gravity: 0 })
 
 		expect(after.nodes[1]).toMatchObject({ x: 500, vx: 0 })
 	})
 })
+
+describe('holding a node away from the lattice', () => {
+	/** A hub wired to a ring of four — enough structure to strain. */
+	function hub() {
+		return graph(
+			[
+				[0, 0],
+				[100, 0],
+				[0, 100],
+				[-100, 0],
+				[0, -100],
+			],
+			[
+				[0, 1],
+				[0, 2],
+				[0, 3],
+				[0, 4],
+			],
+		)
+	}
+
+	it('strains the structure rather than dragging it along', () => {
+		const held = hub()
+		held.nodes[0].pinned = true
+		held.nodes[0].x = 400
+
+		let g = held
+		for (let i = 0; i < 400; i++) g = step(g, { restLength: 100 })
+
+		// The ring must lag well behind, not ride along to the hub's new position.
+		expect(g.nodes[3].x).toBeLessThan(250)
+	})
+
+	it('leaves the held node out of equilibrium, so releasing it snaps back', () => {
+		const held = hub()
+		held.nodes[0].pinned = true
+		held.nodes[0].x = 400
+
+		let g = held
+		for (let i = 0; i < 400; i++) g = step(g, { restLength: 100 })
+
+		g.nodes[0].pinned = false
+		const released = step(g, { restLength: 100 })
+
+		expect(released.nodes[0].x).toBeLessThan(400)
+		expect(kineticEnergy(released)).toBeGreaterThan(SETTLED)
+	})
+})
+
+const SETTLED = 0.01
 
 describe(addNode.name, () => {
 	const spread = graph([

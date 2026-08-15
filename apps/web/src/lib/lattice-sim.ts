@@ -29,6 +29,13 @@ export type SimOptions = {
 	restLength: number
 	/** Velocity retained per tick. Below 1 the system dissipates and settles. */
 	damping: number
+	/**
+	 * Weak pull toward the origin. Without it nothing holds the lattice in place:
+	 * dragging a node tows the whole structure along, so by the time it is released
+	 * it sits at its own centroid, perfectly balanced, and nothing ripples. Gravity
+	 * makes a drag *strain* the lattice instead of relocating it.
+	 */
+	gravity: number
 	/** Inverse-square push between nearby pairs, so nodes never pile up. */
 	repulsion: number
 	/**
@@ -49,6 +56,7 @@ const defaults: SimOptions = {
 	stiffness: 0.08,
 	restLength: 90,
 	damping: 0.92,
+	gravity: 0.02,
 	repulsion: 9000,
 	repulsionRange: 130,
 	maxSpeed: 12,
@@ -79,11 +87,16 @@ export function kineticEnergy(graph: Graph): number {
 
 /** Advance the graph by one tick, returning a new graph. */
 export function step(graph: Graph, options: Partial<SimOptions> = {}): Graph {
-	const { stiffness, restLength, damping, repulsion, repulsionRange, maxSpeed } = {
+	const { stiffness, restLength, damping, gravity, repulsion, repulsionRange, maxSpeed } = {
 		...defaults,
 		...options,
 	}
 	const nodes = graph.nodes.map((node) => ({ ...node }))
+
+	for (const node of nodes) {
+		node.vx -= node.x * gravity
+		node.vy -= node.y * gravity
+	}
 
 	for (let i = 0; i < nodes.length; i++) {
 		for (let j = i + 1; j < nodes.length; j++) {
