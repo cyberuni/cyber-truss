@@ -5,7 +5,9 @@
  */
 ---
 
-<figure class="lattice" data-lattice>
+{/* `not-content` opts the figure's children out of Starlight's markdown spacing,
+    which otherwise lands a 1rem margin on every element that follows a sibling. */}
+<figure class="lattice not-content" data-lattice>
 	<canvas
 		data-lattice-canvas
 		role="img"
@@ -56,7 +58,7 @@
 
 	.lattice-reset {
 		position: absolute;
-		top: 0rem;
+		top: 1rem;
 		right: 1rem;
 		display: grid;
 		place-items: center;
