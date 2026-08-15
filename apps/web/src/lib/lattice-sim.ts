@@ -15,7 +15,12 @@ export type Node = {
 	pinned: boolean
 }
 
-export type Edge = [number, number]
+/**
+ * A spring between two nodes, optionally stating the length it is happy at. A ring
+ * wired to both its neighbours and its next-but-one cannot satisfy both hops at one
+ * length; without a per-edge rest length such a lattice is permanently strained.
+ */
+export type Edge = [number, number] | [number, number, number]
 
 export type Graph = {
 	nodes: Node[]
@@ -116,13 +121,13 @@ export function step(graph: Graph, options: Partial<SimOptions> = {}): Graph {
 		}
 	}
 
-	for (const [a, b] of graph.edges) {
+	for (const [a, b, rest = restLength] of graph.edges) {
 		const from = nodes[a]
 		const to = nodes[b]
 		const dx = to.x - from.x
 		const dy = to.y - from.y
 		const length = Math.hypot(dx, dy) || 1e-6
-		const pull = (stiffness * (length - restLength)) / length
+		const pull = (stiffness * (length - rest)) / length
 		from.vx += dx * pull
 		from.vy += dy * pull
 		to.vx -= dx * pull

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { addNode, type Graph, kineticEnergy, step } from './lattice-sim.js'
 
-function graph(nodes: [number, number][], edges: [number, number][] = []): Graph {
+function graph(nodes: [number, number][], edges: Graph['edges'] = []): Graph {
 	return {
 		nodes: nodes.map(([x, y]) => ({ x, y, vx: 0, vy: 0, pinned: false })),
 		edges,
@@ -96,6 +96,22 @@ describe(step.name, () => {
 		for (let i = 0; i < 50; i++) g = step(g, { restLength: 100, gravity: 0 })
 
 		expect(distance(g, 0, 1)).toBeGreaterThan(10)
+	})
+
+	it('lets an edge carry its own rest length', () => {
+		// A ring wired to both its neighbours and its next-but-one cannot satisfy both
+		// at a single length, so an edge may state the length it is happy at.
+		let g = graph(
+			[
+				[0, 0],
+				[300, 0],
+			],
+			[[0, 1, 200]],
+		)
+
+		for (let i = 0; i < 500; i++) g = step(g, spring)
+
+		expect(distance(g, 0, 1)).toBeCloseTo(200, 1)
 	})
 
 	it('leaves pairs beyond the repulsion range alone', () => {
