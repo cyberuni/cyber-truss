@@ -1,0 +1,262 @@
+---
+/**
+ * The lattice, made draggable. Renders the spring-mass simulation in
+ * `src/lib/lattice-sim.ts` to a canvas and wires pointer drag to node pinning.
+ */
+---
+
+<figure class="lattice" data-lattice>
+	<canvas
+		data-lattice-canvas
+		role="img"
+		aria-label="A graph of interconnected nodes. Drag a node and release it to see the whole structure settle, or click empty space to add a node."
+	></canvas>
+	<div class="lattice-controls">
+		<button type="button" data-lattice-reset>Reset</button>
+	</div>
+	<figcaption>
+		Drag a node and let go: it snaps back, the energy ripples outward, and the whole
+		graph settles into a new shape — same edges, different drawing. Click empty space
+		to add a node.
+	</figcaption>
+</figure>
+
+<style>
+	.lattice {
+		margin: 1.5rem 0;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: var(--sl-color-black);
+	}
+
+	.lattice canvas {
+		display: block;
+		width: 100%;
+		height: 340px;
+		touch-action: none;
+		cursor: grab;
+	}
+
+	.lattice canvas.is-dragging {
+		cursor: grabbing;
+	}
+
+	.lattice-controls {
+		display: flex;
+		gap: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+	}
+
+	.lattice-controls button {
+		font: inherit;
+		font-size: var(--sl-text-sm);
+		padding: 0.25rem 0.75rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.25rem;
+		background: var(--sl-color-gray-6);
+		color: var(--sl-color-white);
+		cursor: pointer;
+	}
+
+	.lattice-controls button:hover {
+		background: var(--sl-color-gray-5);
+	}
+
+	.lattice figcaption {
+		padding: 0 0.75rem 0.75rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+</style>
+
+<script>
+	import { addNode, type Graph, kineticEnergy, step } from '../lib/lattice-sim.js'
+
+	const REST = 90
+	const SETTLED = 0.01
+	const GRAB_RADIUS = 24
+	const CLICK_SLOP = 5
+
+	/** A hexagon around a hub, plus two outliers — small enough to read, dense enough to ripple. */
+	function seed(): Graph {
+		const ring = Array.from({ length: 6 }, (_, i) => {
+			const angle = (i / 6) * Math.PI * 2
+			return { x: Math.cos(angle) * REST, y: Math.sin(angle) * REST, vx: 0, vy: 0, pinned: false }
+		})
+		const graph: Graph = {
+			nodes: [{ x: 0, y: 0, vx: 0, vy: 0, pinned: false }, ...ring],
+			edges: [],
+		}
+		for (let i = 1; i <= 6; i++) {
+			graph.edges.push([0, i], [i, (i % 6) + 1])
+		}
+		return addNode(addNode(graph, { x: REST * 2, y: -REST }, 2), { x: -REST * 2, y: REST }, 2)
+	}
+
+	function setup(root: HTMLElement) {
+		const canvas = root.querySelector<HTMLCanvasElement>('[data-lattice-canvas]')
+		const context = canvas?.getContext('2d')
+		if (!canvas || !context) return
+
+		const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+		let graph = seed()
+		let dragging: number | null = null
+		let frame = 0
+
+		let width = 0
+		let height = 0
+		const resize = () => {
+			const ratio = devicePixelRatio || 1
+			const box = canvas.getBoundingClientRect()
+			width = box.width
+			height = box.height
+			canvas.width = Math.round(width * ratio)
+			canvas.height = Math.round(height * ratio)
+			context.setTransform(ratio, 0, 0, ratio, 0, 0)
+			draw()
+		}
+		new ResizeObserver(resize).observe(canvas)
+
+		// Starlight swaps its palette on the <html> data-theme attribute; re-read on change.
+		let palette = readPalette()
+		function readPalette() {
+			const style = getComputedStyle(root)
+			return {
+				edge: style.getPropertyValue('--sl-color-gray-4').trim() || '#888',
+				strain: style.getPropertyValue('--sl-color-accent-high').trim() || '#8ab',
+				node: style.getPropertyValue('--sl-color-accent').trim() || '#68a',
+				rim: style.getPropertyValue('--sl-color-white').trim() || '#fff',
+			}
+		}
+		new MutationObserver(() => {
+			palette = readPalette()
+			draw()
+		}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+		function draw() {
+			context.clearRect(0, 0, width, height)
+			const cx = width / 2
+			const cy = height / 2
+
+			for (const [a, b] of graph.edges) {
+				const from = graph.nodes[a]
+				const to = graph.nodes[b]
+				// Strained edges brighten, so load redistributing through the structure is visible.
+				const strain = Math.min(1, Math.abs(Math.hypot(to.x - from.x, to.y - from.y) - REST) / REST)
+				context.strokeStyle = strain > 0.05 ? palette.strain : palette.edge
+				context.globalAlpha = 0.35 + strain * 0.65
+				context.lineWidth = 1 + strain * 1.5
+				context.beginPath()
+				context.moveTo(cx + from.x, cy + from.y)
+				context.lineTo(cx + to.x, cy + to.y)
+				context.stroke()
+			}
+
+			context.globalAlpha = 1
+			for (const node of graph.nodes) {
+				const speed = Math.min(1, Math.hypot(node.vx, node.vy) / 4)
+				context.beginPath()
+				context.arc(cx + node.x, cy + node.y, 6 + speed * 3, 0, Math.PI * 2)
+				context.fillStyle = palette.node
+				context.fill()
+				context.lineWidth = 1.5
+				context.strokeStyle = palette.rim
+				context.globalAlpha = 0.25 + speed * 0.75
+				context.stroke()
+				context.globalAlpha = 1
+			}
+		}
+
+		/** Run to rest without animating — the reduced-motion path, and the reset path. */
+		function settle() {
+			for (let i = 0; i < 600 && kineticEnergy(graph) > SETTLED; i++) graph = step(graph, { restLength: REST })
+			draw()
+		}
+
+		function tick() {
+			graph = step(graph, { restLength: REST })
+			draw()
+			// Sleep once settled rather than burning a frame budget on a still image.
+			frame = dragging === null && kineticEnergy(graph) < SETTLED ? 0 : requestAnimationFrame(tick)
+		}
+
+		function wake() {
+			if (reduced.matches) return settle()
+			if (!frame) frame = requestAnimationFrame(tick)
+		}
+
+		function nodeAt(event: PointerEvent) {
+			const box = canvas.getBoundingClientRect()
+			const x = event.clientX - box.left - width / 2
+			const y = event.clientY - box.top - height / 2
+			let found: number | null = null
+			let best = GRAB_RADIUS
+			graph.nodes.forEach((node, i) => {
+				const distance = Math.hypot(node.x - x, node.y - y)
+				if (distance < best) {
+					best = distance
+					found = i
+				}
+			})
+			return { index: found, x, y }
+		}
+
+		// Where an empty-space press started, so a press that never moved can be told
+		// apart from a drag and treated as "add a node here".
+		let pressed: { x: number; y: number } | null = null
+
+		canvas.addEventListener('pointerdown', (event) => {
+			const { index, x, y } = nodeAt(event)
+			canvas.setPointerCapture(event.pointerId)
+			if (index === null) {
+				pressed = { x, y }
+				return
+			}
+			if (reduced.matches) return
+			dragging = index
+			graph.nodes[index].pinned = true
+			canvas.classList.add('is-dragging')
+			wake()
+		})
+
+		canvas.addEventListener('pointermove', (event) => {
+			if (dragging === null) return
+			const { x, y } = nodeAt(event)
+			const node = graph.nodes[dragging]
+			node.x = x
+			node.y = y
+		})
+
+		const release = (event: PointerEvent) => {
+			if (pressed) {
+				const { x, y } = nodeAt(event)
+				if (Math.hypot(x - pressed.x, y - pressed.y) < CLICK_SLOP) {
+					graph = addNode(graph, pressed, Math.min(3, graph.nodes.length))
+				}
+				pressed = null
+				wake()
+				return
+			}
+			if (dragging === null) return
+			// Unpinning discharges the strain the drag stored into the springs.
+			graph.nodes[dragging].pinned = false
+			dragging = null
+			canvas.classList.remove('is-dragging')
+			wake()
+		}
+		canvas.addEventListener('pointerup', release)
+		canvas.addEventListener('pointercancel', release)
+
+		root.querySelector('[data-lattice-reset]')?.addEventListener('click', () => {
+			graph = seed()
+			reduced.matches ? settle() : wake()
+		})
+
+		resize()
+		settle()
+	}
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-lattice]')) setup(root)
+</script>

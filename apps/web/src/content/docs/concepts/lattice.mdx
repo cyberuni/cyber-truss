@@ -3,6 +3,8 @@ title: The lattice
 description: The concept cyber-truss is about
 ---
 
+import LatticeGraph from '../../../components/LatticeGraph.astro'
+
 **The system is `cyber-truss`. The concept is the lattice.**
 
 A truss is a rigid net of members in which load applied at *any* point redistributes
@@ -17,6 +19,11 @@ wordmark. Three readings carry weight:
 3. **Order-theoretic lattice** — has a *join*, a unique least upper bound for any two
    elements. This is the CRDT result: merge into a join-semilattice is confluent *by
    construction*.
+
+<LatticeGraph />
+
+Adding a node forms new edges and changes the spacing: same ripple, new graph. The
+edge set is what the system holds; where the nodes end up is not.
 
 ## The graph is unique; the drawing is not
 
