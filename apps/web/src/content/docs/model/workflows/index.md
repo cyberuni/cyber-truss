@@ -10,7 +10,7 @@ rather than a ratified part of it. See [the model overview](/cyber-truss/model/)
 
 ## What a formal workflow is
 
-Expressing [waterfall](/cyber-truss/model/waterfall/) produced a reusable shape. Every
+Expressing [waterfall](/cyber-truss/model/workflows/waterfall/) produced a reusable shape. Every
 staged process examined since has fit it, which makes it worth stating as a definition:
 
 > A **formal workflow** is a named policy over a lattice. It fixes four things: which
@@ -29,7 +29,7 @@ it was derived from has not been tested.
 
 | Workflow | Field | Sets it spans | Shape | Strain policy |
 | --- | --- | --- | --- | --- |
-| [Waterfall](/cyber-truss/model/waterfall/) | software | requirements, design, code, verification | chain | zero at every gate |
+| [Waterfall](/cyber-truss/model/workflows/waterfall/) | software | requirements, design, code, verification | chain | zero at every gate |
 | [SDD](/cyber-truss/model/relationship-to-sdd/) | software | spec unit, implementation unit | one link | zero at the impl gate |
 | Trunk-based development | software | code, test, docs | star on `{code, test}` | completeness zero at merge; obligation carried |
 | Safety certification | avionics, medical devices | requirements, design, code, tests, review evidence | chain, traced both ways | zero, and the *edge set itself* is an artifact |
@@ -144,6 +144,30 @@ property without the constraint.
 **Status: Thesis** on all three, and load-bearing on none of them — the model does not
 depend on this catalog. It is evidence about whether the vocabulary generalises, which
 was the one thing running eight instances could establish.
+
+## When an entry earns its own page
+
+Only [waterfall](/cyber-truss/model/workflows/waterfall/) has one, and the rule that
+produced that asymmetry is worth stating so the catalog does not drift into eight thin
+pages.
+
+> An entry earns a page when expressing it **changes** the model. Entries that confirm it
+> stay rows.
+
+Waterfall changed it: the four-parameter definition at the top of this page came out of
+that exercise, along with the phases-are-not-sets distinction and the finding about entry
+restrictions. The remaining six confirm — each is evidence that the vocabulary reaches a
+field it was not derived from, and that evidence lives in the *comparison*. Split across
+pages, the strain-policy column can no longer be read down, which is where the first
+finding below actually comes from.
+
+Two are the likeliest to be promoted if pushed further. **Safety certification** treats
+the edge set as a deliverable in its own right, which raises a question the model has not
+answered — whether a connection can itself be an artifact-set. **Double-entry
+bookkeeping** is the smallest complete instance in the catalog, which makes it the
+natural first thing an implementation is tested against.
+
+**Status: Settled** as this section's editorial rule. Neither promotion has been argued.
 
 ## What has not been tested
 

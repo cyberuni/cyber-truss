@@ -211,5 +211,5 @@ makes it worse, which is the outcome that mattered.
 
 The four parameters this exercise settled on — sets, shape, discharge, strain policy —
 turn out to describe staged processes well outside software.
-[Formal workflows](/cyber-truss/model/formal-workflows/) runs the same exercise across
+[Formal workflows](/cyber-truss/model/workflows/) runs the same exercise across
 eight fields.

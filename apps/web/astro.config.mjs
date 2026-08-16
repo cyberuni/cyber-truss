@@ -35,8 +35,13 @@ export default defineConfig({
 						{ label: 'Confluence', link: '/model/confluence/' },
 						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
 						{ label: 'Relationship to SDD', link: '/model/relationship-to-sdd/' },
-						{ label: 'Waterfall in the model', link: '/model/waterfall/' },
-						{ label: 'Formal workflows', link: '/model/formal-workflows/' },
+						{
+							label: 'Formal workflows',
+							items: [
+								{ label: 'The catalog', link: '/model/workflows/' },
+								{ label: 'Waterfall in the model', link: '/model/workflows/waterfall/' },
+							],
+						},
 						{ label: 'Open questions', link: '/model/open-questions/' },
 					],
 				},
