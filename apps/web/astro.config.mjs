@@ -17,12 +17,9 @@ export default defineConfig({
 			sidebar: [
 				{ label: 'Getting Started', link: '/getting-started/' },
 				{
-					label: 'Concepts',
-					items: [{ autogenerate: { directory: 'concepts' } }],
-				},
-				{
 					label: 'The lattice model',
 					items: [
+						{ label: 'The lattice', link: '/model/lattice/' },
 						{ label: 'Overview', link: '/model/' },
 						{ label: 'Artifact-sets', link: '/model/artifact-sets/' },
 						{ label: 'Connections', link: '/model/connections/' },

@@ -29,7 +29,7 @@ This is confluence in the rewriting sense — Church-Rosser. If a term can be re
 several routes, all of them reach the same normal form. Applied here: the entry point is a
 choice about *how you work*, and it should have no bearing on *what you end up with*.
 
-It is also the third reading of [the lattice](/cyber-truss/concepts/lattice/), and the
+It is also the third reading of [the lattice](/cyber-truss/model/lattice/), and the
 central one rather than an aside. An order-theoretic lattice has a **join**: a unique
 least upper bound for any two elements. Merge into a join-semilattice is confluent by
 construction.

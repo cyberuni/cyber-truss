@@ -36,7 +36,7 @@ same quality. The path is leaking into the outcome.
 Two halves, and both matter.
 
 **Path independence.** Whichever artifact you touch first, the repository settles into the
-same place. This is the order-theoretic reading of [the lattice](/cyber-truss/concepts/lattice/):
+same place. This is the order-theoretic reading of [the lattice](/cyber-truss/model/lattice/):
 a join is a *unique* least upper bound, and merge into a join-semilattice is confluent by
 construction. Confluence is the property; the rest of the model is how it is bought.
 
@@ -48,6 +48,7 @@ documentation are raised and discharged out-of-band.
 
 | Page | What it establishes |
 | --- | --- |
+| [The lattice](/cyber-truss/model/lattice/) | The concept the design is worked out from — three readings, and the one this page leans on |
 | [Artifact-sets](/cyber-truss/model/artifact-sets/) | The unit the model reasons about, on two orthogonal axes, and what controls each |
 | [Connections](/cyber-truss/model/connections/) | The relation between sets, why nothing owns it today, and the three kinds of strain |
 | [Confluence](/cyber-truss/model/confluence/) | What path-independence means precisely, and what it is claimed over |

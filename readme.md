@@ -18,7 +18,7 @@ SDD keeps what it is good at: the normaliser behind one door — lenses, gates,
 frozen-suite discipline, modes, classification, DoD. `cyber-truss` holds the state that
 outlives every mission.
 
-**The system is `cyber-truss`. The concept is [the lattice](https://cyberuni.github.io/cyber-truss/concepts/lattice/).**
+**The system is `cyber-truss`. The concept is [the lattice](https://cyberuni.github.io/cyber-truss/model/lattice/).**
 
 ## Installation
 
