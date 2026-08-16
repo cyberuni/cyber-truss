@@ -53,6 +53,7 @@ documentation are raised and discharged out-of-band.
 | [Confluence](/cyber-truss/model/confluence/) | What path-independence means precisely, and what it is claimed over |
 | [Canonical execution](/cyber-truss/model/canonical-execution/) | How confluence is bought: distill, replay, compare |
 | [Relationship to SDD](/cyber-truss/model/relationship-to-sdd/) | SDD as the two-set instance of this model |
+| [Waterfall in the model](/cyber-truss/model/waterfall/) | A staged, gated process expressed here — and the half of it that turns out to be unnecessary |
 | [Open questions](/cyber-truss/model/open-questions/) | What is unresolved, and what breaks if it resolves badly |
 
 ## What this model is not

@@ -35,6 +35,7 @@ export default defineConfig({
 						{ label: 'Confluence', link: '/model/confluence/' },
 						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
 						{ label: 'Relationship to SDD', link: '/model/relationship-to-sdd/' },
+						{ label: 'Waterfall in the model', link: '/model/waterfall/' },
 						{ label: 'Open questions', link: '/model/open-questions/' },
 					],
 				},
