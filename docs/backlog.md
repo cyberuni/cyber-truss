@@ -8,6 +8,12 @@ graph to the lattice page" and turned up two adjacent bodies of work: a way to c
 CSS defects that no static tool can see, and a plugin architecture for `truss` itself.
 Each item carries enough of its discovery context to be picked up cold.
 
+**The design these items sit under is written up on the docs site under
+[The model](https://cyberuni.github.io/cyber-truss/model/)** (source:
+`apps/web/src/content/docs/model/`). That is the single source for the vocabulary —
+artifact-sets, connections, confluence, canonical execution — and for what is settled
+versus open. This file records *work*; it does not restate the model.
+
 ## Shipped in that session, for context
 
 `0818501`..`6849048` — the lattice demo: a pure spring-mass simulation in
@@ -33,6 +39,15 @@ Not scheduled work — questions that block the items below and are the user's c
    additive where SDD roles are exclusive — and then **withdrawn as too weak**:
    cardinality tells you the shape of an entry, not which file holds it. Genuinely open.
    Blocks C1.
+
+   A newer argument *for* the `.agents` route, not yet tested: under the model,
+   `.agents/universal-plugin.json` already maps domain types to production-chain roles,
+   which is structurally an **artifact-set → controller table** — the same relation truss
+   needs. A `truss` key in `package.json` would be a second registry for one relation.
+   The counter to check first: SDD's role-map is *mission-scoped* (roles resolved when a
+   change request runs) while a truss controller is *standing* (governs continuously).
+   Same relation, different lifetime. That may be one file with two keys, or it may be
+   what keeps them apart.
 2. **Packaging.** Probe packages inside this monorepo, or separate repos. Blocks C1, C7.
 3. **Does adopting axi/TOON supersede ADR 0001?** TOON on stdout is agreed; the ADR's
    "structured `--json`" consequence has not been formally superseded or amended.
@@ -155,17 +170,21 @@ truss ships, not detection.
 
 ## D. Parked design notes
 
-Both are `truss check` concerns, not setup concerns. Recorded so they are not
-re-derived, and deliberately kept out of the plugin architecture.
-
 **D1. Rungs.** A check is bounded by what it needs to exist: *declared* (source text),
 *derived* (a build), *observed* (a running instance), *compared* (a stored baseline).
 Not a quality ladder — each rung is blind to specific things, and cheaper is not
 directionally-right-but-weaker. The `0rem` case is the proof: the declared rung would
 have laundered it.
 
-**D2. Topology vs coordinates.** The lattice concept already splits what must converge
-(the edge set) from what is free (the drawing). Applied to findings: **topology gates,
-coordinates report.** This predicts why visual regression is chronically flaky — it
-measures coordinates and treats them as topology — and it is the structural reason a
-deterministic baseline matters.
+Still parked, and still a `truss check` concern rather than a setup one. It has not been
+folded into the model, though it plausibly bears on how a connection declares what it
+needs in order to be evaluated.
+
+**D2. Topology vs coordinates.** *No longer parked.* This was filed as a note about how
+findings are reported. It turned out to be **the statement of what the system
+guarantees**: confluence is claimed over topology, not over byte-identity. Without it the
+guarantee is unachievable or undefined.
+
+Now written up at
+[The model → Confluence](https://cyberuni.github.io/cyber-truss/model/confluence/). Do not
+re-derive it here.
