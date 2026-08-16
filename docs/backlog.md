@@ -23,6 +23,44 @@ test suite that existed at the time:
 - A ring wired to ±1 and ±2 cannot satisfy both hops at one rest length, so every chord
   rendered permanently strained. Fixed by per-edge rest length (`fb86ad3`).
 
+## Open decisions
+
+Not scheduled work — questions that block the items below and are the user's call.
+
+1. **Plugin discovery mechanism.** A `truss` key in a dependency's `package.json`, an
+   `.agents/universal-plugin.json` entry for consistency with SDD/ACED/Quill, or both.
+   An argument against the `.agents` route was made on cardinality grounds — probes are
+   additive where SDD roles are exclusive — and then **withdrawn as too weak**:
+   cardinality tells you the shape of an entry, not which file holds it. Genuinely open.
+   Blocks C1.
+2. **Packaging.** Probe packages inside this monorepo, or separate repos. Blocks C1, C7.
+3. **Does adopting axi/TOON supersede ADR 0001?** TOON on stdout is agreed; the ADR's
+   "structured `--json`" consequence has not been formally superseded or amended.
+   Blocks C2, C3.
+
+Also outstanding: a system plan redone against the narrowed scope — *setup and update of
+truss in a repo*, with capability negotiation removed. The earlier plan was drafted
+before that narrowing and over-reaches.
+
+## Settled — do not re-derive
+
+Each of these was proposed, argued, and rejected. Recorded with the reason so the ground
+is not re-litigated.
+
+- **A cheap static layer beneath the browser check.** Stylelint's `length-zero-no-unit`
+  would have autofixed `0rem` → `0`, leaving the defect intact and destroying the only
+  forensic tell. Biome flags neither `0rem` nor `0px` under this repo's config
+  (verified). There is no mechanical rung below "render it and measure".
+- **Capability detection, and a join between probe requirements and repo capabilities.**
+  A plugin is a package carrying its own dependencies, so installing it *is* acquiring
+  the capability. No capability vocabulary, no `requires[]`, no `blocked` status.
+- **`doctor` as a reporter of repository content.** It diagnoses whether *the tool* is
+  correctly set up here, matching `brew` / `npm` / `flutter doctor`. Repository strain is
+  `truss check`. Both read-only by default, both with `--fix`.
+- **Rungs and topology-vs-coordinates as drivers of the plugin architecture.** Both are
+  `truss check` semantics, not setup concerns. Kept in §D for later, deliberately out of
+  the setup design.
+
 ## A. Docs site
 
 **A1. The lattice graph fills about a third of its canvas.** `REST = 90` in
