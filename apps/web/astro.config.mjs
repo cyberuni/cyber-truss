@@ -27,6 +27,18 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'concepts' } }],
 				},
 				{
+					label: 'The model',
+					items: [
+						{ label: 'Overview', link: '/model/' },
+						{ label: 'Artifact-sets', link: '/model/artifact-sets/' },
+						{ label: 'Connections', link: '/model/connections/' },
+						{ label: 'Confluence', link: '/model/confluence/' },
+						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
+						{ label: 'Relationship to SDD', link: '/model/relationship-to-sdd/' },
+						{ label: 'Open questions', link: '/model/open-questions/' },
+					],
+				},
+				{
 					label: 'CLI',
 					items: [{ autogenerate: { directory: 'cli' } }],
 				},
