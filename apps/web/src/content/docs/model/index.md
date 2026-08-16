@@ -1,5 +1,5 @@
 ---
-title: The truss model
+title: The lattice model
 description: The vocabulary and the guarantee — what cyber-truss claims, and what it does not
 ---
 

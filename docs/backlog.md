@@ -9,7 +9,7 @@ CSS defects that no static tool can see, and a plugin architecture for `truss` i
 Each item carries enough of its discovery context to be picked up cold.
 
 **The design these items sit under is written up on the docs site under
-[The model](https://cyberuni.github.io/cyber-truss/model/)** (source:
+[The lattice model](https://cyberuni.github.io/cyber-truss/model/)** (source:
 `apps/web/src/content/docs/model/`). That is the single source for the vocabulary —
 artifact-sets, connections, confluence, canonical execution — and for what is settled
 versus open. This file records *work*; it does not restate the model.
@@ -186,5 +186,5 @@ guarantees**: confluence is claimed over topology, not over byte-identity. Witho
 guarantee is unachievable or undefined.
 
 Now written up at
-[The model → Confluence](https://cyberuni.github.io/cyber-truss/model/confluence/). Do not
+[The lattice model → Confluence](https://cyberuni.github.io/cyber-truss/model/confluence/). Do not
 re-derive it here.

@@ -27,7 +27,7 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'concepts' } }],
 				},
 				{
-					label: 'The model',
+					label: 'The lattice model',
 					items: [
 						{ label: 'Overview', link: '/model/' },
 						{ label: 'Artifact-sets', link: '/model/artifact-sets/' },
