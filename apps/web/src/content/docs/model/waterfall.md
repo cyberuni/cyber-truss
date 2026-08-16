@@ -60,13 +60,58 @@ the gates are what
 [the SDD page](/cyber-truss/model/relationship-to-sdd/#what-running-the-exercise-revealed)
 already identified as *conformance evaluated at a connection crossing*.
 
-Which yields the first result of the exercise: **SDD is waterfall with two sets.** Both
-are staged chains with gated crossings; SDD's chain has one link. The generalisation the
-SDD page anticipated — "every connection needs a discharge criterion" — is the thing that
-makes an N-link chain no harder to express than a one-link one.
+## What the set names stand for
 
-**Status: Thesis.** The mapping holds on inspection; it has not been run against a real
-waterfall project's artifacts.
+The four names are abstract because waterfall is described abstractly. In a real project
+they are files someone can open:
+
+| Artifact-set | Concretely |
+| --- | --- |
+| `{requirements}` | a PRD, a statement of work, user stories, a regulatory requirement list |
+| `{design}` | Figma files, wireframes, an API schema, an architecture decision record |
+| `{code, test}` | source, unit tests, integration tests |
+| `{verification plan, results}` | a test plan, QA reports, UAT sign-off |
+
+Each row is a **type**, not a file — the point
+[artifact-sets](/cyber-truss/model/artifact-sets/#artifact) makes with four vendor
+manifests. `{design}` covering both a Figma board and an ADR is not sloppiness: a rule
+keyed to files must be rewritten when the team adopts a fifth design tool, and a rule
+keyed to the artifact is written once.
+
+It also shows why the sets are not the phases. A Figma board and an API schema are worked
+on by different people at different times, and both live in `{design}` because a change to
+either strains the same connection to `{code, test}`.
+
+## Where SDD's spec unit lands
+
+The obvious next question is whether `{spec}` belongs between `{design}` and `{code, test}`.
+It does not, and the reason is more interesting than the answer.
+
+Waterfall names no spec phase. Inserting one because *this repository* has one would
+repeat, in reverse, the error the SDD page caught — bending the instance to fit the model
+rather than testing the model against the instance. The catalog is only evidence if each
+entry is expressed in its own terms.
+
+Ask instead where SDD's `{spec.md, .feature}` lands on waterfall's chain, and it turns out
+to **straddle**. `spec.md` states what the system should do — waterfall's requirements
+end. The `.feature` is the executable oracle those requirements are checked against —
+waterfall's verification end. SDD fuses the first and last positions of the chain into a
+single artifact-set.
+
+That sharpens the earlier claim. **SDD is not waterfall with fewer links; it is waterfall
+folded.** Requirements and verification become one set, design is absorbed into it rather
+than standing alone, and what remains is a single connection to `{code, test, stories}`.
+The fold is also what makes SDD's gate cheap: a chain gate checks conformance between two
+documents, while a folded gate can *execute* the verification half against the
+implementation.
+
+Which suggests a rule the catalog did not otherwise surface: fusing requirement with
+verification collapses a chain, and the collapse is what makes the remaining gate
+mechanical rather than a review. Whether that generalises — whether any staged chain can
+be shortened this way — is not established here.
+
+**Status: Thesis** on the fold. The mapping holds on inspection; it has not been run
+against a real waterfall project's artifacts.
 
 ## What waterfall is actually buying
 
