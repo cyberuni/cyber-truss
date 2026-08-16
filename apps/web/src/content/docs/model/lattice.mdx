@@ -5,46 +5,50 @@ description: What the lattice is — the concept cyber-truss is about, in three 
 
 import LatticeGraph from '../../../components/LatticeGraph.astro'
 
-**The system is `cyber-truss`. The concept is the lattice.**
-
 A truss is a rigid net of members in which load applied at *any* point redistributes
-through the whole structure. That is the mental image: change entering anywhere, and
-the whole repository settling around it.
+through the whole structure. That is the mental image: change entering anywhere, and the
+whole repository settling around it.
 
-*Lattice* is the concept the system is about, used in prose and specs but never as the
-wordmark. Three readings carry weight:
+*Lattice* is the concept the system is about — used in prose and specs, never as the
+wordmark. Three readings carry weight, and each one leaves a mark on the design.
 
-1. **Crystal lattice** — the structure shape-memory alloys return to.
-2. **A graph of interconnected nodes** — drag one, release, and the whole thing settles.
-3. **Order-theoretic lattice** — has a *join*, a unique least upper bound for any two
-   elements. This is the CRDT result: merge into a join-semilattice is confluent *by
-   construction*.
+## Crystal lattice
+
+The structure shape-memory alloys return to. Bend one and it goes back — not because
+anything searched for the original shape, but because that shape is where the material
+is at rest.
+
+Levinthal's paradox tells the same story about proteins: one cannot search all its
+conformations, yet it folds in milliseconds, because the energy landscape is
+funnel-shaped. The system does not *search* for the settled state either; the shape of
+the landscape makes reaching it the path of least resistance. **Settling should be
+downhill; staying strained should be uphill.**
+
+## A graph of interconnected nodes
+
+Drag one, release, and the whole thing settles.
 
 <LatticeGraph />
 
-Adding a node forms new edges and changes the spacing: same ripple, new graph. The
-edge set is what the system holds; where the nodes end up is not.
+Adding a node forms new edges and changes the spacing: same ripple, new graph. The edge
+set is what the system holds; where the nodes end up is not — so two runs may draw the
+same graph differently without either being wrong. Which properties have to converge and
+which are free is the subject of [Confluence](/cyber-truss/model/confluence/).
 
-## The graph is unique; the drawing is not
+## Order-theoretic lattice
 
-Two runs producing different *layouts* of the same graph is not a failure. Two runs
-producing a different **edge set** is.
+A lattice has a *join*: a unique least upper bound for any two elements. Merge into a
+join-semilattice is therefore confluent by construction — no two routes can reach
+different answers, because the answer is *defined* as the least thing above both.
 
-> Scenarios, actors, and edges are topology and must converge. Prose, section order,
-> and file organisation are coordinates and are free.
+This is the reading the guarantee rests on, and buying it is what the rest of the model
+is for.
 
-## Settling should be downhill
-
-Levinthal's paradox: a protein cannot search all its conformations, yet folds in
-milliseconds — because the energy landscape is funnel-shaped. The system does not
-*search* for the settled state; the landscape shape makes reaching it the path of least
-resistance. **Settling should be downhill; staying strained should be uphill.**
-
-## Where this is argued
+## Where this goes
 
 The design worked out from these three readings — artifact-sets, connections, and the
-confluence guarantee they buy — is written up in
-[The lattice model](/cyber-truss/model/). None of it is built yet, and the parts still
+confluence guarantee they buy — begins at the [model overview](/cyber-truss/model/) and
+runs through the rest of this section. None of it is built yet, and the parts still
 moving are marked as such.
 
 The full naming and design argument lives in
