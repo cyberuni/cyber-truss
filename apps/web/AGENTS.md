@@ -16,6 +16,42 @@ pnpm web build    # production build; catches MDX and content-collection errors
 pnpm web test     # vitest over src/**/*.test.ts
 ```
 
+## Moving a Page
+
+**A page move is a content review, not a `git mv`.** A page's text is written against its
+neighbours — what it can assume the reader has seen, what it points at, what it may safely
+restate. Change the neighbours and some of that text becomes wrong while every link still
+resolves. Do the review before pushing, and commit it separately from the move so the move
+stays revertable.
+
+Work the list in order:
+
+1. **Inbound links.** `grep -rn "<old/path>" . --exclude-dir=node_modules --exclude-dir=dist
+   --exclude-dir=.git`. Catch `readme.md` and any absolute `https://cyberuni.github.io/...`
+   URL, not just site-relative ones. There is no redirect layer — the old URL dies.
+2. **Sidebar.** Update `astro.config.mjs`. An `autogenerate` entry left pointing at a now
+   empty directory, and a section reduced to a single item, are both dead weight; a section
+   with one member should become a top-level link.
+3. **Cross-references.** A page that was "elsewhere" is now a sibling. Prose written as
+   *"this is argued over in X"* reads as a pointer away from a section the reader is already
+   inside. Reword as a handoff.
+4. **Duplication.** Restating a claim is tolerable across distant sections and reads as a
+   repeat when the pages sit three rows apart. Grep the moved page's key sentences and
+   blockquotes against its new neighbours, and decide which page **owns** each claim; the
+   others cite it.
+5. **Labels.** Check the new neighbours for near-duplicate sidebar entries — `The lattice
+   model > The lattice > Overview` needed disambiguating once the concept page moved in.
+6. **Anchors.** If the review deleted or renamed a heading, grep for `#the-old-heading-slug`.
+
+Then `pnpm web build` and crawl the output, since Starlight does not fail a build over a
+dead internal link:
+
+```sh
+cd dist && for f in $(find . -name '*.html'); do grep -o 'href="/cyber-truss/[a-z0-9/-]*"' $f; done \
+  | sort -u | sed 's|href="/cyber-truss/||;s|"||' \
+  | while read p; do [ -f "./$p/index.html" ] || [ -z "$p" ] || echo "BROKEN: /$p"; done
+```
+
 ## Interactive Components
 
 Client-side logic lives in `src/lib/<name>.ts` as a pure, DOM-free module with its own
