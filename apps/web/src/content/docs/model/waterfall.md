@@ -41,14 +41,22 @@ co-variation, not by schedule.
 
 | Model element | Waterfall |
 | --- | --- |
-| Units of change | `{requirements}`, `{design}`, `{code, test}`, `{verification plan, results}` |
+| Artifact-sets | `{requirements}`, `{design}`, `{code, test}`, `{verification plan, results}` |
 | Governance targets | the document standard each phase's output must meet — template, review checklist, sign-off criteria |
 | Connections | requirements ↔ design, design ↔ implementation, implementation ↔ verification — a chain |
 | Discharge criterion | the phase gate |
 | Strain policy | zero strain behind you before the next set is opened |
 
-Nothing in that table is new machinery. The chain is four sets and three connections; the
-gates are what
+The first row says **artifact-sets**, not units of change, and the distinction is not
+pedantry. Waterfall's own completeness standard is that a change is not done until it has
+crossed the whole chain — so reading these four as units of change collapses them into
+one, and a single set has no connections left to gate. They are separate sets because
+they can be **strained independently**: requirements can move while design has not yet
+followed. Whether that strain is tolerated is the workflow's business, and it is the next
+section.
+
+Nothing else in the table is new machinery. The chain is four sets and three connections;
+the gates are what
 [the SDD page](/cyber-truss/model/relationship-to-sdd/#what-running-the-exercise-revealed)
 already identified as *conformance evaluated at a connection crossing*.
 
