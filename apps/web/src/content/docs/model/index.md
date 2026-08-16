@@ -54,6 +54,7 @@ documentation are raised and discharged out-of-band.
 | [Canonical execution](/cyber-truss/model/canonical-execution/) | How confluence is bought: distill, replay, compare |
 | [Relationship to SDD](/cyber-truss/model/relationship-to-sdd/) | SDD as the two-set instance of this model |
 | [Waterfall in the model](/cyber-truss/model/waterfall/) | A staged, gated process expressed here — and the half of it that turns out to be unnecessary |
+| [Formal workflows](/cyber-truss/model/formal-workflows/) | The same exercise across eight fields, and the four parameters they all reduce to |
 | [Open questions](/cyber-truss/model/open-questions/) | What is unresolved, and what breaks if it resolves badly |
 
 ## What this model is not

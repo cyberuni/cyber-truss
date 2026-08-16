@@ -155,3 +155,8 @@ carries. Nothing about this exercise makes that problem easier — but nothing a
 makes it worse, which is the outcome that mattered.
 
 **Status: Open**, inherited.
+
+The four parameters this exercise settled on — sets, shape, discharge, strain policy —
+turn out to describe staged processes well outside software.
+[Formal workflows](/cyber-truss/model/formal-workflows/) runs the same exercise across
+eight fields.
