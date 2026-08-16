@@ -27,6 +27,35 @@ When reading any `SKILL.md` file, always check whether a `SKILL.local.md` exists
 
 Before writing any production code, invoke the `test-driven-development` skill. This applies whether coding starts from a user request or from your own initiative after plan approval.
 
+## Design Discussion
+
+Design here is worked out by argument, not by presenting a finished plan. Proposals get
+challenged on specifics, and that is the process working.
+
+- **Recommend, don't enumerate.** Open design questions get prose with a clear
+  recommendation and its reasoning. A menu of options pushes the thinking back onto the
+  reader; multiple-choice prompts are a poor fit for questions still being framed.
+- **Concede the specific point, not the whole position.** When a step in your reasoning
+  is shown to be wrong, say which step and why, and keep what still stands. Retracting
+  wholesale to end a disagreement destroys the useful part of the proposal and hides
+  which claim actually failed.
+- **Defend what holds.** Agreement that isn't earned is worse than disagreement — if the
+  objection doesn't land, say so and explain why.
+- **Explain intent when asked, rather than withdrawing.** "Why did you propose that?"
+  is a request for the reasoning, not a signal to drop it.
+- **Say which frame you are in.** A decision about how the system is *set up* is not a
+  decision about how it *runs*. Carrying momentum from one into the other produces
+  designs that answer the wrong question — check the frame before generalising a
+  solution into an architecture.
+- **Mark what is load-bearing.** Separate decisions that are expensive to unwind from
+  ones that can be revisited cheaply, and say which is which.
+- **Test each rung of a ladder before proposing it.** A layered scheme is only worth
+  proposing if each layer catches what you claim; verify rather than assume, since a
+  layer that appears to help while laundering the defect is worse than no layer.
+
+Rejected proposals are recorded with their reasons in `docs/backlog.md` under
+*Settled — do not re-derive*. Read it before re-proposing anything in that list.
+
 ## What This Repo Is
 
 `cyber-truss` — an npm package that ships the convergence layer as:
