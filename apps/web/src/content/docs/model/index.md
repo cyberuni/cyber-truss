@@ -13,17 +13,20 @@ for what is still moving.
 
 ## The problem
 
-A change to a repository rarely stays in one place. Adding a skill obliges four vendor
-manifests. Accepting an ADR obliges the module it governs. Editing a global stylesheet
-obliges every component rendering beneath it.
+A change to a repository rarely stays in one place. Add a configuration flag, and the
+parser, the default config file, the documentation, and the tests each owe you an edit.
+Add a user-facing string, and every translation file owes you one. Agree on a team
+convention, and every module it governs owes you one — eventually.
 
-Today those obligations live in prose and memory. This repository's own `AGENTS.md`
-carries one verbatim — *"when the first skill lands, add `"skills": "./skills/"` to three
-manifests"* — because no tool owns it.
+Today those obligations live in prose and memory: a line in `CONTRIBUTING.md`, a
+`// keep in sync with …` comment, an item on the pull-request checklist, or nothing at
+all. Every one of them is a note asking a person to remember, written because no tool
+owns the relation the note is describing.
 
-Worse, the *order* you work in changes the result. The same feature built spec-first,
-built-to-learn, or backfilled from an implementation produces work of measurably
-different quality. The path is leaking into the outcome.
+Worse, the *order* you work in changes the result. The same feature comes out differently
+depending on whether the test was written first, written alongside, or backfilled after
+the code — and the same is true of its documentation. The path is leaking into the
+outcome.
 
 ## The guarantee
 
