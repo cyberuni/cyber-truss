@@ -23,10 +23,10 @@ Today those obligations live in prose and memory: a line in `CONTRIBUTING.md`, a
 all. Every one of them is a note asking a person to remember, written because no tool
 owns the relation the note is describing.
 
-Worse, the *order* you work in changes the result. The same feature comes out differently
-depending on whether the test was written first, written alongside, or backfilled after
-the code — and the same is true of its documentation. The path is leaking into the
-outcome.
+Worse, the *order* you work in changes the result. Decide what a feature should do and
+then build it; or build it and write down what it does afterwards; or work both ends at
+once. All three are legitimate, all three are used, and they do not produce work of the
+same quality. The path is leaking into the outcome.
 
 ## The guarantee
 
