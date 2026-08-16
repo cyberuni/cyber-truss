@@ -1,0 +1,211 @@
+---
+/**
+ * Static set diagrams for the artifact-set page. One file, one visual language:
+ * dashed outlines are artifact-sets, solid chips are artifacts, and every example
+ * is taken from this repository.
+ *
+ * Props are read inline as `Astro.props.variant` rather than destructured: Biome
+ * lints the frontmatter without seeing the template, so a frontmatter const that
+ * is only used below reads to it as dead code.
+ */
+interface Props {
+	/** Which figure to draw. */
+	variant: 'artifact' | 'axes' | 'nesting'
+}
+---
+
+{/* `not-content` opts the figure's children out of Starlight's markdown spacing,
+    which otherwise lands a 1rem margin on every element that follows a sibling. */}
+<figure class="setdiag not-content">
+	{
+		Astro.props.variant === 'artifact' && (
+			<svg viewBox="0 0 720 262" role="img" aria-label="Four vendor manifest files collapse into a single artifact called plugin manifest, which then appears as one member of the artifact-set for adding a skill, alongside skill and files list.">
+				<text class="cap" x="152" y="30">one artifact</text>
+				<rect class="set" x="16" y="44" width="272" height="196" rx="10" />
+				<g class="chip">
+					<rect x="32" y="60" width="240" height="34" rx="6" />
+					<text x="152" y="82">plugin.json</text>
+					<rect x="32" y="104" width="240" height="34" rx="6" />
+					<text x="152" y="126">.claude-plugin/plugin.json</text>
+					<rect x="32" y="148" width="240" height="34" rx="6" />
+					<text x="152" y="170">.cursor-plugin/plugin.json</text>
+					<rect x="32" y="192" width="240" height="34" rx="6" />
+					<text x="152" y="214">.codex-plugin/plugin.json</text>
+				</g>
+
+				<path class="arrow" d="M300 142 H338" />
+				<path class="arrowhead" d="M338 136 L350 142 L338 148 Z" />
+
+				<ellipse class="set" cx="534" cy="142" rx="170" ry="104" />
+				<text class="cap" x="534" y="30">one artifact-set</text>
+				<text class="sub" x="534" y="72">unit of change — adding a skill</text>
+				<g class="chip">
+					<rect x="444" y="94" width="180" height="32" rx="6" />
+					<text x="534" y="115">skill</text>
+					<rect x="444" y="134" width="180" height="32" rx="6" />
+					<text x="534" y="155">plugin manifest</text>
+					<rect x="444" y="174" width="180" height="32" rx="6" />
+					<text x="534" y="195">files list</text>
+				</g>
+			</svg>
+		)
+	}
+
+	{
+		Astro.props.variant === 'axes' && (
+			<svg viewBox="0 0 720 320" role="img" aria-label="Two overlapping sets. The unit of change for adding a skill holds plugin manifest, files list and skill. The governance target for agent-instruction guidelines holds skill and AGENTS.md. Only skill is in both.">
+				<ellipse class="set fill" cx="270" cy="176" rx="230" ry="126" />
+				<ellipse class="set fill" cx="450" cy="176" rx="230" ry="126" />
+
+				<text class="cap" x="155" y="104">unit of change</text>
+				<text class="sub" x="155" y="124">adding a skill</text>
+				<text class="cap" x="552" y="104">governance target</text>
+				<text class="sub" x="552" y="124">agent-instruction guidelines</text>
+
+				<g class="chip">
+					<rect x="60" y="152" width="150" height="32" rx="6" />
+					<text x="135" y="173">plugin manifest</text>
+					<rect x="60" y="192" width="150" height="32" rx="6" />
+					<text x="135" y="213">files list</text>
+
+					<rect x="510" y="160" width="160" height="32" rx="6" />
+					<text x="590" y="181">AGENTS.md</text>
+				</g>
+
+				<g class="chip shared">
+					<rect x="300" y="160" width="120" height="32" rx="6" />
+					<text x="360" y="181">skill</text>
+				</g>
+			</svg>
+		)
+	}
+
+	{
+		Astro.props.variant === 'nesting' && (
+			<svg viewBox="0 0 640 272" role="img" aria-label="A set labelled TypeScript sources, governed by tsc and Biome, containing a smaller set labelled CLI command modules, governed additionally by the agent-CLI principles.">
+				<rect class="set" x="16" y="44" width="608" height="212" rx="12" />
+				<text class="cap start" x="36" y="32">{'{ TypeScript sources }'}</text>
+				<text class="sub start" x="36" y="70">controlled by tsc and Biome</text>
+
+				<rect class="set inner" x="56" y="86" width="528" height="98" rx="10" />
+				<text class="sub start" x="76" y="110">
+					{'{ CLI command modules } — additionally, the agent-CLI principles'}
+				</text>
+				<g class="chip">
+					<rect x="76" y="124" width="156" height="34" rx="6" />
+					<text x="154" y="146">src/program.ts</text>
+					<rect x="242" y="124" width="156" height="34" rx="6" />
+					<text x="320" y="146">src/output.ts</text>
+					<rect x="408" y="124" width="156" height="34" rx="6" />
+					<text x="486" y="146">src/cli.ts</text>
+				</g>
+
+				<g class="chip">
+					<rect x="56" y="200" width="180" height="34" rx="6" />
+					<text x="146" y="222">src/version.ts</text>
+					<rect x="246" y="200" width="180" height="34" rx="6" />
+					<text x="336" y="222">src/output.test.ts</text>
+				</g>
+			</svg>
+		)
+	}
+
+	<figcaption><slot /></figcaption>
+</figure>
+
+<style>
+	.setdiag {
+		margin: 1.5rem 0;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: var(--sl-color-black);
+	}
+
+	.setdiag svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		padding: 0.75rem;
+		box-sizing: border-box;
+	}
+
+	/* An artifact-set: dashed, because membership is declared rather than physical. */
+	.set {
+		fill: none;
+		stroke: var(--sl-color-accent);
+		stroke-width: 1.5;
+		stroke-dasharray: 6 5;
+	}
+
+	/* Overlapping sets tint, so the intersection reads darker without extra shapes. */
+	.set.fill {
+		fill: var(--sl-color-accent-low);
+		fill-opacity: 0.5;
+	}
+
+	.set.inner {
+		stroke: var(--sl-color-gray-3);
+	}
+
+	/* An artifact: solid, because it is a thing in the repository. */
+	.chip rect {
+		fill: var(--sl-color-gray-6);
+		stroke: var(--sl-color-gray-4);
+		stroke-width: 1;
+	}
+
+	.chip text {
+		fill: var(--sl-color-white);
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 13px;
+		text-anchor: middle;
+	}
+
+	.chip.shared rect {
+		fill: var(--sl-color-accent-high);
+		stroke: var(--sl-color-accent);
+	}
+
+	.chip.shared text {
+		fill: var(--sl-color-black);
+	}
+
+	.cap,
+	.sub {
+		font-family: inherit;
+		text-anchor: middle;
+	}
+
+	.cap {
+		fill: var(--sl-color-white);
+		font-size: 14px;
+		font-weight: 600;
+	}
+
+	.sub {
+		fill: var(--sl-color-gray-3);
+		font-size: 12.5px;
+	}
+
+	.start {
+		text-anchor: start;
+	}
+
+	.arrow {
+		fill: none;
+		stroke: var(--sl-color-gray-4);
+		stroke-width: 1.5;
+	}
+
+	.arrowhead {
+		fill: var(--sl-color-gray-4);
+	}
+
+	.setdiag figcaption {
+		padding: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+</style>

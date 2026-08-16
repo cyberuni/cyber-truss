@@ -3,6 +3,8 @@ title: Artifact-sets
 description: The unit the model reasons about — two orthogonal axes, and the controllers that govern them
 ---
 
+import SetDiagram from '../../../components/SetDiagram.astro'
+
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
@@ -19,6 +21,13 @@ The choice of *type* rather than *instance* is load-bearing. This repository shi
 `.codex-plugin/plugin.json` — four files, one artifact. A rule keyed to files has to be
 written four times and rewritten when a fifth vendor appears. A rule keyed to the artifact
 is written once.
+
+<SetDiagram variant="artifact">
+	Two levels, and the model only ever names the second. Four files are one artifact —
+	`plugin manifest` — and that artifact is one member of the set that has to move when a
+	skill is added. A rule written against the right-hand box survives a fifth vendor
+	appearing in the left-hand one.
+</SetDiagram>
 
 Below this level the coupling is already owned: symbol and reference coupling is the
 compiler's job, and reproducing it would produce a worse compiler.
@@ -59,6 +68,15 @@ Adding a skill does not require touching `AGENTS.md`, so `{skill, AGENTS.md}` is
 governance target and *not* a unit of change. Code and tests co-vary tightly, but the
 criteria governing a test differ from those governing the code it exercises.
 
+<SetDiagram variant="axes">
+	The two axes drawn over the same repository. Neither set contains the other and neither
+	is a refinement of the other — they cross. `skill` is the only artifact in both, and it
+	is in them for unrelated reasons: it moves with the manifests, and it is judged by the
+	same criteria as `AGENTS.md`. Collapse the two ellipses into one and you get a set that
+	is wrong on both counts — it would demand `AGENTS.md` change with every new skill, and
+	it would hold the manifests to guidelines written for prose.
+</SetDiagram>
+
 `truss` therefore takes **both a delta and repository state** as input. They are not the
 same query and neither subsumes the other.
 
@@ -83,6 +101,23 @@ Two things follow.
 `{TypeScript files}`. Biome controls formatting. Astro and Starlight control
 `{website content}`. Each is mature and well-built. None of them reach past the boundary
 of the set they own — which is the subject of [Connections](/cyber-truss/model/connections/).
+
+**Sets on the same axis may nest, and controllers stack where they do.** Containment is
+the one set relationship that needs no connection to resolve: an artifact inside a nested
+set answers to every controller whose boundary encloses it.
+
+<SetDiagram variant="nesting">
+	Two governance targets on the same axis, one inside the other. Every file here is held
+	by tsc and Biome; only the command modules are additionally held to the agent-CLI
+	principles — `--json` handled in `output.ts`, no `process.exit` inside a command. The
+	inner set is not a separate concern bolted on, it is a stricter reading of the same
+	axis, so a violation there is a conformance strain against the inner controller alone.
+</SetDiagram>
+
+Most pairs of sets, on either axis, simply do not touch: `{ADR documents}` and
+`{Starlight stylesheets}` share no member and constrain nothing about each other. The
+model has nothing to say about those, and that is the point — it looks only where sets
+meet.
 
 **The spectrum has a direction of travel.** A controller should migrate toward
 deterministic code as the coupling it enforces turns out to be encodable. That migration
