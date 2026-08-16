@@ -20,7 +20,7 @@ export default defineConfig({
 					label: 'The lattice model',
 					items: [
 						{ label: 'The lattice', link: '/model/lattice/' },
-						{ label: 'Overview', link: '/model/' },
+						{ label: 'Model overview', link: '/model/' },
 						{ label: 'Artifact-sets', link: '/model/artifact-sets/' },
 						{ label: 'Connections', link: '/model/connections/' },
 						{ label: 'Confluence', link: '/model/confluence/' },
