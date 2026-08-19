@@ -13,6 +13,14 @@ export type Node = {
 	vx: number
 	vy: number
 	pinned: boolean
+	/** The artifact-set this node stands for, drawn beside it. */
+	label?: string
+	/**
+	 * Where this node is at rest. Gravity pulls it here rather than to the origin, so
+	 * an authored layout — not whatever the physics happens to relax into — is the
+	 * shape the lattice remembers and returns to.
+	 */
+	home?: { x: number; y: number }
 }
 
 /**
@@ -35,7 +43,8 @@ export type SimOptions = {
 	/** Velocity retained per tick. Below 1 the system dissipates and settles. */
 	damping: number
 	/**
-	 * Weak pull toward the origin. Without it nothing holds the lattice in place:
+	 * Weak pull toward a node's home, or toward the origin for a node with none.
+	 * Without it nothing holds the lattice in place:
 	 * dragging a node tows the whole structure along, so by the time it is released
 	 * it sits at its own centroid, perfectly balanced, and nothing ripples. Gravity
 	 * makes a drag *strain* the lattice instead of relocating it.
@@ -68,11 +77,12 @@ const defaults: SimOptions = {
 }
 
 /**
- * Grow the lattice by one node, wired to its `degree` nearest neighbours. The new
- * springs start out of equilibrium, so the same ripple fires and the whole layout
- * re-spaces — no special case needed.
+ * Grow the lattice by one node, wired to its `degree` nearest neighbours, and at home
+ * where it was dropped. The new springs start out of equilibrium, so the same ripple
+ * fires and the whole layout re-spaces — no special case needed.
  */
-export function addNode(graph: Graph, at: { x: number; y: number }, degree: number): Graph {
+export function addNode(graph: Graph, at: { x: number; y: number }, degree: number, label?: string): Graph {
+	const home = { x: at.x, y: at.y }
 	const index = graph.nodes.length
 	const nearest = graph.nodes
 		.map((node, i) => ({ i, distance: Math.hypot(node.x - at.x, node.y - at.y) }))
@@ -80,7 +90,7 @@ export function addNode(graph: Graph, at: { x: number; y: number }, degree: numb
 		.slice(0, degree)
 
 	return {
-		nodes: [...graph.nodes, { x: at.x, y: at.y, vx: 0, vy: 0, pinned: false }],
+		nodes: [...graph.nodes, { x: at.x, y: at.y, vx: 0, vy: 0, pinned: false, home, ...(label ? { label } : {}) }],
 		edges: [...graph.edges, ...nearest.map(({ i }): Edge => [index, i])],
 	}
 }
@@ -99,8 +109,8 @@ export function step(graph: Graph, options: Partial<SimOptions> = {}): Graph {
 	const nodes = graph.nodes.map((node) => ({ ...node }))
 
 	for (const node of nodes) {
-		node.vx -= node.x * gravity
-		node.vy -= node.y * gravity
+		node.vx -= (node.x - (node.home?.x ?? 0)) * gravity
+		node.vy -= (node.y - (node.home?.y ?? 0)) * gravity
 	}
 
 	for (let i = 0; i < nodes.length; i++) {
@@ -152,4 +162,19 @@ export function step(graph: Graph, options: Partial<SimOptions> = {}): Graph {
 	}
 
 	return { nodes, edges: graph.edges }
+}
+
+/**
+ * Pin every edge's rest length to the length it currently has, so a graph whose
+ * topology no drawing can satisfy at one uniform length still counts as unloaded.
+ * Freeze a layout once it has settled and strain then reads as *change since then*
+ * rather than as the residual the topology was born with.
+ */
+export function freezeRestLengths(graph: Graph): Graph {
+	return {
+		nodes: graph.nodes,
+		edges: graph.edges.map(
+			([a, b]): Edge => [a, b, Math.hypot(graph.nodes[b].x - graph.nodes[a].x, graph.nodes[b].y - graph.nodes[a].y)],
+		),
+	}
 }

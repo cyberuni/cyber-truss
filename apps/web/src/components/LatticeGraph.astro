@@ -11,7 +11,7 @@
 	<canvas
 		data-lattice-canvas
 		role="img"
-		aria-label="A graph of interconnected nodes. Drag a node and release it to see the whole structure settle, or click empty space to add a node."
+		aria-label="A repository's artifact-sets laid out as a lifecycle — PRD, mockup and acceptance criteria on the left, then spec, doc and ADR, then code, test plan and repo config, then test, and CI, deploy config and release on the right — wired by the changes that propagate between them. Drag a node and release it to see the whole structure settle, or click empty space to add a node."
 	></canvas>
 	<button type="button" class="lattice-reset" data-lattice-reset aria-label="Reset the lattice" title="Reset the lattice">
 		<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">
@@ -26,11 +26,13 @@
 		</svg>
 	</button>
 	<figcaption>
-		Drag a node and let go: it snaps back, the energy ripples outward, and the whole
-		graph settles into a new shape — same edges, different drawing. An edge brightens
-		as it is pulled away from its rest length, so the pale edges are the ones under
-		load and the dim ones are slack — watch the brightness travel outward as the
-		strain redistributes. Click empty space to add a node.
+		Each node is an artifact-set; each edge says that a change to one artifact-set
+		forces a change to the other. Drag a node and let go: it snaps back, the energy
+		ripples outward, and the whole structure settles again — same edges, same
+		drawing. An edge brightens as it is pulled away from its rest length,
+		so the pale edges are the ones under load and the dim ones are slack — watch the
+		brightness travel outward as the strain redistributes. Click empty space to add
+		an artifact-set.
 	</figcaption>
 </figure>
 
@@ -47,7 +49,7 @@
 	.lattice canvas {
 		display: block;
 		width: 100%;
-		height: 340px;
+		height: 320px;
 		touch-action: none;
 		cursor: grab;
 	}
@@ -100,32 +102,86 @@
 </style>
 
 <script>
-	import { addNode, type Graph, kineticEnergy, step } from '../lib/lattice-sim.js'
+	import { addNode, type Edge, freezeRestLengths, type Graph, kineticEnergy, step } from '../lib/lattice-sim.js'
 
-	const REST = 90
+	const REST = 125
 	const SETTLED = 0.01
 	const GRAB_RADIUS = 24
 	const CLICK_SLOP = 5
+	/** Clearance between a node's disc and its name. */
+	const LABEL_GAP = 14
+	/** Half the width the layout needs, names included, before it has to be scaled down. */
+	const DESIGN_REACH = 310
+	/**
+	 * Repulsion reach, kept under the closest pair in the layout below. A range that
+	 * covers a resting neighbour would push the authored drawing apart on frame one.
+	 */
+	const SIM = { restLength: REST, repulsionRange: 70 }
 
-	const RING = 7
+	/**
+	 * The artifact-sets, laid out as an SDLC diagram reads: intent on the left, the
+	 * running system on the right, and the spine of the lifecycle along the middle.
+	 * The bands above and below hold what each step of that spine drags along with it.
+	 */
+	const ARTIFACTS: { label: string; x: number; y: number }[] = [
+		{ label: 'PRD', x: -250, y: 0 },
+		{ label: 'spec', x: -125, y: 0 },
+		{ label: 'code', x: 0, y: 0 },
+		{ label: 'test', x: 125, y: 0 },
+		{ label: 'release', x: 250, y: 0 },
+		{ label: 'mockup', x: -190, y: -100 },
+		{ label: 'doc', x: -60, y: -100 },
+		{ label: 'test plan', x: 65, y: -100 },
+		{ label: 'deploy config', x: 190, y: -100 },
+		{ label: 'acceptance criteria', x: -190, y: 100 },
+		{ label: 'ADR', x: -60, y: 100 },
+		{ label: 'repo config', x: 65, y: 100 },
+		{ label: 'CI', x: 190, y: 100 },
+	]
 
-	/** A ring where every node is wired to its two neighbours on each side. */
+	/**
+	 * An edge says: change one of these two and the other has to change with it. It is
+	 * a relation, not an arrow — nothing here points from cause to effect.
+	 */
+	const LINKS: [string, string][] = [
+		['PRD', 'spec'],
+		['spec', 'code'],
+		['code', 'test'],
+		['test', 'release'],
+		['PRD', 'mockup'],
+		['mockup', 'spec'],
+		['PRD', 'acceptance criteria'],
+		['acceptance criteria', 'spec'],
+		['spec', 'doc'],
+		['doc', 'code'],
+		['spec', 'ADR'],
+		['ADR', 'code'],
+		['ADR', 'doc'],
+		['ADR', 'repo config'],
+		['code', 'test plan'],
+		['test plan', 'test'],
+		['code', 'repo config'],
+		['repo config', 'test'],
+		['repo config', 'CI'],
+		['test', 'CI'],
+		['CI', 'release'],
+		['CI', 'deploy config'],
+		['deploy config', 'release'],
+	]
+
+	/** Names for the artifact-sets a reader adds by clicking, in the order they land. */
+	const SPARE = ['schema', 'fixtures', 'changelog', 'runbook', 'benchmark', 'dashboard']
+
+	/**
+	 * The authored layout, with every edge told to be happy at the length it has there.
+	 * No drawing satisfies this topology at a single rest length, so freezing is what
+	 * lets the diagram read as unloaded and every later glow read as change.
+	 */
 	function seed(): Graph {
-		const nodes = Array.from({ length: RING }, (_, i) => {
-			const angle = (i / RING) * Math.PI * 2
-			return { x: Math.cos(angle) * REST, y: Math.sin(angle) * REST, vx: 0, vy: 0, pinned: false }
-		})
-		const edges: Graph['edges'] = []
-		for (let i = 0; i < RING; i++) {
-			for (const hop of [1, 2]) {
-				const to = (i + hop) % RING
-				// Each hop gets the length it spans in the regular ring, so the seed sits
-				// unstrained; one rest length for both hops would light every chord up.
-				const span = 2 * REST * Math.sin((Math.PI * hop) / RING)
-				edges.push([i, to, span])
-			}
-		}
-		return { nodes, edges }
+		const nodes = ARTIFACTS.map(({ label, x, y }) => ({ x, y, vx: 0, vy: 0, pinned: false, label, home: { x, y } }))
+		const index = (label: string) => ARTIFACTS.findIndex((artifact) => artifact.label === label)
+		const edges = LINKS.map(([from, to]): Edge => [index(from), index(to)])
+		return freezeRestLengths({ nodes, edges })
 	}
 
 	function setup(root: HTMLElement) {
@@ -140,11 +196,15 @@
 
 		let width = 0
 		let height = 0
+		// Shrink the layout, never the type: positions scale to the column the page
+		// gives us, while discs and names keep the size they are legible at.
+		let scale = 1
 		const resize = () => {
 			const ratio = devicePixelRatio || 1
 			const box = canvas.getBoundingClientRect()
 			width = box.width
 			height = box.height
+			scale = Math.min(1, width / 2 / DESIGN_REACH)
 			canvas.width = Math.round(width * ratio)
 			canvas.height = Math.round(height * ratio)
 			context.setTransform(ratio, 0, 0, ratio, 0, 0)
@@ -158,6 +218,8 @@
 			const style = getComputedStyle(root)
 			return {
 				edge: style.getPropertyValue('--sl-color-gray-4').trim() || '#888',
+				label: style.getPropertyValue('--sl-color-gray-2').trim() || '#ccc',
+				behind: style.getPropertyValue('--sl-color-black').trim() || '#000',
 				strain: style.getPropertyValue('--sl-color-accent-high').trim() || '#8ab',
 				node: style.getPropertyValue('--sl-color-accent').trim() || '#68a',
 				rim: style.getPropertyValue('--sl-color-white').trim() || '#fff',
@@ -182,8 +244,8 @@
 				context.globalAlpha = 0.35 + strain * 0.65
 				context.lineWidth = 1 + strain * 1.5
 				context.beginPath()
-				context.moveTo(cx + from.x, cy + from.y)
-				context.lineTo(cx + to.x, cy + to.y)
+				context.moveTo(cx + from.x * scale, cy + from.y * scale)
+				context.lineTo(cx + to.x * scale, cy + to.y * scale)
 				context.stroke()
 			}
 
@@ -191,7 +253,7 @@
 			for (const node of graph.nodes) {
 				const speed = Math.min(1, Math.hypot(node.vx, node.vy) / 4)
 				context.beginPath()
-				context.arc(cx + node.x, cy + node.y, 6 + speed * 3, 0, Math.PI * 2)
+				context.arc(cx + node.x * scale, cy + node.y * scale, 6 + speed * 3, 0, Math.PI * 2)
 				context.fillStyle = palette.node
 				context.fill()
 				context.lineWidth = 1.5
@@ -200,16 +262,43 @@
 				context.stroke()
 				context.globalAlpha = 1
 			}
+
+			label(cx, cy)
+		}
+
+		/**
+		 * Names, drawn after every node so no disc lands on a name, and knocked out of
+		 * whatever they cross so they stay readable over a bright edge. A name goes above
+		 * its node in the upper band and below it everywhere else, which keeps every one
+		 * of them out of the bands' own horizontal run of edges.
+		 */
+		function label(cx: number, cy: number) {
+			context.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif'
+			context.textAlign = 'center'
+			context.lineJoin = 'round'
+			context.lineWidth = 3
+
+			for (const node of graph.nodes) {
+				if (!node.label) continue
+				const above = node.y < 0
+				context.textBaseline = above ? 'bottom' : 'top'
+				const x = cx + node.x * scale
+				const y = cy + node.y * scale + (above ? -LABEL_GAP : LABEL_GAP)
+				context.strokeStyle = palette.behind
+				context.strokeText(node.label, x, y)
+				context.fillStyle = palette.label
+				context.fillText(node.label, x, y)
+			}
 		}
 
 		/** Run to rest without animating — the reduced-motion path, and the reset path. */
 		function settle() {
-			for (let i = 0; i < 600 && kineticEnergy(graph) > SETTLED; i++) graph = step(graph, { restLength: REST })
+			for (let i = 0; i < 600 && kineticEnergy(graph) > SETTLED; i++) graph = step(graph, SIM)
 			draw()
 		}
 
 		function tick() {
-			graph = step(graph, { restLength: REST })
+			graph = step(graph, SIM)
 			draw()
 			// Sleep once settled rather than burning a frame budget on a still image.
 			frame = dragging === null && kineticEnergy(graph) < SETTLED ? 0 : requestAnimationFrame(tick)
@@ -222,10 +311,10 @@
 
 		function nodeAt(event: PointerEvent) {
 			const box = canvas.getBoundingClientRect()
-			const x = event.clientX - box.left - width / 2
-			const y = event.clientY - box.top - height / 2
+			const x = (event.clientX - box.left - width / 2) / scale
+			const y = (event.clientY - box.top - height / 2) / scale
 			let found: number | null = null
-			let best = GRAB_RADIUS
+			let best = GRAB_RADIUS / scale
 			graph.nodes.forEach((node, i) => {
 				const distance = Math.hypot(node.x - x, node.y - y)
 				if (distance < best) {
@@ -265,8 +354,8 @@
 		const release = (event: PointerEvent) => {
 			if (pressed) {
 				const { x, y } = nodeAt(event)
-				if (Math.hypot(x - pressed.x, y - pressed.y) < CLICK_SLOP) {
-					graph = addNode(graph, pressed, Math.min(3, graph.nodes.length))
+				if (Math.hypot(x - pressed.x, y - pressed.y) < CLICK_SLOP / scale) {
+					graph = addNode(graph, pressed, Math.min(3, graph.nodes.length), SPARE[graph.nodes.length - ARTIFACTS.length])
 				}
 				pressed = null
 				wake()

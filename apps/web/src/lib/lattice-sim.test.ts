@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addNode, type Graph, kineticEnergy, step } from './lattice-sim.js'
+import { addNode, freezeRestLengths, type Graph, kineticEnergy, step } from './lattice-sim.js'
 
 function graph(nodes: [number, number][], edges: Graph['edges'] = []): Graph {
 	return {
@@ -176,6 +176,20 @@ describe('holding a node away from the lattice', () => {
 
 const SETTLED = 0.01
 
+describe('home', () => {
+	it('pulls a displaced node back toward its home rather than the origin', () => {
+		const away: Graph = {
+			nodes: [{ x: 300, y: 0, vx: 0, vy: 0, pinned: false, home: { x: 200, y: 0 } }],
+			edges: [],
+		}
+
+		let g = away
+		for (let i = 0; i < 400; i++) g = step(g, { repulsion: 0 })
+
+		expect(g.nodes[0].x).toBeCloseTo(200, 0)
+	})
+})
+
 describe(addNode.name, () => {
 	const spread = graph([
 		[0, 0],
@@ -197,7 +211,7 @@ describe(addNode.name, () => {
 	it('adds the node at rest', () => {
 		const grown = addNode(spread, { x: 5, y: 0 }, 2)
 
-		expect(grown.nodes[4]).toEqual({ x: 5, y: 0, vx: 0, vy: 0, pinned: false })
+		expect(grown.nodes[4]).toEqual({ x: 5, y: 0, vx: 0, vy: 0, pinned: false, home: { x: 5, y: 0 } })
 	})
 
 	it('leaves the graph it was given untouched', () => {
@@ -207,11 +221,42 @@ describe(addNode.name, () => {
 		expect(spread.edges).toEqual([])
 	})
 
+	it('names the new node when a label is given', () => {
+		const grown = addNode(spread, { x: 5, y: 0 }, 2, 'schema')
+
+		expect(grown.nodes[4].label).toBe('schema')
+	})
+
 	it('links to every node when the graph is smaller than the degree asked for', () => {
 		const pair = graph([[0, 0]])
 
 		const grown = addNode(pair, { x: 5, y: 0 }, 3)
 
 		expect(grown.edges).toEqual([[1, 0]])
+	})
+})
+
+describe('freezeRestLengths', () => {
+	it('makes every edge happy where it currently sits', () => {
+		const strained = graph(
+			[
+				[0, 0],
+				[30, 0],
+				[30, 40],
+			],
+			[
+				[0, 1],
+				[1, 2],
+				[2, 0],
+			],
+		)
+
+		const frozen = freezeRestLengths(strained)
+
+		expect(frozen.edges).toEqual([
+			[0, 1, 30],
+			[1, 2, 40],
+			[2, 0, 50],
+		])
 	})
 })

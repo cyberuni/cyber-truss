@@ -30,10 +30,22 @@ Drag one, release, and the whole thing settles.
 
 <LatticeGraph />
 
-Adding a node forms new edges and changes the spacing: same ripple, new graph. The edge
-set is what the system holds; where the nodes end up is not — so two runs may draw the
-same graph differently without either being wrong. Which properties have to converge and
-which are free is the subject of [Confluence](/cyber-truss/model/confluence/).
+The nodes are a repository's [artifact-sets](/cyber-truss/model/artifact-sets/) — the PRD,
+the mockups, the acceptance criteria, the spec, the ADRs, the docs, the code, the repo
+config, the test plan, the tests, CI, the deploy config, the release. An edge is a
+[connection](/cyber-truss/model/connections/): the fact that changing one of the two
+forces a change in the other. It is a relation, not an arrow, so the load travels either
+way along it.
+
+They are placed the way a lifecycle diagram places them, intent on the left and the
+running system on the right, because that is the arrangement a reader already knows. The
+placement is a convenience of the drawing and nothing more — no artifact-set is upstream
+of another, and the strain crosses a member in whichever direction the change arrived
+from. What the system holds is the edge set; where a node sits on the page it does not.
+
+Adding a node forms new edges and changes the spacing: same ripple, larger structure.
+Which properties have to converge and which are free is the subject of
+[Confluence](/cyber-truss/model/confluence/).
 
 ## Order-theoretic lattice
 
