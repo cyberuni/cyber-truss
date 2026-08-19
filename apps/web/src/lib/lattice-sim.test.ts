@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { addNode, freezeRestLengths, type Graph, kineticEnergy, step } from './lattice-sim.js'
+import { absorb, absorbing, freezeRestLengths, type Graph, kineticEnergy, land, reach, step } from './lattice-sim.js'
 
-function graph(nodes: [number, number][], edges: Graph['edges'] = []): Graph {
+/** Edges as terse `[from, to, rest?]` tuples, since most tests only care about geometry. */
+function graph(nodes: [number, number][], edges: [number, number, number?][] = []): Graph {
 	return {
 		nodes: nodes.map(([x, y]) => ({ x, y, vx: 0, vy: 0, pinned: false })),
-		edges,
+		edges: edges.map(([from, to, rest]) => (rest === undefined ? { from, to } : { from, to, rest })),
 	}
 }
 
@@ -190,52 +191,6 @@ describe('home', () => {
 	})
 })
 
-describe(addNode.name, () => {
-	const spread = graph([
-		[0, 0],
-		[10, 0],
-		[20, 0],
-		[500, 0],
-	])
-
-	it('links the new node to its nearest neighbours', () => {
-		const grown = addNode(spread, { x: 5, y: 0 }, 2)
-
-		expect(grown.nodes).toHaveLength(5)
-		expect(grown.edges).toEqual([
-			[4, 0],
-			[4, 1],
-		])
-	})
-
-	it('adds the node at rest', () => {
-		const grown = addNode(spread, { x: 5, y: 0 }, 2)
-
-		expect(grown.nodes[4]).toEqual({ x: 5, y: 0, vx: 0, vy: 0, pinned: false, home: { x: 5, y: 0 } })
-	})
-
-	it('leaves the graph it was given untouched', () => {
-		addNode(spread, { x: 5, y: 0 }, 2)
-
-		expect(spread.nodes).toHaveLength(4)
-		expect(spread.edges).toEqual([])
-	})
-
-	it('names the new node when a label is given', () => {
-		const grown = addNode(spread, { x: 5, y: 0 }, 2, 'schema')
-
-		expect(grown.nodes[4].label).toBe('schema')
-	})
-
-	it('links to every node when the graph is smaller than the degree asked for', () => {
-		const pair = graph([[0, 0]])
-
-		const grown = addNode(pair, { x: 5, y: 0 }, 3)
-
-		expect(grown.edges).toEqual([[1, 0]])
-	})
-})
-
 describe('freezeRestLengths', () => {
 	it('makes every edge happy where it currently sits', () => {
 		const strained = graph(
@@ -254,9 +209,109 @@ describe('freezeRestLengths', () => {
 		const frozen = freezeRestLengths(strained)
 
 		expect(frozen.edges).toEqual([
-			[0, 1, 30],
-			[1, 2, 40],
-			[2, 0, 50],
+			{ from: 0, to: 1, rest: 30 },
+			{ from: 1, to: 2, rest: 40 },
+			{ from: 2, to: 0, rest: 50 },
 		])
+	})
+})
+
+/** A chain of four, so a change has somewhere to travel. */
+function chain(transmit: number): Graph {
+	return {
+		nodes: [0, 1, 2, 3].map((i) => ({ x: i * 100, y: 0, vx: 0, vy: 0, pinned: false })),
+		edges: [
+			{ from: 0, to: 1, transmit },
+			{ from: 1, to: 2, transmit },
+			{ from: 2, to: 3, transmit },
+		],
+	}
+}
+
+describe(reach.name, () => {
+	it('leaves the set the change landed in fully affected', () => {
+		expect(reach(chain(0.5), 0)[0]).toEqual({ share: 1, hops: 0 })
+	})
+
+	it('attenuates the change once per connection it crosses', () => {
+		const reached = reach(chain(0.5), 0)
+
+		expect(reached.map((r) => r.share)).toEqual([1, 0.5, 0.25, 0.125])
+		expect(reached.map((r) => r.hops)).toEqual([0, 1, 2, 3])
+	})
+
+	it('lets a loose connection hold a change back where a tight one passes it on', () => {
+		expect(reach(chain(0.2), 0)[1].share).toBeLessThan(reach(chain(0.9), 0)[1].share)
+	})
+
+	it('delivers by the tightest route rather than the shortest', () => {
+		const detour: Graph = {
+			nodes: [0, 1, 2].map((i) => ({ x: i * 100, y: 0, vx: 0, vy: 0, pinned: false })),
+			edges: [
+				{ from: 0, to: 1, transmit: 0.8 },
+				{ from: 1, to: 2, transmit: 0.8 },
+				{ from: 0, to: 2, transmit: 0.1 },
+			],
+		}
+
+		expect(reach(detour, 0)[2]).toEqual({ share: 0.8 * 0.8, hops: 2 })
+	})
+
+	it('reaches nothing across a graph with no connections', () => {
+		const alone = chain(0.5)
+		alone.edges = []
+
+		expect(reach(alone, 0).map((r) => r.share)).toEqual([1, 0, 0, 0])
+	})
+})
+
+/** Run the change all the way in, or give up — an absorption that never ends is a bug. */
+function take(graph: Graph) {
+	for (let i = 0; i < 5000 && absorbing(graph); i++) graph = absorb(graph)
+	if (absorbing(graph)) throw new Error('change never finished arriving')
+	return graph
+}
+
+describe(land.name, () => {
+	it('grows every set it reaches by the share that arrives there', () => {
+		const taken = take(land(chain(0.5), 0))
+
+		expect(taken.nodes.map((n) => n.absorbed ?? 0)).toEqual([1, 0.5, 0.25, 0.125])
+	})
+
+	it('stacks a second change on top of the first rather than replacing it', () => {
+		const once = take(land(chain(0.5), 0))
+
+		const twice = take(land(once, 3))
+
+		expect(twice.nodes[0].absorbed).toBeCloseTo(1 + 0.125, 6)
+		expect(twice.nodes[3].absorbed).toBeCloseTo(0.125 + 1, 6)
+	})
+
+	it('never gives a set back what it has taken', () => {
+		let g = land(chain(0.5), 0)
+		let previous = 0
+
+		for (let i = 0; i < 200; i++) {
+			g = absorb(g)
+			const now = g.nodes[2].absorbed ?? 0
+			expect(now).toBeGreaterThanOrEqual(previous)
+			previous = now
+		}
+	})
+
+	it('marks the set the change landed in, and only that one', () => {
+		const landed = land(chain(0.5), 1)
+
+		expect(landed.nodes.map((n) => n.changed ?? false)).toEqual([false, true, false, false])
+	})
+
+	it('holds a distant set back until the change has had time to get there', () => {
+		let g = land(chain(0.9), 0)
+
+		for (let i = 0; i < 5; i++) g = absorb(g)
+
+		expect(g.nodes[0].absorbed ?? 0).toBeGreaterThan(0)
+		expect(g.nodes[3].absorbed ?? 0).toBe(0)
 	})
 })

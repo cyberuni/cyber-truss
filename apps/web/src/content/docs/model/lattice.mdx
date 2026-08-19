@@ -26,24 +26,29 @@ downhill; staying strained should be uphill.**
 
 ## A graph of interconnected nodes
 
-Drag one, release, and the whole thing settles.
+Land a change anywhere and the whole thing answers for it.
 
 <LatticeGraph />
 
-The nodes are a repository's [artifact-sets](/cyber-truss/model/artifact-sets/) — the PRD,
-the mockups, the acceptance criteria, the spec, the ADRs, the docs, the code, the repo
-config, the test plan, the tests, CI, the deploy config, the release. An edge is a
-[connection](/cyber-truss/model/connections/): the fact that changing one of the two
-forces a change in the other. It is a relation, not an arrow, so the load travels either
-way along it.
+Each node is an [artifact-set](/cyber-truss/model/artifact-sets/) — the artifacts that
+have to move together, whether that is three of them or one. Each edge is a
+[connection](/cyber-truss/model/connections/): changing one of the two obliges a change
+in the other. It is a relation, not an arrow, so a change crosses it in whichever
+direction it arrived from.
 
-They are placed the way a lifecycle diagram places them, intent on the left and the
+What a connection does carry is a *degree*. A change to the spec rewrites almost
+everything downstream of it; a change to the end-to-end tests barely troubles CI. Two
+sets the same number of hops apart can therefore end up affected quite differently, and a
+change dies out where the couplings are loose rather than at some fixed radius. That
+unevenness is the whole reason a repository is survivable: if every connection carried a
+change at full strength, every commit would be a rewrite.
+
+The sets are placed the way a lifecycle diagram places them, intent on the left and the
 running system on the right, because that is the arrangement a reader already knows. The
 placement is a convenience of the drawing and nothing more — no artifact-set is upstream
-of another, and the strain crosses a member in whichever direction the change arrived
-from. What the system holds is the edge set; where a node sits on the page it does not.
+of another. What the system holds is the edge set; where a node sits on the page it does
+not.
 
-Adding a node forms new edges and changes the spacing: same ripple, larger structure.
 Which properties have to converge and which are free is the subject of
 [Confluence](/cyber-truss/model/confluence/).
 

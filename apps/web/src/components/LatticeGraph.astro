@@ -1,7 +1,8 @@
 ---
 /**
- * The lattice, made draggable. Renders the spring-mass simulation in
- * `src/lib/lattice-sim.ts` to a canvas and wires pointer drag to node pinning.
+ * The lattice, made interactive. Renders the simulation in `src/lib/lattice-sim.ts`
+ * to a canvas: drag a node to load the springs, click one to land a change in that
+ * artifact-set and watch it spread along the connections that carry it.
  */
 ---
 
@@ -11,7 +12,7 @@
 	<canvas
 		data-lattice-canvas
 		role="img"
-		aria-label="A repository's artifact-sets laid out as a lifecycle — PRD, mockup and acceptance criteria on the left, then spec, doc and ADR, then code, test plan and repo config, then test, and CI, deploy config and release on the right — wired by the changes that propagate between them. Drag a node and release it to see the whole structure settle, or click empty space to add a node."
+		aria-label="A repository's artifact-sets laid out as a lifecycle and wired by the changes that propagate between them: the PRD; mockup and tokens; criteria and examples; spec and schema; docs, JSDoc and stories; ADR and AGENTS.md; code, test and stories; the test plan; repo and lint config; end-to-end tests and fixtures; CI; deploy config and infrastructure; release notes. Click a set to land a change in it and see how far it reaches; drag one and release it to see the structure settle."
 	></canvas>
 	<button type="button" class="lattice-reset" data-lattice-reset aria-label="Reset the lattice" title="Reset the lattice">
 		<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">
@@ -26,13 +27,16 @@
 		</svg>
 	</button>
 	<figcaption>
-		Each node is an artifact-set; each edge says that a change to one artifact-set
-		forces a change to the other. Drag a node and let go: it snaps back, the energy
-		ripples outward, and the whole structure settles again — same edges, same
-		drawing. An edge brightens as it is pulled away from its rest length,
-		so the pale edges are the ones under load and the dim ones are slack — watch the
-		brightness travel outward as the strain redistributes. Click empty space to add
-		an artifact-set.
+		Every node is an artifact-set — one, two or three artifacts that move together —
+		and every edge says a change to one of the two has to be answered in the other.
+		<strong>Click a set</strong> to land a change in it: it fills and swells, and the
+		change travels outward, arriving at each further set weaker than it left. How much
+		weaker is the connection's own property, which is why a change to the end-to-end
+		tests barely moves CI while a change to the spec moves nearly everything. Changes
+		accumulate, so a set's area is everything it has had to absorb — keep clicking and
+		the sets a repository really pays for become the large ones. Drag a node and let go
+		to load the structure the other way: it snaps back, the strain travels outward
+		along the members, and the lattice settles into the shape it started in.
 	</figcaption>
 </figure>
 
@@ -49,7 +53,7 @@
 	.lattice canvas {
 		display: block;
 		width: 100%;
-		height: 320px;
+		height: 340px;
 		touch-action: none;
 		cursor: grab;
 	}
@@ -79,7 +83,8 @@
 
 	/*
 	 * Stretch the tappable region to 44px without growing the button. A thumb that
-	 * misses lands on the canvas, which adds a node, so a near miss is not harmless.
+	 * misses lands on the canvas, which is harmless now that empty space does nothing,
+	 * but the button is still small enough to be worth the extra room.
 	 */
 	.lattice-reset::before {
 		content: '';
@@ -102,19 +107,28 @@
 </style>
 
 <script>
-	import { addNode, type Edge, freezeRestLengths, type Graph, kineticEnergy, step } from '../lib/lattice-sim.js'
+	import { absorb, absorbing, type Edge, freezeRestLengths, type Graph, kineticEnergy, land, step } from '../lib/lattice-sim.js'
 
 	const REST = 125
 	const SETTLED = 0.01
-	const GRAB_RADIUS = 24
+	const GRAB_RADIUS = 26
 	const CLICK_SLOP = 5
-	/** Clearance between a node's disc and its name. */
-	const LABEL_GAP = 14
+	/** Clearance between a node's ring and its name. */
+	const LABEL_GAP = 5
 	/** Half the width the layout needs, names included, before it has to be scaled down. */
-	const DESIGN_REACH = 310
+	const DESIGN_REACH = 320
+	/**
+	 * A quiet set's radius, and the swell one change's worth of absorption adds. Radius
+	 * goes as the square root, so the *area* of a set tracks what it has taken — the
+	 * reading a reader does by eye when comparing two circles.
+	 */
+	const NODE_RADIUS = 6
+	const NODE_SWELL = 6
+	/** Where the swelling stops, so a reader who keeps clicking does not fill the frame. */
+	const ABSORB_CAP = 4
 	/**
 	 * Repulsion reach, kept under the closest pair in the layout below. A range that
-	 * covers a resting neighbour would push the authored drawing apart on frame one.
+	 * covered a resting neighbour would push the authored drawing apart on frame one.
 	 */
 	const SIM = { restLength: REST, repulsionRange: 70 }
 
@@ -122,55 +136,66 @@
 	 * The artifact-sets, laid out as an SDLC diagram reads: intent on the left, the
 	 * running system on the right, and the spine of the lifecycle along the middle.
 	 * The bands above and below hold what each step of that spine drags along with it.
+	 *
+	 * Each one is a *set* — the unit the model reasons about — so the members that move
+	 * together are named together, however many that is. `{code, test, stories}` is the
+	 * canonical case: code changed without its tests is not a smaller change, it is an
+	 * incomplete one. A set of one is just as legitimate; nothing else moves with CI.
+	 *
+	 * Sets overlap, and the drawing simply names a shared artifact twice — `stories` is
+	 * in `{code, test, stories}` and in `{docs, JSDoc, stories}`. Nothing is lost by the
+	 * duplication, because sharing a member is not a *third* kind of relationship: it is
+	 * a reason those two sets are connected, and the connection is already drawn.
 	 */
-	const ARTIFACTS: { label: string; x: number; y: number }[] = [
-		{ label: 'PRD', x: -250, y: 0 },
-		{ label: 'spec', x: -125, y: 0 },
-		{ label: 'code', x: 0, y: 0 },
-		{ label: 'test', x: 125, y: 0 },
-		{ label: 'release', x: 250, y: 0 },
-		{ label: 'mockup', x: -190, y: -100 },
-		{ label: 'doc', x: -60, y: -100 },
-		{ label: 'test plan', x: 65, y: -100 },
-		{ label: 'deploy config', x: 190, y: -100 },
-		{ label: 'acceptance criteria', x: -190, y: 100 },
-		{ label: 'ADR', x: -60, y: 100 },
-		{ label: 'repo config', x: 65, y: 100 },
-		{ label: 'CI', x: 190, y: 100 },
+	const SETS: { id: string; label: string; x: number; y: number }[] = [
+		{ id: 'intent', label: '{PRD}', x: -250, y: 0 },
+		{ id: 'contract', label: '{spec, schema}', x: -125, y: 0 },
+		{ id: 'implementation', label: '{code, test, stories}', x: 0, y: 0 },
+		{ id: 'verification', label: '{e2e, fixtures}', x: 125, y: 0 },
+		{ id: 'release', label: '{release notes}', x: 250, y: 0 },
+		{ id: 'design', label: '{mockup, tokens}', x: -190, y: -100 },
+		{ id: 'docs', label: '{docs, JSDoc, stories}', x: -60, y: -100 },
+		{ id: 'plan', label: '{test plan}', x: 65, y: -100 },
+		{ id: 'deploy', label: '{deploy, infra}', x: 190, y: -100 },
+		{ id: 'criteria', label: '{criteria, examples}', x: -190, y: 100 },
+		{ id: 'decisions', label: '{ADR, AGENTS.md}', x: -60, y: 100 },
+		{ id: 'toolchain', label: '{repo, lint config}', x: 65, y: 100 },
+		{ id: 'pipeline', label: '{CI}', x: 190, y: 100 },
 	]
 
 	/**
-	 * An edge says: change one of these two and the other has to change with it. It is
-	 * a relation, not an arrow — nothing here points from cause to effect.
+	 * A connection and how much of a change it carries across, 0 to 1. These numbers are
+	 * the whole point of the picture: a repository is not uniformly coupled, so a change
+	 * that rewrites half the repo from one set dies out two hops from another. They are
+	 * illustrative — nothing measures them yet.
 	 */
-	const LINKS: [string, string][] = [
-		['PRD', 'spec'],
-		['spec', 'code'],
-		['code', 'test'],
-		['test', 'release'],
-		['PRD', 'mockup'],
-		['mockup', 'spec'],
-		['PRD', 'acceptance criteria'],
-		['acceptance criteria', 'spec'],
-		['spec', 'doc'],
-		['doc', 'code'],
-		['spec', 'ADR'],
-		['ADR', 'code'],
-		['ADR', 'doc'],
-		['ADR', 'repo config'],
-		['code', 'test plan'],
-		['test plan', 'test'],
-		['code', 'repo config'],
-		['repo config', 'test'],
-		['repo config', 'CI'],
-		['test', 'CI'],
-		['CI', 'release'],
-		['CI', 'deploy config'],
-		['deploy config', 'release'],
+	const LINKS: [string, string, number][] = [
+		['intent', 'contract', 0.85],
+		['contract', 'implementation', 0.9],
+		['implementation', 'verification', 0.55],
+		['verification', 'release', 0.4],
+		['intent', 'design', 0.7],
+		['design', 'contract', 0.6],
+		['intent', 'criteria', 0.8],
+		['criteria', 'contract', 0.7],
+		['contract', 'docs', 0.6],
+		// These two sets share a member, so anything that moves `stories` has moved both
+		// of them. A shared artifact is a floor under a connection's transmittance.
+		['docs', 'implementation', 0.7],
+		['contract', 'decisions', 0.4],
+		['decisions', 'implementation', 0.75],
+		['decisions', 'docs', 0.5],
+		['decisions', 'toolchain', 0.45],
+		['implementation', 'plan', 0.4],
+		['plan', 'verification', 0.7],
+		['implementation', 'toolchain', 0.25],
+		['toolchain', 'verification', 0.35],
+		['toolchain', 'pipeline', 0.6],
+		['verification', 'pipeline', 0.15],
+		['pipeline', 'deploy', 0.45],
+		['pipeline', 'release', 0.5],
+		['deploy', 'release', 0.6],
 	]
-
-	/** Names for the artifact-sets a reader adds by clicking, in the order they land. */
-	const SPARE = ['schema', 'fixtures', 'changelog', 'runbook', 'benchmark', 'dashboard']
 
 	/**
 	 * The authored layout, with every edge told to be happy at the length it has there.
@@ -178,9 +203,9 @@
 	 * lets the diagram read as unloaded and every later glow read as change.
 	 */
 	function seed(): Graph {
-		const nodes = ARTIFACTS.map(({ label, x, y }) => ({ x, y, vx: 0, vy: 0, pinned: false, label, home: { x, y } }))
-		const index = (label: string) => ARTIFACTS.findIndex((artifact) => artifact.label === label)
-		const edges = LINKS.map(([from, to]): Edge => [index(from), index(to)])
+		const nodes = SETS.map(({ label, x, y }) => ({ x, y, vx: 0, vy: 0, pinned: false, label, home: { x, y }, absorbed: 0 }))
+		const index = (id: string) => SETS.findIndex((set) => set.id === id)
+		const edges = LINKS.map(([from, to, transmit]): Edge => ({ from: index(from), to: index(to), transmit }))
 		return freezeRestLengths({ nodes, edges })
 	}
 
@@ -197,7 +222,7 @@
 		let width = 0
 		let height = 0
 		// Shrink the layout, never the type: positions scale to the column the page
-		// gives us, while discs and names keep the size they are legible at.
+		// gives us, while rings and names keep the size they are legible at.
 		let scale = 1
 		const resize = () => {
 			const ratio = devicePixelRatio || 1
@@ -218,11 +243,12 @@
 			const style = getComputedStyle(root)
 			return {
 				edge: style.getPropertyValue('--sl-color-gray-4').trim() || '#888',
-				label: style.getPropertyValue('--sl-color-gray-2').trim() || '#ccc',
-				behind: style.getPropertyValue('--sl-color-black').trim() || '#000',
 				strain: style.getPropertyValue('--sl-color-accent-high').trim() || '#8ab',
 				node: style.getPropertyValue('--sl-color-accent').trim() || '#68a',
-				rim: style.getPropertyValue('--sl-color-white').trim() || '#fff',
+				// The mid tone, not -high: -high inverts between the themes and washes out on dark.
+				changed: style.getPropertyValue('--sl-color-orange').trim() || '#e8a33d',
+				label: style.getPropertyValue('--sl-color-gray-2').trim() || '#ccc',
+				behind: style.getPropertyValue('--sl-color-black').trim() || '#000',
 			}
 		}
 		new MutationObserver(() => {
@@ -235,14 +261,25 @@
 			const cx = width / 2
 			const cy = height / 2
 
-			for (const [a, b, rest = REST] of graph.edges) {
-				const from = graph.nodes[a]
-				const to = graph.nodes[b]
-				// Strained edges brighten, so load redistributing through the structure is visible.
+			for (const edge of graph.edges) {
+				const from = graph.nodes[edge.from]
+				const to = graph.nodes[edge.to]
+				const rest = edge.rest ?? REST
+				// Two ways for a member to light up: pulled off its rest length by a drag,
+				// or carrying a change that has reached both of its ends.
 				const strain = Math.min(1, Math.abs(Math.hypot(to.x - from.x, to.y - from.y) - rest) / rest)
-				context.strokeStyle = strain > 0.05 ? palette.strain : palette.edge
-				context.globalAlpha = 0.35 + strain * 0.65
-				context.lineWidth = 1 + strain * 1.5
+				// A member lights only while both of its ends are actually taking change in.
+				// Owing a change is not the same as receiving one: the far side of the
+				// lattice is owed its share the instant a change lands, and lighting on
+				// that would flash the whole structure at once instead of showing a front.
+				const carrying = Math.min(1, Math.min(taking(from), taking(to)) * 2.5)
+				const lit = Math.max(strain, carrying)
+				// At rest the line still says how tightly it couples, so a reader can see
+				// where a change will travel before landing one.
+				const quiet = 0.18 + (edge.transmit ?? 1) * 0.3
+				context.strokeStyle = carrying > strain ? palette.changed : lit > 0.05 ? palette.strain : palette.edge
+				context.globalAlpha = quiet + lit * (1 - quiet)
+				context.lineWidth = 1 + lit * 1.5
 				context.beginPath()
 				context.moveTo(cx + from.x * scale, cy + from.y * scale)
 				context.lineTo(cx + to.x * scale, cy + to.y * scale)
@@ -251,57 +288,84 @@
 
 			context.globalAlpha = 1
 			for (const node of graph.nodes) {
-				const speed = Math.min(1, Math.hypot(node.vx, node.vy) / 4)
+				const taken = node.absorbed ?? 0
+				const x = cx + node.x * scale
+				const y = cy + node.y * scale
+
+				// A ring, not a disc: a node is a *set*, and what is drawn is its boundary.
+				// The boundary is solid once a change has landed in the set directly.
 				context.beginPath()
-				context.arc(cx + node.x * scale, cy + node.y * scale, 6 + speed * 3, 0, Math.PI * 2)
-				context.fillStyle = palette.node
+				context.arc(x, y, ringRadius(node), 0, Math.PI * 2)
+				context.fillStyle = palette.behind
 				context.fill()
-				context.lineWidth = 1.5
-				context.strokeStyle = palette.rim
-				context.globalAlpha = 0.25 + speed * 0.75
-				context.stroke()
+				context.fillStyle = palette.changed
+				context.globalAlpha = Math.min(1, taken) * 0.75
+				context.fill()
 				context.globalAlpha = 1
+				context.setLineDash(node.changed ? [] : [3, 2.5])
+				context.lineWidth = node.changed ? 2.5 : 1.5
+				context.strokeStyle = taken > 0.02 ? palette.changed : palette.node
+				context.stroke()
+				context.setLineDash([])
 			}
 
 			label(cx, cy)
 		}
 
+		/** What a set is taking in right now — nothing while it is still waiting its turn. */
+		function taking(node: { pending?: number; delay?: number }) {
+			return (node.delay ?? 0) > 0 ? 0 : (node.pending ?? 0)
+		}
+
+		/** How wide a set has grown. Area tracks absorption, so radius tracks its root. */
+		function ringRadius(node: { absorbed?: number }) {
+			return NODE_RADIUS + NODE_SWELL * Math.sqrt(Math.min(node.absorbed ?? 0, ABSORB_CAP))
+		}
+
 		/**
-		 * Names, drawn after every node so no disc lands on a name, and knocked out of
-		 * whatever they cross so they stay readable over a bright edge. A name goes above
-		 * its node in the upper band and below it everywhere else, which keeps every one
-		 * of them out of the bands' own horizontal run of edges.
+		 * Names, drawn after every node so no ring lands on a name, and knocked out of
+		 * whatever they cross so they stay readable over a lit member. Always below the
+		 * node: a name that picks its side from where the node currently is jumps across
+		 * the moment a drag carries that node past the middle.
 		 */
 		function label(cx: number, cy: number) {
 			context.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif'
 			context.textAlign = 'center'
+			context.textBaseline = 'top'
 			context.lineJoin = 'round'
 			context.lineWidth = 3
 
 			for (const node of graph.nodes) {
 				if (!node.label) continue
-				const above = node.y < 0
-				context.textBaseline = above ? 'bottom' : 'top'
+				const taken = node.absorbed ?? 0
 				const x = cx + node.x * scale
-				const y = cy + node.y * scale + (above ? -LABEL_GAP : LABEL_GAP)
+				const y = cy + node.y * scale + ringRadius(node) + LABEL_GAP
 				context.strokeStyle = palette.behind
 				context.strokeText(node.label, x, y)
-				context.fillStyle = palette.label
+				context.fillStyle = taken > 0.02 ? palette.changed : palette.label
+				context.globalAlpha = 0.8 + Math.min(1, taken) * 0.2
 				context.fillText(node.label, x, y)
+				context.globalAlpha = 1
 			}
+		}
+
+		/** One tick of both the springs and the change working its way through. */
+		function advance() {
+			graph = absorb(step(graph, SIM))
+			return kineticEnergy(graph) < SETTLED && !absorbing(graph)
 		}
 
 		/** Run to rest without animating — the reduced-motion path, and the reset path. */
 		function settle() {
-			for (let i = 0; i < 600 && kineticEnergy(graph) > SETTLED; i++) graph = step(graph, SIM)
+			for (let i = 0; i < 900; i++) if (advance()) break
 			draw()
 		}
 
 		function tick() {
-			graph = step(graph, SIM)
+			const rested = advance()
 			draw()
 			// Sleep once settled rather than burning a frame budget on a still image.
-			frame = dragging === null && kineticEnergy(graph) < SETTLED ? 0 : requestAnimationFrame(tick)
+			frame = dragging === null && rested ? 0 : requestAnimationFrame(tick)
 		}
 
 		function wake() {
@@ -325,17 +389,15 @@
 			return { index: found, x, y }
 		}
 
-		// Where an empty-space press started, so a press that never moved can be told
-		// apart from a drag and treated as "add a node here".
-		let pressed: { x: number; y: number } | null = null
+		// Where a press landed, so a press that never moved can be told apart from a drag
+		// and treated as "a change lands in this set" instead.
+		let pressed: { index: number; x: number; y: number } | null = null
 
 		canvas.addEventListener('pointerdown', (event) => {
 			const { index, x, y } = nodeAt(event)
+			if (index === null) return
 			canvas.setPointerCapture(event.pointerId)
-			if (index === null) {
-				pressed = { x, y }
-				return
-			}
+			pressed = { index, x, y }
 			if (reduced.matches) return
 			dragging = index
 			graph.nodes[index].pinned = true
@@ -352,20 +414,20 @@
 		})
 
 		const release = (event: PointerEvent) => {
+			if (dragging !== null) {
+				// Unpinning discharges the strain the drag stored into the springs.
+				graph.nodes[dragging].pinned = false
+				dragging = null
+				canvas.classList.remove('is-dragging')
+			}
 			if (pressed) {
 				const { x, y } = nodeAt(event)
+				// A press that went nowhere is a click: land a change in this set.
 				if (Math.hypot(x - pressed.x, y - pressed.y) < CLICK_SLOP / scale) {
-					graph = addNode(graph, pressed, Math.min(3, graph.nodes.length), SPARE[graph.nodes.length - ARTIFACTS.length])
+					graph = land(graph, pressed.index)
 				}
 				pressed = null
-				wake()
-				return
 			}
-			if (dragging === null) return
-			// Unpinning discharges the strain the drag stored into the springs.
-			graph.nodes[dragging].pinned = false
-			dragging = null
-			canvas.classList.remove('is-dragging')
 			wake()
 		}
 		canvas.addEventListener('pointerup', release)
@@ -373,7 +435,7 @@
 
 		root.querySelector('[data-lattice-reset]')?.addEventListener('click', () => {
 			graph = seed()
-			reduced.matches ? settle() : wake()
+			settle()
 		})
 
 		resize()
