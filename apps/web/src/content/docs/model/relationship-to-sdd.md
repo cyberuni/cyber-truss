@@ -84,6 +84,11 @@ This repository records `cyber-truss` as a **peer** of SDD, settled in
 [discussion #16](https://github.com/cyberuni/.github/discussions/16). That is a decision
 about naming and organisational placement.
 
-Architecturally the relationship described here is different: SDD is an instance of this
-model, and `cyber-truss` is the layer beneath it. The two claims are not in conflict —
-they answer different questions — but the second should not be read back into the first.
+Two architectural claims sit alongside it, on separate axes. On the modelling axis, SDD is
+the two-set instance and this model is its general form. On the runtime axis, `cyber-truss`
+holds convergence continuously while SDD's engine runs per mission and then retires. That
+second axis is the sense in which it is
+[a layer under SDD](/cyber-truss/#why-a-layer-under-sdd).
+
+Neither architectural claim ranks the two projects, and neither should be read back into
+the naming decision.
