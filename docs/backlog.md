@@ -49,7 +49,21 @@ Not scheduled work — questions that block the items below and are the user's c
    Same relation, different lifetime. That may be one file with two keys, or it may be
    what keeps them apart.
 2. **Packaging.** Probe packages inside this monorepo, or separate repos. Blocks C1, C7.
-3. **Does adopting axi/TOON supersede ADR 0001?** TOON on stdout is agreed; the ADR's
+3. **Are inbound connections discoverable, or only outbound ones?** Blocks C10.
+   A connection is undirected (settled), but *discovery* is not symmetric. A repo
+   can enumerate the artifact-sets it consumes by reading its own files. It cannot
+   enumerate the repos that consume **it** — that edge exists only in the consumer,
+   and there is no inbound index. `cyberuni/.github`'s reusable release workflow is
+   the worked case: 30 consumers, none of them nameable from inside the repo that
+   ships it. Three routes, and this is the user's call:
+   - **Scan and index.** A loop over the org's repos reading each one's workflows.
+     Verified to work, ~90s across three orgs — and note that `gh search code`
+     returned nothing for the same query, so the API path is not the cheap version.
+   - **Consumer-side declaration**, published where the producer can read it.
+   - **Neither** — accept that outbound blast is unknowable and gate on *"this
+     artifact is consumed by parties this repo cannot name"* rather than on a list.
+     Weaker signal, zero infrastructure, and it is enough to stop a merge.
+4. **Does adopting axi/TOON supersede ADR 0001?** TOON on stdout is agreed; the ADR's
    "structured `--json`" consequence has not been formally superseded or amended.
    Blocks C2, C3.
 
@@ -167,6 +181,59 @@ reinstall — which is `doctor --fix` work.
 **C9. A curated catalog (optional).** With self-sufficient plugins, truss cannot
 recommend what is not installed. If "you could adopt this" matters, it is a static list
 truss ships, not detection.
+
+**C10. Blast radius as a derived query, and the third state of a connection.** Came
+in from `repobuddy/repobuddy#594`: a dependency PR bumped `changesets/action` v1 → v2
+in `cyberuni/.github`'s reusable release workflow, passed every check in its own repo,
+and broke the release job in 25 downstream repos. The action refuses `@changesets/cli`
+v2 at runtime, and the repo that ships the workflow never runs it.
+
+The first analysis blamed the **major version bump**. That is the wrong axis — semver
+is a property of the dependency being bumped, while the risk is a property of the
+artifact being changed and of who executes it. A minor that changes an input default
+breaks the same consumers; a major devDependency bump in a leaf repo breaks nobody.
+And the same failure reproduces with no repo boundary and no version at all: run
+`turbo run test --filter=...[origin/main]`, have package B depend on A through a
+runtime config load the selector's graph does not carry, and B's tests never run.
+Green, and broken at publish.
+
+What actually failed is a gap between two quantities:
+
+- **Blast radius** — what the delta puts at risk.
+- **Verification reach** — what the check that ran actually evaluated.
+
+The merge is safe when *reach ⊇ radius*. The claim worth arguing is that neither of
+these is a new mechanism, and that blast in particular is not something to *detect*.
+Under the model, blast radius is the transitive closure of connections from the
+artifact-sets the delta touched. If truss holds the connection graph, blast is a query
+over it. A separate blast-detector would be a second registry of a relation the model
+already owns — the same objection already made against duplicating the artifact-set →
+controller table.
+
+Reach is the half the model is genuinely missing, and it is load-bearing. Today a
+connection is either holding or strained. That is two states where there are three: a
+connection can also be **unevaluated**. The `.github` repo does not score as
+unstrained, it scores as never-checked, and reporting those two the same way is
+exactly the defect that let the merge through. So a connection carries an evaluation
+status per run, not only a truth value — and `truss check` has to distinguish *held*
+from *nothing looked*.
+
+Adjacent to D1, but not the same. Rungs say what a connection *needs to exist* in
+order to be evaluable, and are a property of the connection. Reach says what a
+particular run *did* evaluate, and is a property of the run.
+
+Two follow-ons, neither tested:
+
+- It plausibly gives C5 its scope. `truss check` currently means *where is this repo
+  strained*. With reach, a delta-scoped mode means *what did this change put at risk,
+  and was any of it actually evaluated* — the question a merge gate needs.
+- It may be the same question SDD's impl gate asks. The frozen `.feature` is a reach;
+  a delta touching artifact-sets outside its scenarios is radius past reach. If that
+  holds, the two gates are one construction. Check it before leaning on it.
+
+Blocked on Open decision 3 for the cross-repo half. The in-repo half — an incomplete
+dependency graph under selective test selection — is computable today, and is the
+cheaper place to test the model.
 
 ## D. Parked design notes
 
