@@ -39,6 +39,15 @@ Research hit the same effect hard enough to name it, which is what
 
 The path is leaking into the outcome.
 
+Which leaves a remedy nobody keeps. Work spec-first every time, and every small change
+buys the full ceremony: the component looks wrong, so amend the design record before you
+touch the padding; you spot an off-by-one, so open a change request before you fix it. The
+changes people most want to make on sight are the ones the ceremony taxes hardest. So the
+discipline holds on work big enough to deserve it and lapses everywhere else, and the spec
+ends up covering the features while missing everything smaller.
+
+Nobody should have to go back to the drawing board to move a button.
+
 ## The guarantee
 
 > **cyber-truss makes the settled state independent of which artifact you changed
