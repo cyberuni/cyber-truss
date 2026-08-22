@@ -7,14 +7,19 @@ description: SDD as the two-set instance of this model, and what cyber-truss add
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
 
-`cyber-truss` does not replace SDD. SDD runs from a change request to a handoff and then
-retires, while convergence is a property of repository state and has to hold continuously.
-That is why it needs [a layer under SDD](/cyber-truss/#why-a-layer-under-sdd). The two are
-separate projects, settled as peers in
-[discussion #16](https://github.com/cyberuni/.github/discussions/16).
+`cyber-truss` does not replace SDD. SDD is one
+[formal workflow](/cyber-truss/model/workflows/) among several: a policy over two
+artifact-sets, catalogued beside seven others that span different combinations. This model
+is the vocabulary those workflows are written in. The two are separate projects, settled as
+peers in [discussion #16](https://github.com/cyberuni/.github/discussions/16).
 
-In modelling terms they are closer than that. SDD is the smallest instance of this model,
-and this page sets out which of its constraints are lifted.
+They also run on different clocks. SDD runs from a change request to a handoff and then
+retires, while convergence is a property of repository state and has to hold continuously.
+That is the second sense in which cyber-truss sits
+[under SDD](/cyber-truss/#why-a-layer-under-sdd).
+
+SDD is the two-set entry in that catalog, and this page sets out which of its constraints
+are lifted.
 
 ## SDD is the two-set instance
 
