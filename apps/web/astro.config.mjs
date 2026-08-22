@@ -22,6 +22,7 @@ export default defineConfig({
 						{ label: 'The lattice', link: '/model/lattice/' },
 						{ label: 'Model overview', link: '/model/' },
 						{ label: 'Artifact-sets', link: '/model/artifact-sets/' },
+						{ label: 'Specification', link: '/model/specification/' },
 						{ label: 'Connections', link: '/model/connections/' },
 						{ label: 'Confluence', link: '/model/confluence/' },
 						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
