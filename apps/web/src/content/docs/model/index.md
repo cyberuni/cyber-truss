@@ -26,7 +26,18 @@ owns the relation the note is describing.
 Worse, the *order* you work in changes the result. Decide what a feature should do and
 then build it; or build it and write down what it does afterwards; or work both ends at
 once. All three are legitimate, all three are used, and they do not produce work of the
-same quality. The path is leaking into the outcome.
+same quality.
+
+The mechanism is context. Whoever writes the spec first has to reason the problem out:
+which cases exist, which inputs are legal, what should happen at the edges. Whoever
+backfills it from working code has one solution already in front of them, and writes the
+spec that fits that solution. Cases the code never handled are the cases nobody writes
+down. Afterwards nothing looks wrong, because the two artifacts agree, and the spec has
+quietly become a transcript of the implementation rather than a statement of intent.
+Research hit the same effect hard enough to name it, which is what
+[preregistration](/cyber-truss/model/workflows/#preregistered-study) exists to prevent.
+
+The path is leaking into the outcome.
 
 ## The guarantee
 
