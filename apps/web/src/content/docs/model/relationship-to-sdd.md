@@ -7,6 +7,15 @@ description: SDD as the two-set instance of this model, and what cyber-truss add
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
 
+`cyber-truss` does not replace SDD. SDD runs from a change request to a handoff and then
+retires, while convergence is a property of repository state and has to hold continuously.
+That is why it needs [a layer under SDD](/cyber-truss/#why-a-layer-under-sdd). The two are
+separate projects, settled as peers in
+[discussion #16](https://github.com/cyberuni/.github/discussions/16).
+
+In modelling terms they are closer than that. SDD is the smallest instance of this model,
+and this page sets out which of its constraints are lifted.
+
 ## SDD is the two-set instance
 
 Spec-Driven Development has exactly two units of change and one connection between them.
@@ -21,46 +30,35 @@ Expressed in this model:
 | Discharge | the implementation gate |
 
 The vocabulary holds. Two units, a governance table that already exists, one connection,
-and the gates turn out to be **where conformance is evaluated at a connection crossing** —
-which generalizes cleanly: every connection needs a discharge criterion.
+and gates that turn out to be **where conformance is evaluated at a connection crossing**.
+That last one generalizes: every connection needs a discharge criterion.
 
-`cyber-truss` is the same model with the constraints lifted: many artifact-sets rather
-than two, connections traversable from either end, and discharge that happens
-out-of-band rather than inline.
+`cyber-truss` is the same model with the constraints lifted. Many artifact-sets rather
+than two, connections traversable from either end, and discharge that happens out-of-band
+rather than inline.
 
-## What running the exercise revealed
+## Staging belongs to the workflow, not the connection
 
-Expressing SDD in the model surfaced something that would otherwise have been baked in
-wrongly.
+SDD's connection is a strong form: staged and gated, with the spec approved before
+implementation proceeds. Most connections are nothing like it. The Starlight stylesheet →
+component connection has no approval step. The obligation simply exists, and it is
+discharged whenever.
 
-**SDD's connection is a strong form** — staged and gated, with the spec approved before
-implementation proceeds. Most connections are nothing like that. The Starlight
-stylesheet → component connection has no approval step; the obligation simply exists and
-is discharged whenever.
+A model drawn from SDD alone would write staging into the connection type, and every other
+connection would wear a gate it does not need. Connections vary in whether they are staged,
+and that variation is a property of the workflow.
 
-Modelling only from SDD would have written staging into the connection type and made
-every other connection wear a gate it does not need. Connections vary in whether they are
-staged, and that is a property of the workflow rather than of the connection.
-
-This argues for running the same exercise against other two-set instances — ACED for
-agent configuration, Quill for documentation — before the model is fixed. Both are cheap
-to check and differently shaped.
-
-**Status: Settled** that SDD expresses cleanly. **Open:** whether ACED and Quill do.
+**Status: Settled** that SDD expresses cleanly in this model. Whether
+[ACED and Quill do](/cyber-truss/model/open-questions/#smaller-but-unresolved) is open.
 
 ## What is generalized
 
-SDD's implementation judge re-derives each scenario's oracle independently rather than
-reading the producer's. That is independent re-derivation used to *judge an
-implementation*.
-
-This model uses the same mechanism to *normalize any change*, from any entry point, in
-any artifact-set. The judge's re-derivation becomes the replay in
-[canonical execution](/cyber-truss/model/canonical-execution/), and the
-`{oracle, architect, builder}` lens set becomes how the comparison is read.
-
-That continuity is what makes "next revision of SDD" a concrete claim rather than a
-positioning statement.
+The judging mechanism carries over. SDD's implementation judge re-derives each scenario's
+oracle independently rather than reading the producer's; this model applies the same
+independent re-derivation to any change, from any entry point, in any artifact-set. It
+becomes the replay step in
+[canonical execution](/cyber-truss/model/canonical-execution/#reading-the-comparison), and
+the `{oracle, architect, builder}` lens set becomes how the comparison is read.
 
 ## What is added
 
@@ -69,26 +67,11 @@ possible but second-class, and their results differ in quality. This model treat
 entry points as equal at authoring time and normalizes them at execution time.
 
 **Out-of-band discharge.** SDD's gates are synchronous and blocking. Obligations here are
-raised without interrupting the work that created them, and discharged later — possibly
-in a different session, possibly by a different agent. That is where the efficiency claim
+raised without interrupting the work that created them, and discharged later, possibly in
+a different session and possibly by a different agent. That is where the efficiency claim
 comes from: a designer can prototype uninterrupted while changes propagate to spec,
 implementation, and documentation behind them.
 
-**Many sets.** SDD covers two. A repository has more — website content, repository
-configuration, agent configuration, design records — and the connections between them are
+**Many sets.** SDD covers two. A repository has more (website content, repository
+configuration, agent configuration, design records), and the connections between them are
 currently owned by nobody.
-
-## A note on framing
-
-This repository records `cyber-truss` as a **peer** of SDD, settled in
-[discussion #16](https://github.com/cyberuni/.github/discussions/16). That is a decision
-about naming and organisational placement.
-
-Two architectural claims sit alongside it, on separate axes. On the modelling axis, SDD is
-the two-set instance and this model is its general form. On the runtime axis, `cyber-truss`
-holds convergence continuously while SDD's engine runs per mission and then retires. That
-second axis is the sense in which it is
-[a layer under SDD](/cyber-truss/#why-a-layer-under-sdd).
-
-Neither architectural claim ranks the two projects, and neither should be read back into
-the naming decision.
