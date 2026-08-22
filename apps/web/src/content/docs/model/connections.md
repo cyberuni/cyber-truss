@@ -29,6 +29,16 @@ same one.
 
 **Status: Settled.**
 
+## What a connection relates
+
+Two artifact-sets, at their [specifications](/cyber-truss/model/specification/) rather than
+their implementations. There is no diff between a TypeScript module and a Figma frame, so a
+connection stated over implementations could never be evaluated; stated over criteria, both
+ends are written in one vocabulary.
+
+**Status: Settled.** The argument is on the
+[Specification](/cyber-truss/model/specification/#the-problem-this-solves) page.
+
 ## Connections are undirected
 
 A connection is a relation between two artifact-sets. It is **not** an arrow.
@@ -94,6 +104,12 @@ being done, and without it any report nags forever.
 Axis 2. *This skill violates the agent-instruction guidelines.*
 
 State-driven, evaluable on a cold repository, and requires no delta.
+
+The three are not an arbitrary list. Read through the specification relation they are the
+three ways a specification and its implementation can fail to meet: both in hand and
+disagreeing, the implementation elsewhere, or no implementation in the delta at all. That
+derivation is on the [Specification](/cyber-truss/model/specification/#what-the-roles-explain)
+page.
 
 **Status: Settled** that the three are distinct and block differently. **Open:** the
 precise boundary conditions on each.

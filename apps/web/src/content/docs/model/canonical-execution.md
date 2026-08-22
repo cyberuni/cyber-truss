@@ -1,6 +1,6 @@
 ---
 title: Canonical execution
-description: How confluence is bought — distill a change to a Request, replay it, compare
+description: How confluence is bought — distill a change to a Request, derive its criteria, replay it, compare
 ---
 
 :::caution[Design, not implementation]
@@ -26,8 +26,9 @@ landed. It is lifted, distilled, and replayed:
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
 2. **Distill** it to a **Request** — the intent behind the change, separated from the
    particular expression of it — together with the workflow that applies.
-3. **Replay** the Request through that workflow from its starting point.
-4. **Compare** the replayed delta against the change that arrived.
+3. **Derive the criteria** the settled state must satisfy, from the Request.
+4. **Replay** the Request through that workflow from its starting point.
+5. **Compare** the replayed delta against the change that arrived.
 
 The replay is an *independent derivation*. It does not read the incoming change as an
 answer; it derives its own and then looks.
@@ -35,9 +36,30 @@ answer; it derives its own and then looks.
 **Status: Thesis.** Flagged by its author as needing further design and analysis. The
 loop's shape is agreed; several of its parts are not.
 
+## Criteria are derived before the replay, not after
+
+Step 3 is ordered deliberately, and the order is the whole of its value.
+
+A [specification](/cyber-truss/model/specification/) is intent plus criteria, and the
+comparison in step 5 is a comparison of criteria. If those criteria were read off the
+replay's output, the comparison would be checking the workflow against itself and could
+only ever conclude *"the incoming change is wrong."*
+
+Derived from the Request instead, the criteria are authored by neither party to the
+comparison. A workflow that produces something conforming-but-wrong now fails criteria it
+did not write. This is the same move SDD makes by freezing the `.feature` suite before the
+implementation exists, generalized from one gate to every crossing.
+
+It does not close the question below — criteria derived from a misread Request are wrong in
+the same direction as everything downstream of them. It replaces *hope that the comparison
+is honest* with a mechanism that can be inspected.
+
+**Status: Thesis.** The ordering is agreed; what "derive the criteria" consumes beyond the
+Request is not.
+
 ## The inversion
 
-Step 4 changes what the incoming change *is*.
+Step 5 changes what the incoming change *is*.
 
 The designer's mockup is not the deliverable. It is a **prediction of the settled state**,
 and the replay is the independent derivation that checks it. The comparison is where the
@@ -133,4 +155,9 @@ The comparison step is the only protection, and it works only if disagreement is
 as evidence about **the workflow** as often as about the change. A comparison that can
 only conclude *"this change is wrong"* will launder a defective workflow indefinitely.
 
-**Status: Settled** as a requirement on the comparison. **Open:** how it is enforced.
+Deriving criteria [ahead of the replay](#criteria-are-derived-before-the-replay-not-after)
+is the mechanism proposed against this. It is not yet a full answer, because it moves the
+exposure up to the Request rather than removing it.
+
+**Status: Settled** as a requirement on the comparison. **Open:** whether independently
+derived criteria are enough to enforce it.

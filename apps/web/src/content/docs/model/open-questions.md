@@ -72,7 +72,14 @@ defective workflow converges reliably on the same wrong answer, and normalizes a
 ad-hoc changes that would have revealed it.
 
 The comparison must be able to conclude *"the workflow is wrong"* and not only *"this
-change is wrong."* How that is enforced — rather than merely hoped for — is unresolved.
+change is wrong."*
+
+The mechanism now proposed is
+[deriving the criteria from the Request before the replay runs](/cyber-truss/model/canonical-execution/#criteria-are-derived-before-the-replay-not-after),
+so that neither party to the comparison authored the bar it is judged against. That is a
+real mechanism where there was previously only a requirement, but it relocates the exposure
+rather than removing it: criteria derived from a misread Request are wrong in the same
+direction as everything downstream of them. Whether the relocation is enough is unresolved.
 
 ## Where does the controller interface sit?
 
@@ -97,3 +104,16 @@ for settling it before there is more than one controller rather than after.
   differently shaped, should be run through the model before it is fixed.
 - **What form does provenance take** on deltas produced by canonical execution, so they
   do not re-trigger it?
+- **How are specification levels identified across artifact types?** Two specifications are
+  comparable when they sit at
+  [the same rung](/cyber-truss/model/specification/#specifications-exist-at-every-level) —
+  function, module, product, system. What fixes the rung for an artifact type that has no
+  obvious analogue of a function is undefined.
+- **How much of the artifact topology is universal?** The catalog of artifact *roles* looks
+  close to portable across repositories, and so do most
+  [unit-of-change](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change) edges, which
+  follow from what the artifacts mean.
+  [Governance targets](/cyber-truss/model/artifact-sets/#axis-2--governance-target) are
+  local by construction — they are a team's opinion about which criteria apply where. If
+  that split holds, the product ships a default topology that repositories extend and
+  override rather than a blank page. Empirical, and untested against a second repository.
