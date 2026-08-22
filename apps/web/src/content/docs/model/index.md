@@ -78,6 +78,7 @@ documentation are raised and discharged out-of-band.
 | [Formal workflows](/cyber-truss/model/workflows/) | Staged processes across eight fields, and the four parameters they all reduce to |
 | [Waterfall in the model](/cyber-truss/model/workflows/waterfall/) | One of them worked in full — and the half of it that turns out to be unnecessary |
 | [Open questions](/cyber-truss/model/open-questions/) | What is unresolved, and what breaks if it resolves badly |
+| [Glossary](/cyber-truss/model/glossary/) | Every term the model defines, and the ones it deliberately avoids |
 
 ## What this model is not
 

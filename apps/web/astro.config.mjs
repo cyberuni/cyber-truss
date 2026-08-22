@@ -35,6 +35,7 @@ export default defineConfig({
 							],
 						},
 						{ label: 'Open questions', link: '/model/open-questions/' },
+						{ label: 'Glossary', link: '/model/glossary/' },
 					],
 				},
 				{
