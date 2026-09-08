@@ -111,8 +111,7 @@ outcome is unknown must not be sent again.
 - **Entry point** — called with a binding and a capability contract. Inputs: a binding, a
   contract. Outcome: a snapshot carrying its provenance and its freshness.
 - **Extensions** — the binding does not carry the requested contract; the provider process
-  has exited; the provider has restarted and not yet reported; several providers' snapshots
-  are held at once.
+  has exited; the provider has restarted and not yet reported.
 
 ### `resolveReference` — follow a fact into the domain that owns it
 
@@ -160,6 +159,7 @@ outcome is unknown must not be sent again.
 | `Resolution` (`resolved` \| `unresolved`) | `resolveReference` extensions |
 | `dispatchAction(binding, action)` | `dispatchAction` |
 | `ActionOutcome` (`result` \| `domain-error` \| `unknown`) | `dispatchAction` extensions |
+| `Snapshot` as the only source of a decision's state | `dispatchAction`'s answer path — the host adds no verdict of its own |
 | `unloadIntegration(binding)` | `unloadIntegration` |
 
 **Forbidden combinations:** `refreshState` or `dispatchAction` against a binding whose
@@ -222,7 +222,7 @@ graph TD
 ```mermaid
 graph TD
   K[dispatchAction] --> L{binding carries actions contract?}
-  L -->|no| M[no control offered — no call exists]
+  L -->|no| M[no such contract — no request sent]
   L -->|yes| N{domain returns?}
   N -->|result| O[record result with provenance]
   N -->|refusal| P[surface the domain's error, do not retry]
@@ -281,11 +281,11 @@ graph TD
 
 | Edge | Path (Given) | Scenario |
 | --- | --- | --- |
-| actions contract absent | a binding whose contracts omit actions | `no action control is offered for a binding without the actions contract` |
+| actions contract absent | a binding whose contracts omit actions | `dispatching on a binding without the actions contract reports no such contract` |
 | domain returns result | a binding carrying the actions contract | `an action the domain accepts returns its result with the domain as provenance` |
 | domain refuses | a binding carrying the actions contract | `an action the domain refuses surfaces the domain's error and is not retried` |
 | provider restarted in flight | an action dispatched before its provider restarted | `an action in flight across a provider restart is reported unknown and never re-dispatched` |
-| domain returns result | a binding whose provider asked for a decision | `answering a decision dispatches the answer to that provider and records no host approval` |
+| domain returns result | a binding whose provider asked for a decision | `a decision stays as its provider last reported it until that provider reports otherwise` |
 
 ### `unloadIntegration`
 

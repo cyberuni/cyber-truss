@@ -132,10 +132,11 @@ Feature: Extension contract
 
   # ── dispatchAction ──
 
-  Scenario: no action control is offered for a binding without the actions contract
+  Scenario: dispatching on a binding without the actions contract reports no such contract
     Given a binding that lists the state contract only
-    When the host is asked what actions that binding offers
-    Then it reports an empty set of actions
+    When the host dispatches an action on that binding
+    Then it reports no such contract
+    And it sends no request to that provider
 
   Scenario: an action the domain accepts returns its result with the domain as provenance
     Given a binding listing the actions contract
@@ -159,11 +160,11 @@ Feature: Extension contract
     Then the outcome is unknown
     And the host sends that action identifier once
 
-  Scenario: answering a decision dispatches the answer to that provider and records no host approval
+  Scenario: a decision stays as its provider last reported it until that provider reports otherwise
     Given a binding whose provider has reported a decision awaiting an answer
     When the host dispatches an answer for that decision
     Then the answer is delivered to that provider as an action
-    And the host stores no approval of its own for that decision
+    And refreshing that binding still reports the decision as awaiting an answer
 
   # ── unloadIntegration ──
 
