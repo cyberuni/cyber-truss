@@ -50,6 +50,14 @@ Truss core stays independently usable.
   `capability-first`, intent mode. Truss core stays unspec'd for now.
 - **Leash**: `auto-none` — the user ratifies both gates.
 
+## Adjacent: cyber-sdd#6 (ADR-0034)
+
+Adopts colocation of the **node** spec with its subject; project spec and router index
+unchanged. Runs in parallel — it migrates nothing, and relocation is a zero-content-delta
+`git mv` that preserves `@frozen`. Do not couple this mission to it. Switch over once
+`packages/command-center/src/` exists and we know where the subject lives; handoff's
+placement pass is already the mechanism.
+
 ## NEXT
 
 Spec is scaffolded at `status: draft` with one stub behavioral node,
