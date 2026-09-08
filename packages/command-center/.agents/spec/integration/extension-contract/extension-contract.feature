@@ -162,6 +162,7 @@ Feature: Extension contract
 
   Scenario: a decision stays as its provider last reported it until that provider reports otherwise
     Given a binding whose provider has reported a decision awaiting an answer
+    And its provider accepts an action it is sent
     When the host dispatches an answer for that decision
     Then the answer is delivered to that provider as an action
     And refreshing that binding still reports the decision as awaiting an answer

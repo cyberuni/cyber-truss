@@ -162,10 +162,10 @@ outcome is unknown must not be sent again.
 | `Snapshot` as the only source of a decision's state | `dispatchAction`'s answer path — the host adds no verdict of its own |
 | `unloadIntegration(binding)` | `unloadIntegration` |
 
-**Forbidden combinations:** `refreshState` or `dispatchAction` against a binding whose
-`contracts` omit the contract being asked for. The host offers no such control, so neither
-call has a legitimate caller — and each is refused by a guard the graph carries rather than
-by prose.
+**Forbidden combinations:** `refreshState`, `resolveReference` or `dispatchAction` against a
+binding whose `contracts` omit the contract being asked for. The host offers no such control,
+so none of the three calls has a legitimate caller — and each is refused by a guard the graph
+carries rather than by prose.
 
 ## Control Flow
 
