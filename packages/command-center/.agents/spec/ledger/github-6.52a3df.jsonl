@@ -1,1 +1,4 @@
 {"seq": 1, "handle": "unional", "kind": "leash", "cr": "github-6", "leash": "auto-none", "by": "user", "blast": "high", "approach": ["contract-first", "fixture-verified"]}
+{"seq": 2, "kind": "followup", "cr": "github-6", "class": "backlog", "summary": "truss init — write and validate the repository's lattice declaration; an artifact-set with no members is valid, not an error"}
+{"seq": 3, "kind": "followup", "cr": "github-6", "class": "backlog", "summary": "an authoring skill that proposes artifact-sets from repo evidence and confirms each before the CLI writes them"}
+{"seq": 4, "kind": "followup", "cr": "github-6", "class": "backlog", "summary": "AGENTS.md Layout names docs/adr/ and the directory does not exist; backlog also cites an ADR-0001 that is not in the tree"}
