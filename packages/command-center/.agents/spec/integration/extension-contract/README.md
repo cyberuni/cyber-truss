@@ -78,14 +78,21 @@ contract unavailable.
 | Actor | Reaches it how | Goal |
 | --- | --- | --- |
 | Host author | Calls the host API | Render composed state and dispatch actions without knowing any domain |
-| Integration author (Cyberfleet, SDD, Truss core) *(stakeholder — never invokes it)* | Implements a provider | Release each area of their domain on its own schedule, and keep a fault in one area from taking the rest of their domain out of the application |
+| Integration author (Cyberfleet, SDD, Truss core) *(stakeholder — never invokes it)* | Implements a provider | Release each area of their domain on its own schedule, and keep one area's incompatibility from removing the others |
 | Council member *(stakeholder — never invokes it)* | Reads a view | Trust that what they see is current, and that answering a decision does not act twice |
 | Captain or Pod *(stakeholder — never invokes it)* | Receives a dispatched action | Never execute the same action twice because the application lost track of it |
 
 Only the host author invokes this capability. The other three are stakeholders, and the
-contract's three hardest requirements are all theirs: one area of a domain must not be able
-to take down the others, a stale snapshot must not read as live, and an action whose
-outcome is unknown must not be sent again.
+contract's three hardest requirements are all theirs: a failure must not spread past the
+thing that failed, a stale snapshot must not read as live, and an action whose outcome is
+unknown must not be sent again.
+
+**How far isolation reaches, and where it stops.** An incompatible contract is refused
+without removing the provider's other contracts, and a refused or exited provider leaves
+every other provider's binding untouched. It stops at the process: a provider's contracts
+share one process, so when that process exits, everything it carried goes stale together.
+That is a consequence of out-of-process providers, not a gap — a domain wanting two areas
+to fail independently ships two providers.
 
 ### `discoverIntegrations` — find the providers available here
 
@@ -173,8 +180,9 @@ carries rather than by prose.
 
 ```mermaid
 graph TD
-  A[discoverIntegrations] -->|no manifest| Z[zero integrations reported]
-  A -->|manifest found| Y[manifests reported]
+  A[discoverIntegrations] --> A1{any provider manifest present?}
+  A1 -->|no| Z[zero integrations reported]
+  A1 -->|yes| Y[manifests reported]
 ```
 
 ### Bind
@@ -185,7 +193,7 @@ graph TD
   B -->|no| U1[unavailable: not-started]
   B -->|yes| C{declares any capability contract?}
   C -->|no| U2[unavailable: no-contracts]
-  C -->|yes| D{per-contract version compatible?}
+  C -->|yes| D{how many declared contracts are compatible?}
   D -->|none compatible| U3[unavailable: version-mismatch]
   D -->|some compatible| E[bind the compatible subset, name the rest unavailable]
   D -->|all compatible| E
@@ -223,10 +231,11 @@ graph TD
 graph TD
   K[dispatchAction] --> L{binding carries actions contract?}
   L -->|no| M[no such contract — no request sent]
-  L -->|yes| N{domain returns?}
-  N -->|result| O[record result with provenance]
-  N -->|refusal| P[surface the domain's error, do not retry]
-  N -->|provider restarted first| Q[outcome unknown, never re-dispatched]
+  L -->|yes| N{provider still running when the outcome is due?}
+  N -->|no| Q[outcome unknown, never re-dispatched]
+  N -->|yes| N2{domain accepts the action?}
+  N2 -->|yes| O[record result with provenance]
+  N2 -->|no| P[surface the domain's error, do not retry]
 ```
 
 ### Unload
@@ -252,6 +261,7 @@ graph TD
 | Edge | Path (Given) | Scenario |
 | --- | --- | --- |
 | all compatible | a provider declaring state and actions at compatible versions | `a provider whose contracts are all compatible binds with all of them` |
+| all compatible (convergence) | another provider in the same pass was refused | `refusing one provider still binds another loaded in the same pass` |
 | some compatible | a provider with one compatible and one incompatible contract | `a provider with one incompatible contract binds without it` |
 | none compatible | a provider whose only contract is at an incompatible version | `a provider with no compatible contract is refused as a version mismatch` |
 | process does not start | a manifest whose provider command exits immediately | `a provider that does not start is reported unavailable, not absent` |
@@ -264,6 +274,7 @@ graph TD
 | --- | --- | --- |
 | contract absent from binding | a binding that lists the state contract only | `refreshing a contract absent from the binding reports nothing to refresh` |
 | snapshot reported | a bound provider that has reported a snapshot | `a reported snapshot is rendered live and carries its provider as provenance` |
+| snapshot reported (convergence) | another bound provider's process has exited | `one provider's exit does not make another provider's snapshot stale` |
 | process not alive | a bound provider whose process has exited | `a snapshot from an exited provider is kept and marked stale` |
 | restarted, nothing reported yet | a bound provider that has restarted and reported nothing since | `a restart alone never promotes a stale snapshot to live` |
 | snapshot reported | three bound providers that have each reported a snapshot | `facts from three domains keep their own provenance when held together` |
@@ -282,10 +293,10 @@ graph TD
 | Edge | Path (Given) | Scenario |
 | --- | --- | --- |
 | actions contract absent | a binding whose contracts omit actions | `dispatching on a binding without the actions contract reports no such contract` |
-| domain returns result | a binding carrying the actions contract | `an action the domain accepts returns its result with the domain as provenance` |
-| domain refuses | a binding carrying the actions contract | `an action the domain refuses surfaces the domain's error and is not retried` |
-| provider restarted in flight | an action dispatched before its provider restarted | `an action in flight across a provider restart is reported unknown and never re-dispatched` |
-| domain returns result | a binding whose provider asked for a decision | `a decision stays as its provider last reported it until that provider reports otherwise` |
+| domain accepts | a binding carrying the actions contract | `an action the domain accepts returns its result with the domain as provenance` |
+| domain does not accept | a binding carrying the actions contract | `an action the domain refuses surfaces the domain's error and is not retried` |
+| provider not running when due | an action dispatched before its provider restarted | `an action in flight across a provider restart is reported unknown and never re-dispatched` |
+| domain accepts | a binding whose provider asked for a decision | `a decision stays as its provider last reported it until that provider reports otherwise` |
 
 ### `unloadIntegration`
 

@@ -57,6 +57,12 @@ Feature: Extension contract
     Then it returns an unavailable state
     And the unavailable state gives its reason as no contracts
 
+  Scenario: refusing one provider still binds another loaded in the same pass
+    Given a provider whose only contract is at a version the host does not support
+    And a second provider declaring the state contract at a version the host supports
+    When the host loads both
+    Then the second returns a binding
+
   Scenario: the binding envelope does not vary with the declared subset
     Given a provider declaring only the state contract at a supported version
     And a second provider declaring the state, references and actions contracts at supported versions
@@ -90,6 +96,12 @@ Feature: Extension contract
     And that provider's process has restarted and reported nothing since
     When the host refreshes its state
     Then the snapshot is still marked stale
+
+  Scenario: one provider's exit does not make another provider's snapshot stale
+    Given a bound fleet provider whose process has exited
+    And a bound sdd provider that has reported a snapshot
+    When the host refreshes the sdd binding
+    Then the sdd snapshot is marked live
 
   Scenario: facts from three domains keep their own provenance when held together
     Given a bound fleet provider that has reported a completed pod
