@@ -13,9 +13,9 @@ todos:
     status: completed
   - content: Author the .feature covering load/refresh/resolve/action/unload/version-mismatch
     status: completed
+  - content: Build the walking skeleton to validate the contract before freezing
+    status: completed
   - content: Spec gate — freeze the suite
-    status: pending
-  - content: Build the fixture integration against the frozen suite
     status: pending
   - content: Impl gate, then handoff via PR closing the issue
     status: pending
@@ -71,6 +71,17 @@ soften the claim to say it is structural rather than tested. Raised by the third
 - #10 `truss init` — write and validate the lattice declaration
 - #11 the skill that decides what a repo declares
 - #12 AGENTS.md documents a docs/adr/ that does not exist
+
+## What the skeleton proved
+
+Runs in a herdr pane via `cyber-mux open`; all three views and refresh driven remotely.
+The contract survived a real out-of-process provider unchanged — the host carries a Truss
+payload it understands nothing about. Two corrections fell out of building it: the empty
+case had to be a first-class outcome rather than an error, and a TUI that only renders
+under a TTY cannot be tested, so `--view` and a non-TTY single render exist.
+
+Still unexercised by the skeleton, and therefore still unvalidated: actions, references,
+and the no-replay path. Those should not freeze on the strength of a spec alone either.
 
 ## NEXT
 
