@@ -8,11 +8,11 @@ todos:
   - content: Decide the Command Center package split and spec home
     status: completed
   - content: Record package/dependency boundaries and the three-model distinction
-    status: pending
-  - content: Draft the versioned extension contract (identity, snapshots, views, actions)
-    status: pending
-  - content: Author the .feature covering load/refresh/action-result/unload/version-mismatch
-    status: pending
+    status: completed
+  - content: Draft the versioned extension contract (references, state, actions)
+    status: completed
+  - content: Author the .feature covering load/refresh/resolve/action/unload/version-mismatch
+    status: completed
   - content: Spec gate — freeze the suite
     status: pending
   - content: Build the fixture integration against the frozen suite
@@ -60,6 +60,12 @@ placement pass is already the mechanism.
 
 ## NEXT
 
-Spec is scaffolded at `status: draft` with one stub behavioral node,
-`integration/extension-contract`. Next: the explore grill on that node — actors and goals
-first, public surface last — then the `.feature` and the spec gate.
+Draft complete at `status: draft`: 24 scenarios, six use-case groups, six control-flow
+graphs; check-suite, check-spec-state and check-spec-structure green. Two spec-judge rounds
+run — round 1 blocked on governance pre-flight, round 2 returned CHANGE and all six findings
+are answered.
+
+Loop is HELD, not converged. Two things need the user before another round:
+the `views` contract was cut (a design change they have not seen), and finding 3 named text
+the previous round introduced, which is the regression shape that calls for a re-plan rather
+than a third iteration. Leash is `auto-none`, so the spec gate is theirs to ratify.
