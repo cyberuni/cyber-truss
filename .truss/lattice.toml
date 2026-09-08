@@ -1,0 +1,112 @@
+# The lattice this repository declares.
+#
+# An artifact-set is a KIND of thing this repo intends to hold — not a list of files
+# that happen to exist. Declaring one is an act of intent, so a set may legitimately be
+# EMPTY: the intent is stated and a later change discharges it. That is how a repo
+# adopts a standard it does not yet meet.
+#
+# Emptiness is therefore an obligation on the SET, never a strain on a connection.
+# A connection between two sets is only evaluable once both are populated.
+#
+# Connections are UNDIRECTED — `between` is a pair, never a source and a target.
+
+schema = 1
+
+# ── what this repo intends to hold ───────────────────────────────────────────
+
+[[artifact-set]]
+name = "repository agent config"
+axis = "governance-target"
+controller = "deterministic-code"   # CLAUDE.md is a symlink to AGENTS.md
+members = ["AGENTS.md", "CLAUDE.md", "apps/web/AGENTS.md", ".claude/**", ".cursor/**"]
+
+[[artifact-set]]
+name = "source layout"
+axis = "governance-target"
+controller = "none"
+# The directories AGENTS.md's Layout table names — one level, not their contents.
+members = ["apps/*/", "packages/*/", "docs/*/", "scripts/"]
+
+[[artifact-set]]
+name = "cyber-truss code"
+axis = "governance-target"
+controller = "deterministic-code"   # biome, tsc
+members = ["packages/cyber-truss/src/**/*.ts", "!packages/cyber-truss/src/**/*.test.ts"]
+
+[[artifact-set]]
+name = "cyber-truss tests"
+axis = "governance-target"
+controller = "deterministic-code"   # vitest
+members = ["packages/cyber-truss/src/**/*.test.ts"]
+
+[[artifact-set]]
+name = "cyber-truss spec"
+axis = "governance-target"
+controller = "none"
+members = ["packages/cyber-truss/.agents/spec/**"]
+# Declared and unpopulated. The obligation is to backfill it.
+
+[[artifact-set]]
+name = "command-center spec"
+axis = "governance-target"
+controller = "governance"           # SDD gates
+members = ["packages/command-center/.agents/spec/**"]
+
+[[artifact-set]]
+name = "command-center code"
+axis = "governance-target"
+controller = "none"
+members = ["packages/command-center/src/**/*.ts"]
+# Declared and unpopulated. The obligation is to implement the frozen spec.
+
+[[artifact-set]]
+name = "plugin manifests"
+axis = "governance-target"
+controller = "deterministic-code"   # scripts/sync-plugin-version.mjs, on `pnpm version`
+members = [
+  "packages/cyber-truss/package.json",
+  "packages/cyber-truss/plugin.json",
+  "packages/cyber-truss/.plugin/plugin.json",
+  "packages/cyber-truss/.claude-plugin/plugin.json",
+  "packages/cyber-truss/.cursor-plugin/plugin.json",
+  "packages/cyber-truss/.codex-plugin/plugin.json",
+  ".claude-plugin/marketplace.json",
+]
+
+[[artifact-set]]
+name = "docs site"
+axis = "governance-target"
+controller = "none"
+members = ["apps/web/src/content/docs/**"]
+
+# ── what must hold between them ──────────────────────────────────────────────
+
+[[connection]]
+between = ["repository agent config", "source layout"]
+degree = "high"
+holds = "the layout AGENTS.md describes is the layout on disk"
+
+[[connection]]
+between = ["cyber-truss code", "cyber-truss tests"]
+degree = "high"
+holds = "every code unit has a test that exercises it"
+
+[[connection]]
+between = ["cyber-truss code", "cyber-truss spec"]
+degree = "high"
+holds = "the code conforms to its specification"
+
+[[connection]]
+between = ["command-center spec", "command-center code"]
+degree = "high"
+holds = "the code conforms to its specification"
+
+[[connection]]
+between = ["plugin manifests", "cyber-truss code"]
+degree = "medium"
+holds = "the manifests carry the package version and description the code ships"
+
+[[connection]]
+between = ["docs site", "cyber-truss code"]
+degree = "medium"
+holds = "the documented CLI surface is the surface the code exposes"
