@@ -58,6 +58,14 @@ unchanged. Runs in parallel — it migrates nothing, and relocation is a zero-co
 `packages/command-center/src/` exists and we know where the subject lives; handoff's
 placement pass is already the mechanism.
 
+## Open observation (routed, not acted on)
+
+The actors table names "one area of a domain must not take down the others" as one of the
+contract's three hardest requirements, but every failure scenario in the suite is
+single-provider — cross-provider fault isolation is structurally implied by per-binding
+independence, never demonstrated. Strategist-owned: either add a scenario before freeze, or
+soften the claim to say it is structural rather than tested. Raised by the third cold judge.
+
 ## NEXT
 
 Draft complete at `status: draft`: 24 scenarios, six use-case groups, six control-flow
@@ -65,7 +73,11 @@ graphs; check-suite, check-spec-state and check-spec-structure green. Two spec-j
 run — round 1 blocked on governance pre-flight, round 2 returned CHANGE and all six findings
 are answered.
 
-Loop is HELD, not converged. Two things need the user before another round:
-the `views` contract was cut (a design change they have not seen), and finding 3 named text
-the previous round introduced, which is the regression shape that calls for a re-plan rather
-than a third iteration. Leash is `auto-none`, so the spec gate is theirs to ratify.
+Three cold-judge drives run. Defect count 6 -> 4 -> 1; lenses failing 2 -> 2 -> 1; the last
+drive passed Oracle and Architect with 23 of 24 scenarios clean. All blocking findings are
+answered. Every drive found its defect in text the prior round had touched, so no drive has
+yet returned `approve` on an unchanged artifact — a fourth verification drive on the current
+files is what would establish convergence.
+
+Leash is `auto-none`: the spec gate is the user's to ratify. Awaiting their call on whether
+to run that fourth drive or gate as it stands.
