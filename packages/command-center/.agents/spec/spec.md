@@ -41,8 +41,10 @@ are `<capability>/<unit>` and never three deep; a sub-grouping inside a capabili
 
 | Contested concept | Home | Why |
 | --- | --- | --- |
-| The versioned extension contract | `integration/extension-contract` | It is the hosting capability's testable surface, not a rule; the *reasoning* behind it goes to `design/`. |
-| Unavailable / stale integration state | `integration/` | A property of hosting, surfaced by `views/`; the truth lives with the host. |
+| Obtaining and holding a provider | `integration/provider-binding` | Discovery, the handshake, per-contract compatibility, snapshot freshness, release. |
+| What travels over a binding | `integration/provider-exchange` | Following a reference, dispatching an action, and the guarantee an unknown outcome is never re-sent. |
+| Unavailable / stale integration state | `integration/provider-binding` | A property of holding a provider, surfaced by `views/`; the truth lives with the host. |
+| An in-flight action when its provider goes away | `integration/provider-exchange` | The outcome is a property of the action, not of the release — splitting it would put one decision in two nodes. |
 
 ## By concept
 

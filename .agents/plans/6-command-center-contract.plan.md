@@ -15,7 +15,11 @@ todos:
     status: completed
   - content: Build the walking skeleton to validate the contract before freezing
     status: completed
-  - content: Spec gate — freeze the suite
+  - content: Partition the node so freeze follows what a slice has exercised
+    status: completed
+  - content: Spec gate on provider-binding — freeze the exercised half
+    status: pending
+  - content: Impl gate on provider-binding against the landed code
     status: pending
   - content: Impl gate, then handoff via PR closing the issue
     status: pending
@@ -82,6 +86,21 @@ under a TTY cannot be tested, so `--view` and a non-TTY single render exist.
 
 Still unexercised by the skeleton, and therefore still unvalidated: actions, references,
 and the no-replay path. Those should not freeze on the strength of a spec alone either.
+
+## The partition
+
+One node mixing exercised and unexercised behaviour could not reach either gate: freeze is
+per file, so freezing all 26 scenarios would fail the impl gate on actions and references
+that have no implementation, and not freezing left the landed code ungated.
+
+- `integration/provider-binding` — 16 scenarios. Discovery, load, per-contract
+  compatibility, snapshot freshness, release. Every one has running code behind it.
+- `integration/provider-exchange` — 10 scenarios. References, actions, and the no-replay
+  guarantee. Unbuilt, and stays `draft` until iteration 4 exercises it.
+
+The in-flight-action-on-unload scenario moved to exchange: its outcome is a property of the
+action, not of the release, and leaving it in binding would have split one decision across
+two nodes.
 
 ## NEXT
 
