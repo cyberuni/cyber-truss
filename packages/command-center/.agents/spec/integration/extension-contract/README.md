@@ -1,6 +1,6 @@
 ---
 spec-type: behavioral
-concept: integration
+concept: [lifecycle, provenance]
 ---
 
 # Extension contract
@@ -67,14 +67,15 @@ provider that only ever reported state.
 
 | Actor | Reaches it how | Goal |
 | --- | --- | --- |
-| Integration author (Cyberfleet, SDD, Truss core) | Implements a provider | Publish their domain into the application without surrendering ownership of it |
 | Host author | Calls the host API | Render composed state and dispatch actions without knowing any domain |
+| Integration author (Cyberfleet, SDD, Truss core) *(stakeholder — never invokes it)* | Implements a provider | Have every contract they got right stay usable when one they did not is refused |
 | Council member *(stakeholder — never invokes it)* | Reads a view | Trust that what they see is current, and that answering a decision does not act twice |
 | Captain or Pod *(stakeholder — never invokes it)* | Receives a dispatched action | Never execute the same action twice because the application lost track of it |
 
-The two stakeholders invoke nothing, and both of the contract's hardest requirements are
-theirs: a stale snapshot must not read as live, and an action whose outcome is unknown must
-not be sent again.
+Only the host author invokes this capability. The other three are stakeholders, and the
+contract's three hardest requirements are all theirs: a compatible contract must not be
+refused for an incompatible sibling's sake, a stale snapshot must not read as live, and an
+action whose outcome is unknown must not be sent again.
 
 ### `discoverIntegrations` — find the providers available here
 
@@ -110,8 +111,9 @@ not be sent again.
   its own identifier. Outcome: the domain's result, the domain's error, or an explicitly
   unknown outcome.
 - **Extensions** — the domain refuses the action; the provider restarts while the action is
-  in flight; the provider was unloaded while the action was in flight; the binding does not
-  carry the `actions` contract, in which case there is no call to make.
+  in flight; the binding does not carry the `actions` contract, in which case there is no
+  call to make. Unloading during an action is `unloadIntegration`'s divergence, not this
+  one's — it is reached from that entry point.
 
 ### `unloadIntegration` — release a provider
 
@@ -175,7 +177,7 @@ graph TD
   L -->|yes| N{domain returns?}
   N -->|result| O[record result with provenance]
   N -->|refusal| P[surface the domain's error, do not retry]
-  N -->|provider restarted or unloaded first| Q[outcome unknown, never re-dispatched]
+  N -->|provider restarted first| Q[outcome unknown, never re-dispatched]
 ```
 
 ### Unload
@@ -214,7 +216,7 @@ graph TD
 | snapshot reported | a bound provider that has reported a snapshot | `a reported snapshot is rendered live and carries its provider as provenance` |
 | process not alive | a bound provider whose process has exited | `a snapshot from an exited provider is kept and marked stale` |
 | restarted, nothing reported yet | a bound provider that has restarted and reported nothing since | `a restart alone never promotes a stale snapshot to live` |
-| snapshot reported (two providers) | two bound providers that have each reported a snapshot | `facts from two providers keep their own provenance in one view` |
+| snapshot reported | two bound providers that have each reported a snapshot | `facts from two providers keep their own provenance in one view` |
 
 ### `dispatchAction`
 
