@@ -59,12 +59,18 @@ Feature: Extension contract
 
   Scenario: the binding envelope does not vary with the declared subset
     Given a provider declaring only the state contract at a supported version
-    And a second provider declaring the state, views and actions contracts at supported versions
+    And a second provider declaring the state, references and actions contracts at supported versions
     When the host loads each of them
     Then both bindings carry the same set of fields
     And each binding lists exactly the contracts its provider declared
 
   # ── refreshState ──
+
+  Scenario: refreshing a contract absent from the binding reports nothing to refresh
+    Given a binding that lists the state contract only
+    When the host refreshes the actions contract on that binding
+    Then it reports nothing to refresh
+    And it sends no request to that provider
 
   Scenario: a reported snapshot is rendered live and carries its provider as provenance
     Given a bound provider that has reported a snapshot
@@ -85,12 +91,44 @@ Feature: Extension contract
     When the host refreshes its state
     Then the snapshot is still marked stale
 
-  Scenario: facts from two providers keep their own provenance in one view
+  Scenario: facts from three domains keep their own provenance when held together
     Given a bound fleet provider that has reported a completed pod
     And a bound sdd provider that has reported a passed gate
-    When the host composes both snapshots into one view
+    And a bound truss provider that has reported a resolved obligation
+    When the host holds all three snapshots
     Then the completed pod names the fleet provider as its provenance
     And the passed gate names the sdd provider as its provenance
+    And the resolved obligation names the truss provider as its provenance
+
+  # ── resolveReference ──
+
+  Scenario: a reference into another domain resolves through that domain's binding
+    Given a bound sdd provider that recognizes a mission identifier
+    And a fleet snapshot carrying a reference to that mission identifier
+    When the host resolves that reference
+    Then the resolution is resolved
+    And the resolution names the sdd provider as its provenance
+
+  Scenario: a reference into an unbound domain is reported unresolved
+    Given a fleet snapshot carrying a reference into the truss domain
+    And no truss provider is bound
+    When the host resolves that reference
+    Then the resolution is unresolved
+    And the resolution gives its reason as no provider
+
+  Scenario: resolving through a binding without the references contract reports nothing to resolve
+    Given a bound sdd provider whose binding lists the state contract only
+    And a fleet snapshot carrying a reference into the sdd domain
+    When the host resolves that reference
+    Then it reports nothing to resolve
+    And it sends no request to that provider
+
+  Scenario: a reference the target domain does not recognize is reported unresolved
+    Given a bound truss provider that recognizes no obligation identifier
+    And a fleet snapshot carrying a reference to an obligation identifier
+    When the host resolves that reference
+    Then the resolution is unresolved
+    And the resolution gives its reason as unknown identifier
 
   # ── dispatchAction ──
 
@@ -121,10 +159,10 @@ Feature: Extension contract
     Then the outcome is unknown
     And the host sends that action identifier once
 
-  Scenario: answering a decision returns the answer to the domain and records no host approval
+  Scenario: answering a decision dispatches the answer to that provider and records no host approval
     Given a binding whose provider has reported a decision awaiting an answer
-    When a Council member answers that decision in the host
-    Then the answer is dispatched to that provider as an action
+    When the host dispatches an answer for that decision
+    Then the answer is delivered to that provider as an action
     And the host stores no approval of its own for that decision
 
   # ── unloadIntegration ──

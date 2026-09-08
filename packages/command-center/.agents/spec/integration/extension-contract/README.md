@@ -13,26 +13,27 @@ obligations are still outstanding. The application renders all three in one plac
 none of them.
 
 The **extension contract** is the agreement that makes this possible: how the application
-(the **host**) finds a domain's provider, checks it is compatible, holds a copy of what it
-reports, sends it an action, and lets it go. A provider runs as **its own process**, with
-its own lifetime — the host can be restarted without it, and it can be restarted without
-the host.
+(the **host**) finds a domain's provider, checks it is compatible, follows a fact from one
+domain into another, holds a copy of what each reports, sends one an action, and lets it
+go. A provider runs as **its own process**, with its own lifetime — the host can be
+restarted without it, and it can be restarted without the host.
 
 The contract is **not one interface**. Every provider implements a small **handshake**;
-beyond that it declares which of four **capability contracts** it implements, and the host
-uses only those. A provider that reports state but offers no actions implements the state
+beyond that it declares which **capability contracts** it implements, and the host uses
+only those. A provider that reports state but offers no actions implements the state
 contract and nothing else, and is never asked for an action it does not have.
 
 | Capability contract | What it carries |
 | --- | --- |
-| `references` | How this domain's identifiers resolve, so a view can join facts across domains |
+| `references` | How this domain's identifiers resolve, so a fact in one domain can be followed into another |
 | `state` | Snapshots of what the domain currently holds |
-| `views` | What the host may render for this domain |
 | `actions` | Actions the domain owns, and their results and errors |
 
 Each capability contract carries **its own version**. Compatibility is checked per
 contract, not once for the whole provider — otherwise a change to `actions` would refuse a
-provider that only ever reported state.
+provider that only ever reported state. A provider whose `state` is compatible and whose
+`actions` is not therefore **binds without actions**, and the binding names that one
+contract unavailable.
 
 **Key terms**
 
@@ -42,19 +43,28 @@ provider that only ever reported state.
   the domain's record.
 - **Live / stale** — whether the provider that produced a snapshot is still the running
   process the host is bound to. Time alone never changes this; neither does a restart.
-- **Unavailable** — an explicit state the host renders for a provider it could not use,
-  naming why. Distinct from a provider reporting nothing.
-- **Provenance** — which provider a rendered fact came from, carried on every snapshot.
+- **Reference** — an identifier one domain holds for a fact another domain owns. Following
+  it is the only way facts join across domains; the host never joins by guessing.
+- **Unavailable** — an explicit state the host renders for a provider, or for one contract
+  within a binding, that it could not use — naming why. Distinct from reporting nothing.
+- **Provenance** — which provider a rendered fact came from, carried on every snapshot,
+  resolution and action outcome.
 
 ### Non-goals
 
 - **Capability negotiation.** A provider carries its own dependencies, so installing it is
   acquiring the capability. No capability vocabulary, no `requires[]`, no `blocked` state
-  (`docs/backlog.md`, *Settled — do not re-derive*).
+  (`docs/backlog.md`, *Settled — do not re-derive*). Refusing one incompatible contract is
+  not negotiation: the host omits it rather than adapting to it.
 - **A second copy of any authoritative model.** The host holds snapshots, never a mission
   graph, an ownership record, or an obligation store of its own.
 - **Approval by rendering.** Showing a control is not granting one. The answer goes back
   to the domain that asked; the host records no verdict.
+- **A `views` contract.** An earlier draft declared one. Nothing here needs it: the host
+  renders from `state` and follows `references`, and no use case yet asks a provider what
+  it may render. Whether renderable views are a distinct area from state is a question the
+  Command Center TUI (cyber-truss#8) will answer; declaring the contract before then is a
+  commitment made before it has to be.
 - **The Truss controller/probe contract.** That governs repository state continuously and
   is a different contract with a different lifetime. This one binds an application to a
   provider for as long as the application is open. They are not interchangeable, and
@@ -68,14 +78,14 @@ provider that only ever reported state.
 | Actor | Reaches it how | Goal |
 | --- | --- | --- |
 | Host author | Calls the host API | Render composed state and dispatch actions without knowing any domain |
-| Integration author (Cyberfleet, SDD, Truss core) *(stakeholder — never invokes it)* | Implements a provider | Have every contract they got right stay usable when one they did not is refused |
+| Integration author (Cyberfleet, SDD, Truss core) *(stakeholder — never invokes it)* | Implements a provider | Release each area of their domain on its own schedule, and keep a fault in one area from taking the rest of their domain out of the application |
 | Council member *(stakeholder — never invokes it)* | Reads a view | Trust that what they see is current, and that answering a decision does not act twice |
 | Captain or Pod *(stakeholder — never invokes it)* | Receives a dispatched action | Never execute the same action twice because the application lost track of it |
 
 Only the host author invokes this capability. The other three are stakeholders, and the
-contract's three hardest requirements are all theirs: a compatible contract must not be
-refused for an incompatible sibling's sake, a stale snapshot must not read as live, and an
-action whose outcome is unknown must not be sent again.
+contract's three hardest requirements are all theirs: one area of a domain must not be able
+to take down the others, a stale snapshot must not read as live, and an action whose
+outcome is unknown must not be sent again.
 
 ### `discoverIntegrations` — find the providers available here
 
@@ -90,18 +100,29 @@ action whose outcome is unknown must not be sent again.
 - **Actor / goal** — host author; obtain a usable binding, or a reason there is none.
 - **Entry point** — called with one manifest. Inputs: a manifest. Outcome: a binding
   naming the capability contracts the host may use, or an unavailable state naming why not.
-- **Extensions** — the provider process does not start; a capability contract's version is
-  incompatible; every declared contract is incompatible; the provider declares no capability
-  contract at all.
+- **Extensions** — the provider process does not start; one capability contract's version
+  is incompatible while another's is not; every declared contract is incompatible; the
+  provider declares no capability contract at all.
 
 ### `refreshState` — take a snapshot from a bound provider
 
 - **Actor / goal** — host author; hold something current enough to render, and know when it
   is not.
-- **Entry point** — called with a binding and a capability contract. Inputs: a binding.
-  Outcome: a snapshot carrying its provenance and its freshness.
-- **Extensions** — the provider process has exited; the provider has restarted and not yet
-  reported; two providers' snapshots are joined into one view.
+- **Entry point** — called with a binding and a capability contract. Inputs: a binding, a
+  contract. Outcome: a snapshot carrying its provenance and its freshness.
+- **Extensions** — the binding does not carry the requested contract; the provider process
+  has exited; the provider has restarted and not yet reported; several providers' snapshots
+  are held at once.
+
+### `resolveReference` — follow a fact into the domain that owns it
+
+- **Actor / goal** — host author; show one domain's fact alongside the other domain's fact
+  it points at, without the host inventing the join.
+- **Entry point** — called with a reference taken from a snapshot. Inputs: a reference
+  naming a target domain and an identifier. Outcome: the target domain's own record for it,
+  carrying that domain as provenance, or an explicit unresolved state.
+- **Extensions** — no provider for the target domain is bound; the target binding does not
+  carry the `references` contract; the target domain does not recognize the identifier.
 
 ### `dispatchAction` — ask a domain to do something it owns
 
@@ -129,31 +150,44 @@ action whose outcome is unknown must not be sent again.
 | `discoverIntegrations(dir)` | `discoverIntegrations` |
 | `loadIntegration(manifest)` | `loadIntegration` |
 | `Unavailable.reason` (`not-started` \| `version-mismatch` \| `no-contracts`) | `loadIntegration` extensions |
-| `Binding.contracts` — the compatible declared subset | `loadIntegration`, and the bar on `dispatchAction` |
+| `Binding.contracts` — the compatible declared subset | `loadIntegration`, and the bars on `refreshState` and `dispatchAction` |
+| `Binding.unavailable[]` — each declared contract the host could not use, with its reason | `loadIntegration`'s one-incompatible-contract extension |
 | `refreshState(binding, contract)` | `refreshState` |
-| `Snapshot.provenance` | `refreshState`, and the Council member's goal |
+| `Snapshot.provenance` | `refreshState`, `resolveReference`, and the Council member's goal |
 | `Snapshot.freshness` (`live` \| `stale`) | `refreshState` extensions |
+| `Reference` — a target domain and an identifier | `resolveReference` |
+| `resolveReference(reference)` | `resolveReference` |
+| `Resolution` (`resolved` \| `unresolved`) | `resolveReference` extensions |
 | `dispatchAction(binding, action)` | `dispatchAction` |
 | `ActionOutcome` (`result` \| `domain-error` \| `unknown`) | `dispatchAction` extensions |
 | `unloadIntegration(binding)` | `unloadIntegration` |
 
-**Forbidden combination:** `dispatchAction` against a binding whose `contracts` omit
-`actions`. The host offers no such control, so the call has no legitimate caller.
+**Forbidden combinations:** `refreshState` or `dispatchAction` against a binding whose
+`contracts` omit the contract being asked for. The host offers no such control, so neither
+call has a legitimate caller — and each is refused by a guard the graph carries rather than
+by prose.
 
 ## Control Flow
+
+### Discover
+
+```mermaid
+graph TD
+  A[discoverIntegrations] -->|no manifest| Z[zero integrations reported]
+  A -->|manifest found| Y[manifests reported]
+```
 
 ### Bind
 
 ```mermaid
 graph TD
-  A[discoverIntegrations] -->|no manifest| Z[zero integrations reported]
-  A -->|manifest found| B{provider process starts?}
+  B{provider process starts?}
   B -->|no| U1[unavailable: not-started]
   B -->|yes| C{declares any capability contract?}
   C -->|no| U2[unavailable: no-contracts]
   C -->|yes| D{per-contract version compatible?}
   D -->|none compatible| U3[unavailable: version-mismatch]
-  D -->|some compatible| E[bind the compatible subset]
+  D -->|some compatible| E[bind the compatible subset, name the rest unavailable]
   D -->|all compatible| E
 ```
 
@@ -161,11 +195,26 @@ graph TD
 
 ```mermaid
 graph TD
-  F[refreshState] --> G{provider process alive?}
+  F[refreshState] --> F1{binding carries the requested contract?}
+  F1 -->|no| F2[nothing to refresh]
+  F1 -->|yes| G{provider process alive?}
   G -->|no| H[keep last snapshot, mark stale]
   G -->|yes| I{snapshot reported since bind or restart?}
   I -->|no| H
   I -->|yes| J[replace snapshot, mark live, carry provenance]
+```
+
+### References
+
+```mermaid
+graph TD
+  K1[resolveReference] --> K2{target domain bound?}
+  K2 -->|no| K3[unresolved: no provider]
+  K2 -->|yes| K4{binding carries references contract?}
+  K4 -->|no| K5[nothing to resolve]
+  K4 -->|yes| K6{target domain recognizes the identifier?}
+  K6 -->|no| K7[unresolved: unknown identifier]
+  K6 -->|yes| K8[resolved, carrying the target domain as provenance]
 ```
 
 ### Action
@@ -202,21 +251,31 @@ graph TD
 
 | Edge | Path (Given) | Scenario |
 | --- | --- | --- |
-| process starts → contracts declared → all compatible | a provider declaring state and actions at compatible versions | `a provider whose contracts are all compatible binds with all of them` |
-| process starts → contracts declared → some compatible | a provider whose actions version is incompatible and state version is not | `a provider with one incompatible contract binds without it` |
+| all compatible | a provider declaring state and actions at compatible versions | `a provider whose contracts are all compatible binds with all of them` |
+| some compatible | a provider with one compatible and one incompatible contract | `a provider with one incompatible contract binds without it` |
 | none compatible | a provider whose only contract is at an incompatible version | `a provider with no compatible contract is refused as a version mismatch` |
 | process does not start | a manifest whose provider command exits immediately | `a provider that does not start is reported unavailable, not absent` |
-| no contract declared | a provider that completes the handshake and declares no capability contract | `a provider declaring no capability contract is refused` |
+| no contract declared | a provider that completes the handshake and declares an empty contract list | `a provider declaring no capability contract is refused` |
 | bind (convergence) | any provider that binds, whatever subset it declares | `the binding envelope does not vary with the declared subset` |
 
 ### `refreshState`
 
 | Edge | Path (Given) | Scenario |
 | --- | --- | --- |
+| contract absent from binding | a binding that lists the state contract only | `refreshing a contract absent from the binding reports nothing to refresh` |
 | snapshot reported | a bound provider that has reported a snapshot | `a reported snapshot is rendered live and carries its provider as provenance` |
 | process not alive | a bound provider whose process has exited | `a snapshot from an exited provider is kept and marked stale` |
 | restarted, nothing reported yet | a bound provider that has restarted and reported nothing since | `a restart alone never promotes a stale snapshot to live` |
-| snapshot reported | two bound providers that have each reported a snapshot | `facts from two providers keep their own provenance in one view` |
+| snapshot reported | three bound providers that have each reported a snapshot | `facts from three domains keep their own provenance when held together` |
+
+### `resolveReference`
+
+| Edge | Path (Given) | Scenario |
+| --- | --- | --- |
+| identifier recognized | a fleet snapshot carrying a reference into the sdd domain | `a reference into another domain resolves through that domain's binding` |
+| target domain not bound | a fleet snapshot carrying a reference into an unbound domain | `a reference into an unbound domain is reported unresolved` |
+| references contract absent | a target binding that lists the state contract only | `resolving through a binding without the references contract reports nothing to resolve` |
+| identifier not recognized | a truss binding that does not recognize an obligation identifier | `a reference the target domain does not recognize is reported unresolved` |
 
 ### `dispatchAction`
 
@@ -226,7 +285,7 @@ graph TD
 | domain returns result | a binding carrying the actions contract | `an action the domain accepts returns its result with the domain as provenance` |
 | domain refuses | a binding carrying the actions contract | `an action the domain refuses surfaces the domain's error and is not retried` |
 | provider restarted in flight | an action dispatched before its provider restarted | `an action in flight across a provider restart is reported unknown and never re-dispatched` |
-| domain returns result | a binding whose provider asked for a decision | `answering a decision returns the answer to the domain and records no host approval` |
+| domain returns result | a binding whose provider asked for a decision | `answering a decision dispatches the answer to that provider and records no host approval` |
 
 ### `unloadIntegration`
 
