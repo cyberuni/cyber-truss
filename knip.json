@@ -1,6 +1,6 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
-	"ignore": ["docs/prototypes/**"],
+	"ignore": ["docs/prototypes/**", "packages/command-center/providers/**"],
 	"workspaces": {
 		"packages/cyber-truss": {
 			"project": ["src/**/*.ts"]
