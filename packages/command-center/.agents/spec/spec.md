@@ -2,6 +2,8 @@
 name: command-center
 status: draft
 project-path: packages/command-center
+produced-by:
+  spec-producer: sdd:inline-conductor
 ---
 
 # Command Center
