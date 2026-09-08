@@ -1,0 +1,57 @@
+---
+cr-ref: github-6
+source: https://github.com/cyberuni/cyber-truss/issues/6
+status: active
+todos:
+  - content: Bootstrap the SDD project spec (no corpus exists in this repo)
+    status: completed
+  - content: Decide the Command Center package split and spec home
+    status: completed
+  - content: Record package/dependency boundaries and the three-model distinction
+    status: pending
+  - content: Draft the versioned extension contract (identity, snapshots, views, actions)
+    status: pending
+  - content: Author the .feature covering load/refresh/action-result/unload/version-mismatch
+    status: pending
+  - content: Spec gate — freeze the suite
+    status: pending
+  - content: Build the fixture integration against the frozen suite
+    status: pending
+  - content: Impl gate, then handoff via PR closing the issue
+    status: pending
+---
+
+# github-6 — Command Center application boundaries and versioned extension contract
+
+First Foundations item of initiative [#5](https://github.com/cyberuni/cyber-truss/issues/5).
+CR source: [#6](https://github.com/cyberuni/cyber-truss/issues/6).
+
+## Scope
+
+Establish the application-facing contract Cyberfleet and SDD integrations bind to, before
+either depends on a host API. Command Center is a separate application package here;
+Truss core stays independently usable.
+
+## Constraints carried in from `docs/backlog.md`
+
+- Plugins carry their own dependencies — no capability vocabulary, no `requires[]`, no
+  `blocked` status (*Settled — do not re-derive*).
+- Not an MCP server.
+- The Truss controller/probe contract (C1/C7) is a **different** contract from the
+  Command Center extension contract; relate them, do not merge them.
+- Open decision 1 (plugin discovery: `package.json` key vs `.agents/universal-plugin.json`)
+  is adjacent and unresolved; #6 must say how it relates without settling it by accident.
+
+## Settled
+
+- **One package**, `packages/command-center`, with the contract reached through a subpath
+  export. Reversible until the first external provider ships.
+- **Spec home**: colocated at `packages/command-center/.agents/spec/`, strategy
+  `capability-first`, intent mode. Truss core stays unspec'd for now.
+- **Leash**: `auto-none` — the user ratifies both gates.
+
+## NEXT
+
+Spec is scaffolded at `status: draft` with one stub behavioral node,
+`integration/extension-contract`. Next: the explore grill on that node — actors and goals
+first, public surface last — then the `.feature` and the spec gate.
