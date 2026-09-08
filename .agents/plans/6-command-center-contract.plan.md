@@ -66,6 +66,12 @@ single-provider — cross-provider fault isolation is structurally implied by pe
 independence, never demonstrated. Strategist-owned: either add a scenario before freeze, or
 soften the claim to say it is structural rather than tested. Raised by the third cold judge.
 
+## Filed follow-ups
+
+- #10 `truss init` — write and validate the lattice declaration
+- #11 the skill that decides what a repo declares
+- #12 AGENTS.md documents a docs/adr/ that does not exist
+
 ## NEXT
 
 Draft complete at `status: draft`: 24 scenarios, six use-case groups, six control-flow
