@@ -3,9 +3,8 @@ title: What is cyber-truss
 description: A change reaches everything it must and no further, and the system settles back into a consistent state.
 ---
 
-cyber-truss makes a system self-converging: a change landing anywhere redistributes
-through whatever is coupled to it, and settling back into a consistent state is the path
-of least resistance.
+cyber-truss makes a system self-converging: after a change, settling back into a
+consistent state is the path of least resistance.
 
 ## The pitch
 
