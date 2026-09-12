@@ -102,6 +102,22 @@ real mechanism where there was previously only a requirement, but it relocates t
 rather than removing it: criteria derived from a misread intent are wrong in the same
 direction as everything downstream of them. Whether the relocation is enough is unresolved.
 
+## Which strain does an implementation ahead of its specification leave?
+
+The [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain) are
+defined from the specification's side: an implementation incomplete against its
+specification, a specification obliging an implementation elsewhere, criteria unsatisfied
+on a cold repository. Free entry makes the reverse the common case. A developer fixes the
+code and the specification is the side left behind.
+
+It is not clear which kind that strain is, or whether it is one of the three at all. The
+[bug fixed directly in code](/cyber-truss/examples/software-bug-fix/) example hits this in
+both variants: where the specification states the wrong rule, and where it states no rule.
+
+**What breaks if it resolves badly:** selection starts from strain, so a change the kinds
+cannot name selects nothing. Code-first changes are the case the model exists to make
+safe.
+
 ## Where does the controller interface sit?
 
 Controllers span a spectrum from agent definition to deterministic code. What they have
