@@ -20,15 +20,16 @@ a PRD, then a design doc, then a specification, and finally the code. You commit
 specification before you have touched the code, and what the implementation teaches you
 never travels back up.
 
-Or you find the problem yourself, in the code, and you fix it. What you leave behind is
-the PRD that still describes the old behaviour, the spec that now contradicts the code,
-the mockups nobody redrew, and the ticket that was never opened. The fix shipped and the
+Or you find the problem yourself in the code and fix it. What you leave behind is
+the PRD that still describes the old behaviour, the mockups nobody redrew, and the ticket that was never opened. The fix shipped and the
 system around it disagrees with itself.
 
 Both paths end in the same place.
 
-cyber-truss lets you make the change where you understand it and get the rest anyway. That
-change [strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
+cyber-truss lets you make the change where you understand it and get the rest anyway. It
+can do that because the relations between a system's parts are written down, not left to
+whoever remembers them. That change
+[strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
 [connections](/cyber-truss/model/connections/) it crosses, because a connection states a
 relation between two [artifact-sets](/cyber-truss/model/artifact-sets/) that has to hold,
 and it no longer does.
