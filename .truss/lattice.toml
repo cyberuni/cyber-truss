@@ -1,0 +1,197 @@
+# The lattice this repository declares.
+#
+# An artifact-set is a KIND of thing this repo intends to hold — not a list of files
+# that happen to exist. Declaring one is an act of intent, so a set may legitimately be
+# EMPTY: the intent is stated and a later change discharges it. That is how a repo
+# adopts a standard it does not yet meet.
+#
+# Emptiness is therefore an obligation on the SET, never a strain on a connection.
+# A connection between two sets is only evaluable once both are populated.
+#
+# Connections are UNDIRECTED — `between` is a pair, never a source and a target.
+#
+# ── the two axes ─────────────────────────────────────────────────────────────
+#
+# `axis` says which grouping a set is, and the two are orthogonal — a group on one
+# need not be a group on the other. The tell is what the set is asked:
+#
+#   unit-of-change     artifacts that must move together for a change to be complete.
+#                      Delta-driven, meaningless without a change: DID THIS LAND
+#                      EVERYWHERE IT HAD TO? Members are heterogeneous — different
+#                      kinds bound by one commit. Strain here is incompleteness
+#                      (within one unit) or obligation (across two).
+#
+#   governance-target  artifacts the same criteria apply to. State-driven, needs no
+#                      diff: DOES THIS CONFORM TO WHAT GOVERNS IT? Members are
+#                      homogeneous — one criterion over all of them. Strain here is
+#                      nonconformance.
+#
+# The same files appear on both axes, for unrelated reasons, and that overlap is the
+# model working rather than a modelling error. `{code, test}` is one unit of change —
+# code that lands without its tests is not a smaller change, it is an incomplete one —
+# while code and tests are two SEPARATE governance targets, because tsc and biome hold
+# the code and vitest holds the tests to criteria that are not the same criteria.
+#
+# Note which sets have controllers. Every governance target below has one, and most are
+# good. The unit-of-change sets have `controller = "none"` almost throughout — nothing
+# in this repository holds artifacts together across a commit. That is the hole the
+# model exists to name, visible in this file as a column of "none".
+
+schema = 1
+
+# ── what must move together (axis 1) ─────────────────────────────────────────
+
+[[artifact-set]]
+name = "cyber-truss implementation"
+axis = "unit-of-change"
+controller = "none"
+# The canonical `{code, test}` unit. Held as ONE set on purpose: split them and the
+# connection between has to be traversed from an end, which is test-first (TDD) or
+# code-first (tests that reach for what the code does, never for what it must never
+# do). One set has no traversal order, so the question does not arise.
+members = ["packages/cyber-truss/src/**/*.ts"]
+
+[[artifact-set]]
+name = "cyber-truss spec"
+axis = "unit-of-change"
+controller = "none"
+members = ["packages/cyber-truss/.agents/spec/**"]
+# Declared and unpopulated. The obligation is to backfill it.
+
+[[artifact-set]]
+name = "command-center spec"
+axis = "unit-of-change"
+controller = "governance"           # SDD gates
+members = ["packages/command-center/.agents/spec/**"]
+
+[[artifact-set]]
+name = "command-center implementation"
+axis = "unit-of-change"
+controller = "none"
+# `{code, test}` again — the tests live beside the code they exercise, so one glob
+# covers the unit.
+members = ["packages/command-center/src/**/*.ts"]
+
+[[artifact-set]]
+name = "command-center providers"
+axis = "unit-of-change"
+controller = "none"
+# A provider and its registration are one commit: shipping the implementation without
+# registering it leaves the host unable to bind it, and registering one that does not
+# exist fails at startup. Neither half is coherent alone.
+members = ["packages/command-center/providers/**", ".command-center/providers.json"]
+
+[[artifact-set]]
+name = "plugin components"
+axis = "unit-of-change"
+controller = "none"
+# The model's headline case for incompleteness strain: add a skill, also wire the manifests and the
+# `files` list, in that one commit.
+members = [
+  "packages/cyber-truss/skills/**",
+  "packages/cyber-truss/commands/**",
+  "packages/cyber-truss/agents/**",
+]
+# Declared and unpopulated, and the emptiness is already inconsistent with what ships:
+# `packages/cyber-truss/package.json` lists "skills" in `files`. The obligation is to
+# ship the components the package manifest already promises, or stop promising them.
+
+# ── what the same criteria govern (axis 2) ───────────────────────────────────
+
+[[artifact-set]]
+name = "repository agent config"
+axis = "governance-target"
+controller = "deterministic-code"   # CLAUDE.md is a symlink to AGENTS.md
+members = ["AGENTS.md", "CLAUDE.md", "apps/web/AGENTS.md", ".claude/**", ".cursor/**"]
+
+[[artifact-set]]
+name = "source layout"
+axis = "governance-target"
+controller = "none"
+# The directories AGENTS.md's Layout table names — one level, not their contents.
+members = ["apps/*/", "packages/*/", "docs/*/", "scripts/"]
+
+[[artifact-set]]
+name = "cyber-truss code"
+axis = "governance-target"
+controller = "deterministic-code"   # biome, tsc
+# Crosses "cyber-truss implementation" and refines neither: that set asks whether the
+# change landed everywhere, this one asks whether the code conforms, cold.
+members = ["packages/cyber-truss/src/**/*.ts", "!packages/cyber-truss/src/**/*.test.ts"]
+
+[[artifact-set]]
+name = "cyber-truss tests"
+axis = "governance-target"
+controller = "deterministic-code"   # vitest
+members = ["packages/cyber-truss/src/**/*.test.ts"]
+
+[[artifact-set]]
+name = "plugin manifests"
+axis = "governance-target"
+controller = "deterministic-code"   # scripts/sync-plugin-version.mjs, on `pnpm version`
+members = [
+  "packages/cyber-truss/package.json",
+  "packages/cyber-truss/plugin.json",
+  "packages/cyber-truss/.plugin/plugin.json",
+  "packages/cyber-truss/.claude-plugin/plugin.json",
+  "packages/cyber-truss/.cursor-plugin/plugin.json",
+  "packages/cyber-truss/.codex-plugin/plugin.json",
+  ".claude-plugin/marketplace.json",
+]
+
+[[artifact-set]]
+name = "docs site"
+axis = "governance-target"
+controller = "none"
+members = ["apps/web/src/content/docs/**"]
+
+# ── what must hold between them ──────────────────────────────────────────────
+#
+# A connection between two unit-of-change sets carries OBLIGATION strain — the two ends
+# land in different commits by design, so the debt is created now and discharged later.
+# A connection reaching a governance target carries NONCONFORMANCE strain, evaluable on a
+# cold repository. Incompleteness strain is intra-unit and needs no connection to state.
+
+[[connection]]
+between = ["repository agent config", "source layout"]
+degree = "high"
+holds = "the layout AGENTS.md describes is the layout on disk"
+
+[[connection]]
+between = ["cyber-truss code", "cyber-truss tests"]
+degree = "high"
+holds = "every code unit has a test that exercises it"
+# Coverage, between two governance targets. It says nothing about whether the two
+# landed together — that is the unit-of-change set, and no controller holds it.
+
+[[connection]]
+between = ["cyber-truss spec", "cyber-truss implementation"]
+degree = "high"
+holds = "the code conforms to its specification"
+
+[[connection]]
+between = ["command-center spec", "command-center implementation"]
+degree = "high"
+holds = "the code conforms to its specification"
+# The SDD instance: a spec unit and an implementation unit, discharged at the impl
+# gate. Obligation strain is what the spec gate creates and the impl gate settles.
+
+[[connection]]
+between = ["command-center providers", "command-center implementation"]
+degree = "high"
+holds = "every registered provider satisfies the contract the host binds against"
+
+[[connection]]
+between = ["plugin components", "plugin manifests"]
+degree = "high"
+holds = "every component the package ships is declared in the manifests and listed in `files`"
+
+[[connection]]
+between = ["plugin manifests", "cyber-truss code"]
+degree = "medium"
+holds = "the manifests carry the package version and description the code ships"
+
+[[connection]]
+between = ["docs site", "cyber-truss code"]
+degree = "medium"
+holds = "the documented CLI surface is the surface the code exposes"

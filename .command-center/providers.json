@@ -1,0 +1,9 @@
+{
+	"providers": [
+		{
+			"name": "truss",
+			"command": "node",
+			"args": ["packages/command-center/providers/truss/provider.mjs"]
+		}
+	]
+}

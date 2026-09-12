@@ -1,0 +1,41 @@
+{
+	"name": "@cyberuni/command-center",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Observe projects, coordinate work, and answer requests without taking over the session",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		},
+		"./contract": {
+			"import": "./dist/contract.js",
+			"types": "./dist/contract.d.ts"
+		}
+	},
+	"bin": {
+		"command-center": "./dist/cli.js"
+	},
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"providers"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsx src/cli.ts",
+		"test": "vitest run src",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@types/node": "^25.9.1",
+		"tsdown": "^0.22.14",
+		"tsx": "^4.23.8",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.10"
+	},
+	"engines": {
+		"node": ">=22"
+	}
+}
