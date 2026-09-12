@@ -235,6 +235,20 @@ Blocked on Open decision 3 for the cross-repo half. The in-repo half — an inco
 dependency graph under selective test selection — is computable today, and is the
 cheaper place to test the model.
 
+**C11. Chain of custody across cycles. Later enhancement, not MVP.** Came out of the
+bug-fix example on 2026-09-12. Selected workflows run in an order nobody controls, and
+when their results disagree further cycles run
+([Order is not controlled](https://cyberuni.github.io/cyber-truss/model/canonical-execution/#order-is-not-controlled)).
+One change can then span several cycles, some of them waiting on people. The ledger
+should record the chain: the intent, each cycle's workflows and Requests, their deltas,
+the comparison outcomes, and which parts a human authored rather than a replay produced.
+From that record the whole change can be summarized for a human to review as one thing,
+not as a trail of separate commits.
+
+Depends on the open question of
+[what vehicle holds pending Requests](https://cyberuni.github.io/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests).
+The MVP can run cycles without recording the chain.
+
 ## D. Parked design notes
 
 **D1. Rungs.** A check is bounded by what it needs to exist: *declared* (source text),
