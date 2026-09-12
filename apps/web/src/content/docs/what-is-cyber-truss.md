@@ -22,10 +22,10 @@ commit to the specification before you have touched the code, and what the imple
 teaches you never travels back up. The documents exist. They stopped being true somewhere
 around step three.
 
-Or you find the problem yourself, in the code, and you fix it. That takes an afternoon.
-What you leave behind is the PRD that still describes the old behaviour, the spec that now
-contradicts the code, the mockups nobody redrew, and the ticket that was never opened. The
-fix shipped and the system around it disagrees with itself.
+Or you find the problem yourself, in the code, and you fix it. What you leave behind is
+the PRD that still describes the old behaviour, the spec that now contradicts the code,
+the mockups nobody redrew, and the ticket that was never opened. The fix shipped and the
+system around it disagrees with itself.
 
 Both paths end in the same place, and cheap document generation makes it worse rather than
 better: more artifacts, drafted faster, going stale at the same rate.
