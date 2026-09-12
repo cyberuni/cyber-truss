@@ -15,6 +15,7 @@ export default defineConfig({
 				},
 			],
 			sidebar: [
+				{ label: 'What is cyber-truss', link: '/what-is-cyber-truss/' },
 				{ label: 'Getting Started', link: '/getting-started/' },
 				{
 					label: 'The lattice model',
