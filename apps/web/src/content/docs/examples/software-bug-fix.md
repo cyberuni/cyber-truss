@@ -72,17 +72,26 @@ down, plus one. That rule is the bug.
 5. **Select.** Feature delivery spans the first connection and design implementation
    spans the second. Both are selected.
 6. **Replay.** Feature delivery translates the intent into a Request at its starting point,
-   amends the spec's criteria, and derives code and tests. Design implementation
+   `{PRD}`. The PRD is too coarse to hold a page-count rule, so the Request
+   [passes through](/cyber-truss/model/canonical-execution/#a-replay-starts-at-the-workflows-start)
+   to `{spec}`, which amends its criteria, and code and tests are derived. Design implementation
    translates the same intent into a Request at `{mockups}`, amends the page indicator, and
    derives the rendering code.
 7. **Compare.** The developer's fix matches on exact multiples. It does not handle the
    empty list, which the criteria name and the fix never considered. The comparison
    reports an improvement to the change.
 8. **Propagate.** The amended spec now disagrees with `{user docs}`, which states the old
-   page count, so docs update is selected and replays under the original intent. Whether
-   `{spec}` to `{mockups}` is strained depends on which replay finished first. If design
-   implementation already amended the mockups, the relation holds. If not, design update
-   is selected as well.
+   page count, so docs update is selected and replays under the original intent. The rest
+   depends on which replay finishes first, and that
+   [is not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled).
+   - If feature delivery finishes first, the amended spec disagrees with the mockups.
+     Design update is selected in another cycle and amends the page indicator, which design
+     implementation has done or will do the same way.
+   - If design implementation finishes first, the amended mockups disagree with the old
+     spec. Design update is selected, and its Request at `{spec}` amends the criteria that
+     feature delivery amends too.
+
+   Either order takes one extra cycle and settles in the same state.
 
 ### Settled state
 
@@ -91,18 +100,14 @@ down, plus one. That rule is the bug.
 - `{code, test}` implements both, with tests for an exact multiple and an empty list.
 - `{user docs}` and `{mockups}` match the spec.
 
-### Status: Unresolved
+### Status: Holds
 
-The run reaches the right state, but step 6 depends on two questions the model has not
-answered.
-
-- Feature delivery starts at `{PRD}`, and the PRD has nothing to amend. Whether replay
-  starts at the workflow's declared start, or at the highest node the intent actually
-  changes, depends on what a workflow's shape is allowed to be.
-- Two workflows derive `{code, test}`, one through the spec and one through the mockups.
-  The settled state needs their results to combine into one implementation, and step 8
-  shows that the set of selected workflows depends on the order they run in. See
-  [Does an intent determine one set of workflows?](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows)
+Both orders in step 8 reconcile after one extra cycle, because every workflow derives
+against the same criteria and none of them adds anything the Request did not ask for. That
+is the easy case. If the design review in step 8 returned a new design, the workflows
+would disagree and further cycles would run, and whether those cycles settle in one state
+is still
+[open](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows).
 
 ## Variant B: the spec says nothing about the boundary
 
@@ -148,9 +153,11 @@ fourth kind or as a condition distillation reports.
   specification. The kinds are defined from the specification's side, and it is not clear
   which kind this strain is.
 - A triangle of connections. `{spec}` reaches `{code, test}` directly and through
-  `{mockups}`, so two workflows derive the same code from one intent. That is where
-  [plural selection](/cyber-truss/model/canonical-execution/#workflow-selection-not-injection-depth)
-  has to combine results.
+  `{mockups}`, so two workflows derive the same code from one intent, in an order nobody
+  chooses. Variant A is the case where the orders reconcile.
+- [A replay starts at the workflow's start](/cyber-truss/model/canonical-execution/#a-replay-starts-at-the-workflows-start).
+  Feature delivery visits `{PRD}` and passes through it, and the settled state leaves the
+  PRD unchanged.
 - Obligations and tickets. The what-is story mentions a ticket that was never opened. In
   the [workflow catalog](/cyber-truss/model/workflows/) a follow-up ticket is how a team
   records an obligation, not an artifact-set, so this example leaves it out.
