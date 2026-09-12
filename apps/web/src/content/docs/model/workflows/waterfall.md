@@ -149,8 +149,8 @@ change request, and route it back through the gate.
 
 Under [canonical execution](/cyber-truss/model/canonical-execution/) that restriction
 becomes unnecessary — while every gate it was protecting stays intact. The developer
-changes what they can see. The change is lifted, distilled to a Request, and **replayed
-through the waterfall workflow from its own starting point**. Requirements are amended
+changes what they can see. The change is lifted and distilled to its intent, which the
+waterfall workflow translates into a Request and **replays from its own starting point**. Requirements are amended
 first, design follows, implementation follows — in order, through every gate, with every
 sign-off performed.
 

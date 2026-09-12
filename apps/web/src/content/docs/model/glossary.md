@@ -60,9 +60,10 @@ a discharge point. One of the four parameters of a [formal workflow](#formal-wor
 
 ### Distillation
 
-Reducing an arriving change to a [Request](#request) plus every workflow that applies —
-separating intent from the particular expression of it. Irreducibly agentic, and the step
-that carries the confluence guarantee. See
+Reducing an arriving change to its [intent](#intent), separated from the particular
+expression of it. Produces nothing workflow-shaped: each workflow owns its own
+[Request](#request). Irreducibly agentic, and the step that carries the confluence
+guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
 
 ### Formal workflow
@@ -90,7 +91,8 @@ and it blocks. See [three kinds of strain](/cyber-truss/model/connections/#three
 ### Intent
 
 The half of a [specification](#specification) stating what the thing is for and which
-direction it should move in. Argued with, not evaluated.
+direction it should move in. Argued with, not evaluated. An arriving change carries intent
+too, and [distillation](#distillation) is what separates it from the change's expression.
 
 ### Lattice
 
@@ -115,8 +117,17 @@ it does not contain. Does not block, must be tracked, and can be **declined**.
 
 ### Request
 
-The distilled intent behind an arriving change, separated from its particular expression.
-Two different expressions of one intent must distil to the same Request.
+A distilled [intent](#intent) translated into one workflow's vocabulary, at that
+workflow's starting point. Owned by the workflow, not by distillation. One workflow given
+the same intent must produce the same Request. See
+[Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent).
+
+### Selection
+
+Finding the workflows a change needs: those whose span covers a strained connection, with
+intent breaking ties where several span the same one. Extended as replays strain
+connections further out. See
+[How workflows are selected](/cyber-truss/model/canonical-execution/#how-workflows-are-selected).
 
 ### Specification
 

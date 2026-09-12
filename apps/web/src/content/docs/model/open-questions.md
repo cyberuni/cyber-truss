@@ -12,14 +12,14 @@ adopting the vocabulary needs to know which parts may move.
 
 Ordered by how much depends on the answer.
 
-## Does a Request determine one set of workflows?
+## Does an intent determine one set of workflows?
 
 [Confluence by canonicalization](/cyber-truss/model/confluence/#two-ways-to-buy-it-and-why-one-is-impractical)
-requires one canonical execution per distilled Request. A Request selects every workflow
-its strain touches, so that execution is a set of workflows working toward one state.
-Canonicalization holds only if two things do.
+requires one canonical execution per distilled intent. Selection yields every workflow
+whose span covers a strained connection, so that execution is a set of workflows working
+toward one state. Canonicalization holds only if two things do.
 
-**The set is unique.** Two distillations of the same intent must select the same
+**The set is unique.** The same intent, arriving at the same strain, must select the same
 workflows. This plainly fails per connection-pair, since several workflows can span the
 same two artifact-sets. A refactor firing from `{code, test, stories}` to
 `{website content}` uses a different workflow than the mission loop, though both connect
@@ -42,14 +42,29 @@ that implies.
 
 Canonicalization concentrates the confluence requirement into
 [distillation](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
-Two different expressions of one intent must produce the same Request.
+Two different expressions of one intent must distill to the same intent.
 
 Distillation is irreducibly agentic, so stability here is an empirical question about
 agent behaviour rather than a property that can be proven.
 
 **What breaks if it resolves badly:** the guarantee fails at the normalization step
 instead of in the connections — the same failure, relocated. The upside is that this
-failure is *measurable*: feed several expressions of one intent and compare the Requests.
+failure is *measurable*: feed several expressions of one intent and compare the distilled
+intents.
+
+## Is per-workflow translation stable?
+
+[Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent),
+and each selected workflow translates that intent into its own Request. Translation is a
+second agentic step, and it runs once per workflow.
+
+It is narrower than distillation, one intent into one vocabulary, and it can be evaluated
+per workflow: hand one workflow the same intent several times and compare the Requests.
+
+**What breaks if it resolves badly:** workflows given the same intent start from different
+Requests, and the set's results stop composing even when selection is unique. The failure
+is spread across workflows rather than concentrated, but each instance is checkable in
+isolation.
 
 ## What vehicle holds pending Requests?
 
@@ -81,10 +96,10 @@ The comparison must be able to conclude *"the workflow is wrong"* and not only *
 change is wrong."*
 
 The mechanism now proposed is
-[deriving the criteria from the Request before the replay runs](/cyber-truss/model/canonical-execution/#criteria-are-derived-before-the-replay-not-after),
+[deriving the criteria from the intent before the replay runs](/cyber-truss/model/canonical-execution/#criteria-are-derived-before-the-replay-not-after),
 so that neither party to the comparison authored the bar it is judged against. That is a
 real mechanism where there was previously only a requirement, but it relocates the exposure
-rather than removing it: criteria derived from a misread Request are wrong in the same
+rather than removing it: criteria derived from a misread intent are wrong in the same
 direction as everything downstream of them. Whether the relocation is enough is unresolved.
 
 ## Where does the controller interface sit?

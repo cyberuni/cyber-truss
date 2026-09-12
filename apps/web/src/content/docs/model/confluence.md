@@ -82,7 +82,7 @@ relocation is a benefit rather than a caveat: it moves the danger from many plac
 can check into one place that is directly evaluable.
 
 **Status: Settled** that canonicalization is the construction. **Open:** whether that
-execution is unique and composes. See [Open questions](/cyber-truss/model/open-questions/#does-a-request-determine-one-set-of-workflows).
+execution is unique and composes. See [Open questions](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows).
 
 ## How the claim is tested
 

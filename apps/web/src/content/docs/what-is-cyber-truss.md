@@ -37,12 +37,12 @@ the connections it crosses, because a connection states a relation between two
 does.
 
 Clearing the strain does not push your change outward from where it landed. The change is
-lifted out of line diffs into artifact-set vocabulary, then distilled into the **request**
-behind it: the intent, separated from the particular expression you used. From that
-request the system derives the criteria the settled state has to meet. Those criteria
-exist before anything is replayed. The request then picks out every workflow its strain
-touches: often several, and never the whole process by default. Each replays the request
-from its own starting point and derives its own answer without reading yours, and the
+lifted out of line diffs into artifact-set vocabulary, then distilled into the **intent**
+behind it, separated from the particular expression you used. From that intent the system
+derives the criteria the settled state has to meet. Those criteria exist before anything
+is replayed. The strain then picks out every workflow it touches: often several, and never
+the whole process by default. Each workflow turns the intent into its own request, replays
+it from its own starting point, and derives its own answer without reading yours. The
 results are compared against the change you made.
 
 So the criteria that come back to your change were authored by neither party to the
