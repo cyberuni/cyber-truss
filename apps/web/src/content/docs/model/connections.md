@@ -73,9 +73,11 @@ strained. Same relation, same fixed point, any entry point.
 ## Three kinds of strain
 
 Strain is a connection whose relation does not currently hold. Working the two axes
-against real cases produces three distinct kinds, and they behave differently.
+against real cases produces three distinct kinds, and they behave differently. A strain is
+**exactly one** of them, so each is named for the defect rather than for the property it
+falls short of.
 
-### Completeness
+### Incompleteness
 
 Intra-unit-of-change. *Add a skill, also wire four manifests and the `files` list.*
 
@@ -99,7 +101,7 @@ them.
 It also gives *declining* a home. Declining is how an obligation is discharged without
 being done, and without it any report nags forever.
 
-### Conformance
+### Nonconformance
 
 Axis 2. *This skill violates the agent-instruction guidelines.*
 

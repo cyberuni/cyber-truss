@@ -31,9 +31,9 @@ it was derived from has not been tested.
 | --- | --- | --- | --- | --- |
 | [Waterfall](/cyber-truss/model/workflows/waterfall/) | software | requirements, design, code, verification | chain | zero at every gate |
 | [SDD](/cyber-truss/model/relationship-to-sdd/) | software | spec unit, implementation unit | one link | zero at the impl gate |
-| Trunk-based development | software | code, test, docs | star on `{code, test}` | completeness zero at merge; obligation carried |
+| Trunk-based development | software | code, test, docs | star on `{code, test}` | zero incompleteness at merge; obligation carried |
 | Safety certification | avionics, medical devices | requirements, design, code, tests, review evidence | chain, traced both ways | zero, and the *edge set itself* is an artifact |
-| Compliance audit | security, legal | policy, control, evidence | star on policy | conformance zero on a cold repository |
+| Compliance audit | security, legal | policy, control, evidence | star on policy | zero nonconformance on a cold repository |
 | Engineering change order | manufacturing | CAD, BOM, routing, supplier docs | star on the part | zero before release; obligations explicit and declinable |
 | Preregistered study | research | protocol, data, analysis, paper | chain, gated once | zero at the protocol gate; free thereafter |
 | Double-entry bookkeeping | accounting | ledger, subledger, statements | pair, continuously held | zero **always** |
@@ -49,7 +49,7 @@ actually distinguishes these processes from one another.
 ### Trunk-based development
 
 The control case against waterfall — same field, same artifacts, opposite policy. Merge to
-trunk requires zero **completeness** strain (the change is whole) but tolerates carried
+trunk requires zero **incompleteness** strain (the change is whole) but tolerates carried
 **obligation** strain indefinitely: the follow-up ticket is the obligation, and the
 backlog is its ledger.
 
@@ -75,7 +75,7 @@ operating. An auditor arrives with no diff at all and evaluates the current stat
 
 *What it tests:* [axis 2](/cyber-truss/model/artifact-sets/#axis-2--governance-target),
 the state-driven axis, in its purest form. Nothing here is delta-driven — this is
-conformance strain evaluated cold, on a repository nobody has just changed. A model with
+nonconformance strain evaluated cold, on a repository nobody has just changed. A model with
 only a unit-of-change axis could not express an audit at all.
 
 ### Engineering change order

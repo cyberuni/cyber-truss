@@ -120,8 +120,8 @@ distinguishes waterfall is that it **refuses to open the next set while strain r
 behind it**, and the model's [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain)
 make the refusal precise:
 
-- **Completeness strain** must be zero — the phase's own artifacts are all present.
-- **Conformance strain** must be zero — each conforms to the standard governing its type.
+- **Incompleteness strain** must be zero — the phase's own artifacts are all present.
+- **Nonconformance strain** must be zero — each conforms to the standard governing its type.
   This is the part of sign-off that is a review against criteria.
 - **Obligation strain** must be zero — and this is the strict one. The model's default is
   that an obligation may be *carried*: raised now, discharged later, possibly by someone
