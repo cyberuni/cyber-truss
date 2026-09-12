@@ -187,6 +187,50 @@ combine by join cannot depend on order. That is a direction, not a construction.
 **Open**, and load-bearing: whether the set is unique, and how its results combine. See
 [Open questions](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows).
 
+### Order is not controlled
+
+The order in which selected workflows run cannot be fixed in advance. A workflow with a
+human in the loop takes as long as the human takes, and a design review can return more
+than its Request asked for, up to a new design. cyber-truss exists because work arrives
+this way, so the model takes the order it is given.
+
+Workflows that finish in some order either reconcile or disagree. When they reconcile, no
+further work is needed. When they disagree, the disagreement is a strained connection, and
+it selects further workflows in another cycle. Disagreement costs cycles. It is not an
+error.
+
+Order may change the path: which workflows run, and how many cycles pass. It may not change
+the settled state, in [topology](/cyber-truss/model/confluence/#what-confluence-is-claimed-over).
+Two orders that settle in different places have lost confluence, however many cycles each
+took. That is the composition obligation above, stated as a condition on cycles: they
+terminate, and at one state.
+
+The Transformation Priority Premise in test-driven development also holds that order
+matters. The comparison has a limit. There, the order of transformations can change which
+algorithm you end up with. Here, that outcome is the failure.
+
+**Status: Settled** that order is not controlled and that disagreement runs further
+cycles. **Open:** that the cycles terminate at one state, and whether work a human adds
+during a replay, beyond what the Request asked for, carries the original intent or is
+distilled as a new one.
+
+## A replay starts at the workflow's start
+
+A workflow replays from its declared starting point, wherever the change landed. At each
+node the Request either changes that node's criteria or passes to the next node unchanged.
+
+A node passes the Request on when it is too coarse to hold the criteria the intent implies.
+A PRD states what a feature must do and has no place for a page-count rule, so a pagination
+fix passes through it to the feature spec, which is where the rule belongs.
+
+Starting at the highest node the intent changes would give the same result when the guess
+is right. It needs that node predicted up front, and predicting reach is the step
+[selection](#how-workflows-are-selected) already declines to make. The visit also checks
+something. Passing through is a judgement that the intent does not change that node, and it
+is the same judgement that catches a change that does.
+
+**Status: Settled.**
+
 ## Replay output must not re-trigger replay
 
 Canonical execution produces deltas that land in the repository. Without provenance,
