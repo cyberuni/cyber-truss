@@ -38,10 +38,10 @@ does.
 
 Clearing the strain does not push your change outward from where it landed. The change is
 lifted out of line diffs into artifact-set vocabulary, then distilled into the **request**
-behind it: the intent, separated from the particular expression you used. The criteria a
-settled state must satisfy are derived from that request. Only then does the workflow
-replay the request from its own starting point. The replay does not read your change as
-the answer. It derives its own and compares.
+behind it: the intent, separated from the particular expression you used. From that
+request the system derives the criteria the settled state has to meet. Those criteria
+exist before anything is replayed. The workflow then replays the request from its own
+starting point, derives its own answer without reading yours, and compares the two.
 
 So the criteria that come back to your change were authored by neither party to the
 comparison. Sometimes they confirm what you wrote. More often they add to it: a case the
