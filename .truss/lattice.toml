@@ -18,13 +18,13 @@
 #   unit-of-change     artifacts that must move together for a change to be complete.
 #                      Delta-driven, meaningless without a change: DID THIS LAND
 #                      EVERYWHERE IT HAD TO? Members are heterogeneous — different
-#                      kinds bound by one commit. Strain here is completeness
+#                      kinds bound by one commit. Strain here is incompleteness
 #                      (within one unit) or obligation (across two).
 #
 #   governance-target  artifacts the same criteria apply to. State-driven, needs no
 #                      diff: DOES THIS CONFORM TO WHAT GOVERNS IT? Members are
 #                      homogeneous — one criterion over all of them. Strain here is
-#                      conformance.
+#                      nonconformance.
 #
 # The same files appear on both axes, for unrelated reasons, and that overlap is the
 # model working rather than a modelling error. `{code, test}` is one unit of change —
@@ -85,7 +85,7 @@ members = ["packages/command-center/providers/**", ".command-center/providers.js
 name = "plugin components"
 axis = "unit-of-change"
 controller = "none"
-# The model's headline completeness case: add a skill, also wire the manifests and the
+# The model's headline case for incompleteness strain: add a skill, also wire the manifests and the
 # `files` list, in that one commit.
 members = [
   "packages/cyber-truss/skills/**",
@@ -149,8 +149,8 @@ members = ["apps/web/src/content/docs/**"]
 #
 # A connection between two unit-of-change sets carries OBLIGATION strain — the two ends
 # land in different commits by design, so the debt is created now and discharged later.
-# A connection reaching a governance target carries CONFORMANCE strain, evaluable on a
-# cold repository. Completeness strain is intra-unit and needs no connection to state.
+# A connection reaching a governance target carries NONCONFORMANCE strain, evaluable on a
+# cold repository. Incompleteness strain is intra-unit and needs no connection to state.
 
 [[connection]]
 between = ["repository agent config", "source layout"]
