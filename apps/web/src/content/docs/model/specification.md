@@ -107,9 +107,9 @@ through the relation and they stop being three observed cases.
 
 | Strain | Shape in this vocabulary |
 | --- | --- |
-| Completeness | a specification and its implementation disagree, and both are in hand |
+| Incompleteness | a specification and its implementation disagree, and both are in hand |
 | Obligation | a specification whose implementation is **elsewhere** — an ADR constrains modules it does not contain |
-| Conformance | criteria evaluated with no counterpart implementation in the delta at all |
+| Nonconformance | criteria evaluated with no counterpart implementation in the delta at all |
 
 Obligation strain is the interesting one. An accepted ADR is a specification with no local
 implementation; the artifacts that implement it are owned by other units of change. That

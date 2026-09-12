@@ -24,21 +24,11 @@ A group of artifacts, grouped along one of [two orthogonal axes](/cyber-truss/mo
 — unit of change or governance target. The unit the model reasons about, and the node in
 [the lattice graph](/cyber-truss/model/lattice/#a-graph-of-interconnected-nodes).
 
-### Completeness strain
-
-A specification and its implementation disagree while both are in hand. Intra-unit-of-change,
-and it blocks. See [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain).
-
 ### Confluence
 
 The guarantee: whichever artifact you change first, the repository settles into the same
 state. Claimed over [topology](#topology), not over bytes. See
 [Confluence](/cyber-truss/model/confluence/).
-
-### Conformance strain
-
-Criteria are unsatisfied with no counterpart implementation in the delta at all —
-evaluable on a cold repository, with no diff. The axis-2 strain.
 
 ### Connection
 
@@ -92,6 +82,11 @@ The role an artifact holds on an edge where something else constrains it. A blac
 model reasons about its outcome, not its internals. A role, not a kind of artifact — see
 [Specification](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer).
 
+### Incompleteness strain
+
+A specification and its implementation disagree while both are in hand. Intra-unit-of-change,
+and it blocks. See [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain).
+
 ### Intent
 
 The half of a [specification](#specification) stating what the thing is for and which
@@ -107,6 +102,11 @@ Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/latti
 
 Raising a raw line diff into artifact-set vocabulary. A prerequisite for everything
 downstream, because an unlifted diff and a connection are written in different languages.
+
+### Nonconformance strain
+
+Criteria are unsatisfied with no counterpart implementation in the delta at all —
+evaluable on a cold repository, with no diff. The axis-2 strain.
 
 ### Obligation strain
 
@@ -134,7 +134,8 @@ the system. The observable that strain describes.
 
 A connection whose relation does not currently hold. Comes in
 [three kinds](/cyber-truss/model/connections/#three-kinds-of-strain) that block
-differently: completeness, obligation, and conformance.
+differently: incompleteness, obligation, and nonconformance. A strain is exactly one of
+the three, never a score on each.
 
 ### Topology
 
