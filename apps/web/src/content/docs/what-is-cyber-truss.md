@@ -16,16 +16,21 @@ meet.
 There are two ways a change actually gets made.
 
 Someone files a bug or asks for a feature, and the work starts at the top. A ticket, then
-a PRD, then a design doc, then a specification, and finally the code that was the point of
-it. Every step is real work. By the time you get to the fix you've described it four times,
-and the description you trust is the last one.
+a PRD, then a design doc, then a specification, and finally the code. Writing all that is
+no longer the slow part, since an agent will draft it in minutes. The problem is that you
+commit to the specification before you have touched the code, and what the implementation
+teaches you never travels back up. The documents exist. They stopped being true somewhere
+around step three.
 
 Or you find the problem yourself, in the code, and you fix it. That takes an afternoon.
 What you leave behind is the PRD that still describes the old behaviour, the spec that now
 contradicts the code, the mockups nobody redrew, and the ticket that was never opened. The
 fix shipped and the system around it disagrees with itself.
 
-cyber-truss lets you take the second path and still get what the first one produces. Make
+Both paths end in the same place, and cheap document generation makes it worse rather than
+better: more artifacts, drafted faster, going stale at the same rate.
+
+cyber-truss lets you make the change where you understand it and get the rest anyway. Make
 the change where the work actually starts. That change
 [strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
 [connections](/cyber-truss/model/connections/) it crosses, because a connection states a
