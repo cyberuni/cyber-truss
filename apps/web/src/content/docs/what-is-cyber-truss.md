@@ -13,7 +13,7 @@ meet.
 
 ## What it does
 
-The example below is software development. Nothing in the model is specific to it.
+Let's use software development as an example.
 
 Traditionally, there are two ways a change actually gets made.
 
@@ -29,12 +29,12 @@ system around it disagrees with itself.
 Both paths end in the same place.
 
 cyber-truss lets you make the change where you understand it and get the rest anyway. It
-can do that because those artifacts are parts of the system too, with the connections
-between them declared rather than remembered. That change
-[strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
-[connections](/cyber-truss/model/connections/) it crosses, because a connection states a
-relation between two [artifact-sets](/cyber-truss/model/artifact-sets/) that has to hold,
-and it no longer does.
+can do that because those artifacts are parts of the system too, with the
+[connections](/cyber-truss/model/connections/) between them declared rather than
+remembered. That change [strains](/cyber-truss/model/connections/#three-kinds-of-strain)
+the connections it crosses, because a connection states a relation between two
+[artifact-sets](/cyber-truss/model/artifact-sets/) that has to hold, and it no longer
+does.
 
 Clearing the strain does not push your change outward from where it landed. The change is
 lifted out of line diffs into artifact-set vocabulary, then distilled into the **request**
