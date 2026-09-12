@@ -40,6 +40,10 @@ export default defineConfig({
 					],
 				},
 				{
+					label: 'Examples',
+					items: [{ autogenerate: { directory: 'examples' } }],
+				},
+				{
 					label: 'CLI',
 					items: [{ autogenerate: { directory: 'cli' } }],
 				},
