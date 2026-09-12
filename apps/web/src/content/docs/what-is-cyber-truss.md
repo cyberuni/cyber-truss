@@ -13,6 +13,8 @@ meet.
 
 ## What it does
 
+The example below is software development. Nothing in the model is specific to it.
+
 Traditionally, there are two ways a change actually gets made.
 
 Someone files a bug or asks for a feature, and the work starts at the top. A ticket, then
@@ -27,8 +29,8 @@ system around it disagrees with itself.
 Both paths end in the same place.
 
 cyber-truss lets you make the change where you understand it and get the rest anyway. It
-can do that because the relations between a system's parts are written down, not left to
-whoever remembers them. That change
+can do that because those artifacts are parts of the system too, with the connections
+between them declared rather than remembered. That change
 [strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
 [connections](/cyber-truss/model/connections/) it crosses, because a connection states a
 relation between two [artifact-sets](/cyber-truss/model/artifact-sets/) that has to hold,
