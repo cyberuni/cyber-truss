@@ -12,23 +12,29 @@ adopting the vocabulary needs to know which parts may move.
 
 Ordered by how much depends on the answer.
 
-## At what level is the workflow unique?
+## Does a Request determine one set of workflows?
 
 [Confluence by canonicalization](/cyber-truss/model/confluence/#two-ways-to-buy-it-and-why-one-is-impractical)
-requires that a distilled Request maps to **one** workflow. Otherwise there is more than
-one executed path and the construction gives nothing.
+requires one canonical execution per distilled Request. A Request selects every workflow
+its strain touches, so that execution is a set of workflows working toward one state.
+Canonicalization holds only if two things do.
 
-Uniqueness plainly fails per connection-pair: several workflows can span the same two
-artifact-sets. A refactor firing from `{code, test, stories}` to `{website content}` uses
-a different workflow than the mission loop, though both connect sets that the mission
-loop also connects.
+**The set is unique.** Two distillations of the same intent must select the same
+workflows. This plainly fails per connection-pair, since several workflows can span the
+same two artifact-sets. A refactor firing from `{code, test, stories}` to
+`{website content}` uses a different workflow than the mission loop, though both connect
+sets that the mission loop also connects. Whether the set is unique at the level of the
+*set of artifact-sets* is a conjecture, not a result.
 
-It may hold at the level of the *set of artifact-sets*. That is a conjecture, not a
-result.
+**The results compose.** Workflows in the set start from differently derived intents and
+can reach overlapping artifacts. Their combined result must not depend on the order they
+run in. Combining results by the lattice join would make that hold by construction, but
+nothing yet shows that workflow results form a join-semilattice.
 
-**What breaks if it resolves badly:** the whole confluence construction. If no level
-guarantees uniqueness, path-independence needs a different mechanism than canonicalization
-— most likely a fallback to per-relation confluence, with the proof burden that implies.
+**What breaks if it resolves badly:** the whole confluence construction. If the set is not
+unique, or its results do not compose, path-independence needs a different mechanism than
+canonicalization. The likeliest fallback is per-relation confluence, with the proof burden
+that implies.
 
 **Most load-bearing open question in the model.**
 

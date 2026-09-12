@@ -68,7 +68,8 @@ connection author gets a chance to get it wrong, there is no cheap way to check 
 did not, and the burden grows with the number of connections.
 
 **Confluence by canonicalization.** Do not require the property at all. Normalize every
-entry point onto a single executed path, so there is only ever one route in play. This is
+entry point onto one canonical execution, so the route in play does not depend on where
+the change arrived. This is
 the same construction as defining a normal form instead of proving that rewrite rules
 commute.
 
@@ -80,8 +81,8 @@ The risk does not vanish — it **concentrates**, in the step that normalizes. T
 relocation is a benefit rather than a caveat: it moves the danger from many places nobody
 can check into one place that is directly evaluable.
 
-**Status: Settled** that canonicalization is the construction. **Open:** the scope over
-which it guarantees uniqueness — see [Open questions](/cyber-truss/model/open-questions/#at-what-level-is-the-workflow-unique).
+**Status: Settled** that canonicalization is the construction. **Open:** whether that
+execution is unique and composes. See [Open questions](/cyber-truss/model/open-questions/#does-a-request-determine-one-set-of-workflows).
 
 ## How the claim is tested
 

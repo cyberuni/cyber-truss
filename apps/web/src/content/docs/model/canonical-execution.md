@@ -25,9 +25,9 @@ landed. It is lifted, distilled, and replayed:
 
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
 2. **Distill** it to a **Request** — the intent behind the change, separated from the
-   particular expression of it — together with the workflow that applies.
+   particular expression of it — together with every workflow that applies.
 3. **Derive the criteria** the settled state must satisfy, from the Request.
-4. **Replay** the Request through that workflow from its starting point.
+4. **Replay** the Request through those workflows, each from its own starting point.
 5. **Compare** the replayed delta against the change that arrived.
 
 The replay is an *independent derivation*. It does not read the incoming change as an
@@ -113,23 +113,28 @@ can be made stable enough to carry the guarantee. This is the thesis's main risk
 
 There is no single global workflow with one starting point.
 
-Several workflows can span the same pair of artifact-sets, and the right one depends on
+Several workflows can span the same pair of artifact-sets, and the right ones depend on
 the change. A refactor inside `{code, test, stories}` fires a signal to
 `{website content}` — and it must **not** drag the whole mission loop in from the spec.
 Routing every change through the longest path would reintroduce exactly the ceremony the
 model removes.
 
-So distillation emits **a Request and the workflow that applies**, and selection is part
-of its job rather than a fixed constant.
+A change also rarely needs only one. The strain it leaves can cross several connections,
+and each crossing may call for a different workflow. So distillation emits **a Request and
+every workflow that applies**. Each workflow derives the intent as it applies at its own
+starting point, and together they work toward one settled state. None of them is the
+route on its own.
 
-This is where the guarantee is currently weakest. Uniqueness plainly does not hold per
-connection-pair, since multiple workflows can span one pair. It may hold at the level of
-the *set of artifact-sets*. That is not yet established — and it matters, because if no
-level guarantees uniqueness then confluence needs a different construction than the one
-above.
+This is where the guarantee is currently weakest, and plural selection moves the question
+rather than removing it. Canonicalization now needs two things: a Request must pick out
+one set of workflows, and the set's results must combine into one state whatever order
+they run in. The second is a composition obligation that a single workflow never carried.
+The order-theoretic reading of the lattice suggests where it could be met: results that
+combine by join cannot depend on order. That is a direction, not a construction.
 
-**Status: Open**, and load-bearing. See
-[Open questions](/cyber-truss/model/open-questions/#at-what-level-is-the-workflow-unique).
+**Status: Settled** that selection is plural. **Open**, and load-bearing: whether the set
+is unique, and how its results combine. See
+[Open questions](/cyber-truss/model/open-questions/#does-a-request-determine-one-set-of-workflows).
 
 ## Replay output must not re-trigger replay
 

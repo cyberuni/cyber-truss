@@ -60,7 +60,7 @@ a discharge point. One of the four parameters of a [formal workflow](#formal-wor
 
 ### Distillation
 
-Reducing an arriving change to a [Request](#request) plus the workflow that applies —
+Reducing an arriving change to a [Request](#request) plus every workflow that applies —
 separating intent from the particular expression of it. Irreducibly agentic, and the step
 that carries the confluence guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
