@@ -1,0 +1,174 @@
+---
+title: Bug fixed in a component library
+description: The pagination bug again, in a published component. The docs describe the API, so they connect to the code as well as the spec.
+sidebar:
+  order: 2
+---
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+This is the [pagination bug](/cyber-truss/examples/software-bug-fix/) moved into a
+component library. What changes is who reads the docs. In an application the help page
+describes behaviour to users. In a library the docs describe an API to developers, who
+write code against it.
+
+## The system
+
+A component library that publishes a `Pagination` component. The consumer passes the page
+count as a `totalPages` prop.
+
+| Artifact-set | Holds |
+| --- | --- |
+| `{spec}` | Intent and criteria for the component's behaviour |
+| `{code, test}` | The component and its tests, one unit of change |
+| `{API docs}` | The reference page: props, types, defaults, and a usage example |
+| `{mockups}` | The design-system mockups of the component |
+
+The usage example on the reference page computes the page count for the consumer:
+
+```tsx
+<Pagination totalPages={Math.floor(items.length / pageSize) + 1} />
+```
+
+Connections:
+
+- `{spec}` to `{code, test}`
+- `{spec}` to `{API docs}`
+- `{spec}` to `{mockups}`
+- `{mockups}` to `{code, test}`
+- `{API docs}` to `{code, test}`
+
+The last connection is the one the application example did not need. The spec states
+behaviour and does not name props. A spec that says *the consumer supplies the page count*
+is satisfied by `totalPages`, by `pageCount`, or by a function. The reference page must
+state which one, with its type and default, so it cannot be checked against the spec
+alone. It can only be checked against the code.
+
+The spec's criteria say the indicator shows the current page and the total, and the
+documented way to compute the total produces no empty page. The usage example breaks that
+criterion on an exact multiple, and nothing has noticed.
+
+## Workflows
+
+| Workflow | Span | Shape |
+| --- | --- | --- |
+| Component delivery | `{spec}`, `{code, test}` | one link |
+| Docs update | `{spec}`, `{API docs}` | one link |
+| API reference | `{code, test}`, `{API docs}` | one link |
+| Design update | `{spec}`, `{mockups}` | one link |
+| Design implementation | `{mockups}`, `{code, test}` | one link |
+
+## The change
+
+A consumer reports an empty last page. The same intent reaches the library by two
+different routes, one per variant.
+
+## Variant A: the fix changes the API
+
+A developer decides consumers should not compute the page count at all. They replace
+`totalPages` with `totalItems` and `pageSize`, compute the count inside the component,
+round up, and commit. The diff touches the code and tests only. Every consumer passing
+`totalPages` breaks on upgrade.
+
+### Expected run
+
+1. **Lift.** The change touches `{code, test}`.
+2. **Distill.** Intent: *every page shows at least one item.* The new props are how the
+   developer expressed it.
+3. **Criteria.** An exact multiple produces no empty page, and the documented way to reach
+   a page count rounds up.
+4. **Strain.** `{spec}` to `{code, test}` holds, because the new component satisfies the
+   spec. `{mockups}` to `{code, test}` holds, because the indicator looks the same.
+   `{API docs}` to `{code, test}` is strained: the reference page documents a `totalPages`
+   prop the code no longer accepts.
+5. **Select.** API reference is the only workflow spanning the strained connection.
+6. **Replay.** API reference translates the intent into a Request at `{code, test}`. The
+   published API is a contract with consumers, so the relation is restored by keeping
+   `totalPages` and correcting how the docs compute it, not by changing the props.
+7. **Compare.** Both the developer's change and the replay meet the criteria. They differ
+   in shape: the developer's change breaks every consumer to fix a defect that lived in a
+   docs example. The architect lens reports *change course*.
+8. **Propagate.** The corrected example now satisfies the spec's criterion, so `{spec}` to
+   `{API docs}` holds. It had been strained since before the change, and the replay
+   cleared it without any workflow being selected for it.
+
+Without the `{API docs}` to `{code, test}` connection, step 4 finds no strain at all. The
+run selects nothing, the reference page documents a removed prop, and the break reaches
+consumers first.
+
+### Settled state
+
+- `{spec}` is unchanged.
+- `{code, test}` accepts `totalPages` as before.
+- `{API docs}` computes the page count by rounding up.
+- `{mockups}` is unchanged.
+
+### Status: Unresolved
+
+The run depends on three things the model does not yet say.
+
+- **Which side of the docs connection is the specification.** Step 6 treats the reference
+  page as the specification of the code, because consumers build against it. A maintainer
+  could equally treat the code as the specification of its reference, and then the replay
+  rewrites the docs to the new props and ships the break. The
+  [per-edge roles](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer)
+  say both readings are allowed and give no rule for choosing. The choice decides the
+  settled state.
+- **Where the connection joins.** `{spec}` joins `{code, test}` at behaviour. `{API docs}`
+  joins it at the exported props and their types, a rung below. The model has not said
+  [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level)
+  across artifact types, and this connection cannot be evaluated until it does.
+- **What distillation keeps.** Step 2 reads the new props as expression. A distiller could
+  read *the component owns the page count* as part of the intent, and then the replay
+  keeps them. See
+  [Can distillation be made stable?](/cyber-truss/model/open-questions/#can-distillation-be-made-stable)
+
+## Variant B: the fix lands in the docs
+
+A technical writer corrects the usage example to round up. The diff touches the reference
+page only.
+
+### Expected run
+
+1. **Lift.** The change touches `{API docs}`.
+2. **Distill.** The same intent as variant A.
+3. **Criteria.** The same criteria as variant A.
+4. **Strain.** None. The example now satisfies the spec. `{API docs}` to `{code, test}`
+   holds, because the props the page documents are the props the code accepts.
+5. **Select.** Nothing.
+
+### Settled state
+
+The same as variant A.
+
+### Status: Holds
+
+The docs connection stays quiet when the API does not change, so a docs correction pulls
+in no code workflow. This status depends on variant A. If variant A distills the
+wider intent, the two variants end in different states, and the model has lost
+[confluence](/cyber-truss/model/confluence/) on the first pair of entry points tried.
+
+## What it tests
+
+- A connection between two implementations of one specification. `{API docs}` and
+  `{code, test}` both implement `{spec}`, and the docs still need the code, because the
+  spec leaves the API open. A connection between siblings cannot always be derived
+  through their common parent.
+- [Per-edge roles](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer)
+  on an edge where either side can be the specification, and the choice changes the
+  outcome.
+- [Distillation carries the weight](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
+  The two variants are the test that section proposes: two expressions of one intent,
+  which must distill to the same thing.
+- [Reading the comparison](/cyber-truss/model/canonical-execution/#reading-the-comparison)
+  past the builder lens. The developer's change conforms. The comparison has to reject it
+  on shape.
+- Strain that predates the change. The docs example broke the spec long before either
+  variant, and selection only examines connections on the sets a change touched. Variant A
+  clears it by accident. Only a cold
+  [nonconformance](/cyber-truss/model/connections/#nonconformance) check finds it on purpose.
+- Versioning is left out. A breaking change obliges a major version and a migration note,
+  which the [workflow catalog](/cyber-truss/model/workflows/) would treat as obligations
+  rather than artifact-sets.

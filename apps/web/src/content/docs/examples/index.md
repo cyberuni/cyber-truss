@@ -52,6 +52,7 @@ An example can have variants, and each variant gets its own status.
 | Example | Field | Status |
 | --- | --- | --- |
 | [Bug fixed directly in code](/cyber-truss/examples/software-bug-fix/) | software | A: Unresolved. B: Gap |
+| [Bug fixed in a component library](/cyber-truss/examples/component-library-bug-fix/) | software | A: Unresolved. B: Holds |
 
 ## Adding an example
 
