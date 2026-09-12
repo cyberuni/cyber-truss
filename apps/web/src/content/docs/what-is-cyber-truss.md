@@ -13,13 +13,21 @@ meet.
 
 ## What it does
 
-Most ways of working make you pick an entry point. Fix the bug in the code and the
-specification that described the old behaviour goes stale. Write the specification first
-and you author the same change twice. Under time pressure the first habit wins, and the
-parts of a system end up disagreeing with each other.
+There are two ways a change actually gets made.
 
-cyber-truss removes the choice. Make the change where the work actually starts. That
-change [strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
+Someone files a bug or asks for a feature, and the work starts at the top. A ticket, then
+a PRD, then a design doc, then a specification, and finally the code that was the point of
+it. Every step is real work. By the time you get to the fix you've described it four times,
+and the description you trust is the last one.
+
+Or you find the problem yourself, in the code, and you fix it. That takes an afternoon.
+What you leave behind is the PRD that still describes the old behaviour, the spec that now
+contradicts the code, the mockups nobody redrew, and the ticket that was never opened. The
+fix shipped and the system around it disagrees with itself.
+
+cyber-truss lets you take the second path and still get what the first one produces. Make
+the change where the work actually starts. That change
+[strains](/cyber-truss/model/connections/#three-kinds-of-strain) the
 [connections](/cyber-truss/model/connections/) it crosses, because a connection states a
 relation between two [artifact-sets](/cyber-truss/model/artifact-sets/) that has to hold,
 and it no longer does.
@@ -33,8 +41,10 @@ and the replay is an independent derivation. It does not read your change as the
 It produces its own and compares.
 
 So the criteria that come back to your change were authored by neither party to the
-comparison. They may confirm what you wrote. They may also show what it missed, and that
-is the case worth having: the round trip improved the work rather than only recording it.
+comparison. Sometimes they confirm what you wrote. More often they add to it: a case the
+quick fix didn't cover, or a better shape for it that only became visible once the intent
+was written down and worked forward. That is the case worth having. The round trip
+improves the change instead of only recording it.
 
 The guarantee this buys is [confluence](/cyber-truss/model/confluence/). Whichever
 artifact you started from, the system settles into the same state.
