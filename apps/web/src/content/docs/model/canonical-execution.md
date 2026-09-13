@@ -218,6 +218,74 @@ and that a run may settle in any state that meets its criteria provided choices 
 states are recorded. **Open:** whether work a human adds during a replay, beyond what the
 Request asked for, carries the original intent or is distilled as a new one.
 
+### Cycles must come to rest
+
+Nothing so far makes a run stop. Two workflows can amend each other's side on every cycle,
+each state locally reasonable, and never settle. Every cycle costs tokens, so this is the
+most expensive way the loop can fail.
+
+Deciding whether an arbitrary loop of rewrites comes to rest is undecidable, so the model
+does not try to detect it. It constrains the loop so that it terminates by construction. A
+turn limit is the weak form of that constraint. It caps the cost but cannot tell progress
+from circling, and when it is written in a prompt an agent can ignore it. SDD's three-turn
+limit has both weaknesses.
+
+Four rules make the constraint.
+
+1. **Criteria are versioned and frozen for a run.** The criteria derived in step 3 are
+   version 1. During a run only two events create a new version: a person adds criteria,
+   or a disagreement is settled by a recorded decision. An agent cannot create a version
+   by adding criteria. This is SDD's frozen `.feature` suite, extended from one gate to a
+   whole run.
+2. **Each resolution is recorded** as a connection paired with the criteria version it was
+   brought into agreement with.
+3. **A cycle may only resolve pairs not already recorded.** A connection resolved under
+   version *v* and strained again under *v* means one workflow undid another's work. That
+   is oscillation, and the run stops.
+4. **A stop needs a decision to continue.** The decision settles the conflict and creates
+   the next version. An agent may decide a given conflict once. Reversing a decision needs
+   a person.
+
+At one version there are finitely many connections to resolve. Versions grow only through
+decisions and people, and each conflict takes at most one agent decision. So a run with no
+person in it is bounded. A run with people in it continues as long as they keep adding
+criteria, which is iteration somebody chose.
+
+The check in rule 3 is a lookup, which puts it at the deterministic end of the
+[controller spectrum](/cyber-truss/model/artifact-sets/#controllers). `truss` can refuse to
+record a cycle that resolves nothing new, so the bound does not depend on an agent
+following an instruction.
+
+#### A reversal renamed as a new criterion
+
+Rule 1 depends on a judgement: whether a proposed criterion is new, or a reversal of a
+decision under a new name. An agent could route a reversal through that door.
+
+The [controller](/cyber-truss/model/artifact-sets/#controllers) of the specification set
+is placed to catch it. Its job is to hold the set's intent and criteria consistent and
+balanced, and a criterion that contradicts a recorded decision is an inconsistency inside
+the set. It is not the workflow proposing the criterion, so it is not judging its own work.
+It can only see a contradiction with decisions it can read, so a decision lands in the
+specification set it affects, not in the ledger alone.
+
+This narrows the weakness without closing it. A contradiction is caught. A criterion that
+erodes a decision without contradicting it, such as an exception broad enough to hollow it
+out, is caught only if the controller judges balance as well as consistency.
+
+#### Append-only history, not append-only criteria
+
+The record the rules read is append-only. Each version, resolution, and decision is added
+and never edited, the way an ADR is superseded rather than rewritten. The criteria
+themselves are not append-only. Between runs a specification changes freely, and criteria
+are rewritten and removed. Holding criteria to append-only would be too restrictive. They
+are frozen within a run, free between runs, and the history of how each version replaced
+the last is what cannot change.
+
+**Status: Thesis.** The rules bound a run with no person in it. **Open:** whether the
+specification controller catches erosion as well as contradiction, and what holds the
+record. See
+[What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
+
 ## A replay starts at the workflow's start
 
 A workflow replays from its declared starting point, wherever the change landed. At each

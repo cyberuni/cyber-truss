@@ -32,6 +32,9 @@ overlapping artifacts. The order they run in is
 their results disagree another cycle runs. Order may change how many cycles pass and which
 settled state is reached, provided every settled state meets the same criteria and each
 choice between states is recorded. The cycles must also come to rest.
+[Four rules](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) bound a run
+with no person in it, and they depend on the specification controller catching a reversal
+renamed as a new criterion.
 
 **What breaks if it resolves badly:** the whole confluence construction. If the set is not
 unique, or its results do not converge, path-independence needs a different mechanism than
