@@ -249,6 +249,19 @@ controls, and when their results disagree further cycles run
   outcomes, and which parts a person authored rather than a replay produced. From that, a
   change spanning several cycles is summarized for a person to review as one thing, not as
   a trail of separate commits.
+- **MVP: pruning.** The record grows with every cycle and must not grow forever. What each
+  part is read for decides when it can go.
+  - Resolutions are read only by rule 3, within the run that recorded them. Once a run has
+    settled, its connection and version pairs can be dropped.
+  - Intermediate criteria versions are read only while their run is open. A settled run
+    keeps its final version.
+  - Decisions are read beyond their run: a reversal needs a person, and the specification
+    controller checks new criteria against them. They stay until the decision has landed
+    in the specification set it affects, which is where that controller reads it.
+
+  Pruning compacts a *closed* run and never edits an open one, which is how it squares
+  with the rule that the record is append-only: nothing still reading a record loses it.
+  The later chain of custody sets its own retention, and may keep what pruning drops.
 
 Depends on the open question of
 [what vehicle holds pending Requests](https://cyberuni.github.io/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests).
