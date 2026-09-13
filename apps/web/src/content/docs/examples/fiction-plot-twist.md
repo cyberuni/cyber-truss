@@ -1,0 +1,201 @@
+---
+title: Twist written mid-draft
+description: A novelist writes a betrayal into chapter 14 that the outline never planned. Does the rest of the book learn it?
+sidebar:
+  order: 3
+---
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+Novelists split into plotters, who outline before they draft, and discovery writers, who
+find the story by writing it. It is the same split as spec-first and code-first. The craft
+advice is the same too: a twist found in the draft has to be planted back through the
+chapters before it, or it reads as unearned. This example runs that planting through the
+model.
+
+## The system
+
+A fantasy novel of twenty chapters, drafted as far as chapter 14.
+
+| Artifact-set | Holds |
+| --- | --- |
+| `{premise}` | The synopsis: what the book is about and how it ends |
+| `{outline}` | Chapter-by-chapter beats: who does what, and when the reader learns it |
+| `{story bible}` | Characters, backstories, world rules, and the timeline |
+| `{manuscript}` | The chapter drafts |
+
+The chapters are one artifact, not twenty. A continuity rule is written once for the
+manuscript, not once per chapter, for the reason given under
+[Artifact](/cyber-truss/model/artifact-sets/#artifact).
+
+Connections:
+
+- `{premise}` to `{outline}`
+- `{outline}` to `{manuscript}`
+- `{story bible}` to `{outline}`
+- `{story bible}` to `{manuscript}`
+
+The last connection holds what the outline does not state: eye colour, how far a horse
+travels in a day, where a character was in a given year. On that edge `{story bible}` is
+the [specification](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer)
+of `{manuscript}`.
+
+The premise reads: *Ilse, heir to a fallen house, learns who destroyed her family and must
+decide whether revenge is worth becoming what she hates.* The outline names the betrayer
+as Chancellor Aubrec, a minor court official, revealed in chapter 16. The story bible says
+Ilse's mentor, Maren, spent the year the house fell at sea.
+
+## Workflows
+
+| Workflow | Span | Shape |
+| --- | --- | --- |
+| Plotting | `{premise}`, `{outline}` | one link |
+| Drafting | `{outline}`, `{manuscript}` | one link |
+| Worldbuilding | `{story bible}`, `{outline}` | one link |
+| Continuity pass | `{story bible}`, `{manuscript}` | one link |
+
+## The change
+
+While drafting chapter 14, the author sees that the betrayal lands harder if it comes from
+Maren. They write the scene in which Ilse finds Maren's seal on the letter that doomed her
+family. The diff touches chapter 14 only.
+
+## Variant A: the book has an outline
+
+### Expected run
+
+1. **Lift.** The change touches `{manuscript}`.
+2. **Distill.** Intent: *the person who betrayed Ilse's family is the person she trusts
+   most, Maren.* The name stays in the intent. A reading that kept only *someone Ilse
+   trusts* would let a replay choose a different character, and what the author found was
+   who, not a category.
+3. **Criteria.**
+   - Maren betrayed the house, and Aubrec did not.
+   - The reveal comes in chapter 14.
+   - At least two earlier scenes admit both readings of Maren: innocent on a first
+     reading, damning on a second.
+   - Maren's backstory places her where she could have sealed the letter.
+   - The climax still turns on Ilse's choice about revenge.
+4. **Strain.** Two connections are strained. `{outline}` to `{manuscript}`: the outline
+   names Aubrec and chapter 14 names Maren. `{story bible}` to `{manuscript}`: the bible
+   puts Maren at sea.
+5. **Select.** Drafting and continuity pass.
+6. **Replay.** Drafting translates the intent into a Request at `{outline}`. The outline
+   moves the betrayal to Maren and adds setup beats to chapters 3 and 9. It also reworks
+   the climax, which had Ilse executing Aubrec and now has her facing someone she loves.
+   Chapters 3, 9, 14, and 18 to 20 are derived from the amended outline. Continuity pass
+   translates the intent into a Request at `{story bible}`, puts Maren ashore that year,
+   and checks the manuscript against the amended bible.
+7. **Compare.** The author's chapter 14 meets the reveal criterion. The setup criterion
+   has holes: nothing before chapter 14 supports the reveal, which is why the scene read as
+   a twist rather than a turn. The replay derived its own chapter 14, and both versions
+   meet the criteria. Prose is a
+   [coordinate](/cyber-truss/model/confluence/#what-confluence-is-claimed-over), so the
+   choice between the two chapters is a choice between settled states. The author keeps
+   their own scene, and the choice is recorded.
+8. **Propagate.** The amended bible strains `{story bible}` to `{outline}`, because
+   chapter 2 of the old outline has Maren's ship coming into port. Worldbuilding is
+   selected. If drafting has already amended the outline against the shared criteria, the
+   strain is gone before worldbuilding runs. If not, worldbuilding amends chapter 2 the way
+   drafting will. Either order settles in one extra cycle. `{premise}` to `{outline}`
+   holds, because the premise names no betrayer and the reworked climax still turns on
+   revenge.
+
+### Settled state
+
+- `{premise}` is unchanged.
+- `{outline}` names Maren, plants her in chapters 3 and 9, and ends on Ilse's choice about
+  her.
+- `{story bible}` puts Maren ashore in the year the house fell.
+- `{manuscript}` carries the author's chapter 14, with derived setup scenes and a derived
+  ending.
+
+### Status: Holds
+
+The run carries the twist back through the outline and out to the chapters that need it.
+It works because the outline is where setup is planned, and drafting, a selected workflow,
+owns the outline.
+
+The run leaves one choice to whichever state it reaches. The criteria say Aubrec did not
+betray the house, and nothing else about him. One replay keeps him as a red herring and
+another cuts him, and both states meet the criteria.
+[Confluence](/cyber-truss/model/confluence/#what-confluence-is-claimed-over) lists actors
+as the usual topology, but topology is only what the criteria constrain, so a character no
+criterion names is a coordinate. An author would not call a character a coordinate. The
+model's reply is that a difference that matters is a criterion nobody stated, and stating
+it starts the next iteration. The reply is consistent, and the choice is recorded rather
+than left to timing.
+
+## Variant B: the author writes without an outline
+
+The book has no `{outline}`. The connections are `{premise}` to `{manuscript}` and
+`{story bible}` to `{manuscript}`. Drafting spans `{premise}` and `{manuscript}`, and
+continuity pass is unchanged.
+
+### Expected run
+
+1. **Lift.** The change touches `{manuscript}`.
+2. **Distill.** The same intent as variant A.
+3. **Criteria.** The same criteria as variant A.
+4. **Strain.** `{story bible}` to `{manuscript}` is strained, because the bible puts Maren
+   at sea. `{premise}` to `{manuscript}` holds, because the premise names no betrayer.
+5. **Select.** Continuity pass.
+6. **Replay.** Continuity pass translates the intent into a Request at `{story bible}` and
+   puts Maren ashore. Its vocabulary is facts: who was where, and when. It has no term for
+   a scene that reads two ways, so the setup criterion does not survive translation.
+7. **Compare.** The same holes as variant A. Nothing before chapter 14 supports the
+   reveal.
+8. **Propagate.** Nothing. The holes lie between chapter 3 and chapter 14, inside one
+   artifact-set, and they strain no connection.
+
+### Settled state
+
+- `{premise}` is unchanged.
+- `{story bible}` puts Maren ashore.
+- `{manuscript}` has the reveal in chapter 14 and no setup before it.
+
+Every connection holds, and the book is not finished by any standard its author would
+accept.
+
+### Status: Gap
+
+The criteria were derived correctly, and the comparison found the holes. Neither step can
+select a workflow. [Selection](/cyber-truss/model/canonical-execution/#how-workflows-are-selected)
+starts from strain on a connection, and the setup the twist needs sits inside
+`{manuscript}`. The run's criteria are wider than its selection, and the criteria no
+selected workflow can translate are dropped without a record.
+
+This is not the gap in the
+[pagination bug's variant B](/cyber-truss/examples/software-bug-fix/#variant-b-the-spec-says-nothing-about-the-boundary).
+There, no criterion named the empty-list case, so nothing could find it. Here the criteria
+exist and the comparison names the hole. What is missing is a route from a hole the
+comparison reports to a workflow or controller that can fill it. The likeliest route is the
+manuscript's [controller](/cyber-truss/model/artifact-sets/#controllers), the editor who
+holds the chapters consistent with each other. It could only take the hole if it were
+handed the run's criteria, and what a controller is handed is
+[still open](/cyber-truss/model/open-questions/#where-does-the-controller-interface-sit).
+
+## What it tests
+
+- [Intent and criteria](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)
+  in a field where quality is argued. Whether a twist is earned is a craft judgement, but
+  *two earlier scenes admit both readings* can be checked by a reader who has not reached
+  chapter 14.
+- [Distillation](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight)
+  keeping a proper name. An intent abstract enough to drop the name lets a replay swap the
+  author's discovery for a different one that meets the same criteria.
+- [The inversion](/cyber-truss/model/canonical-execution/#the-inversion) in creative work.
+  The author's scene is treated as a prediction, and it survives the comparison only
+  because prose is a coordinate. If a style guide constrained the prose, the prose would be
+  topology, and the comparison could reject the author's own sentences.
+- Change reaching backwards in reading order. The setup lands in chapters the author
+  thought were finished. Connections are
+  [undirected](/cyber-truss/model/connections/#connections-are-undirected), and the reach
+  they give is not bound to the order a reader meets the chapters in.
+- Coupling inside one artifact-set. The model sees connections between sets. The
+  consistency fiction depends on most, one chapter against another, lies within a set, and
+  variant B shows what is lost when no connection stands in for it.
+- Actors as topology. Variant A leaves a character's survival to whichever settled state
+  the run reaches.
