@@ -52,6 +52,16 @@ cd dist && for f in $(find . -name '*.html'); do grep -o 'href="/cyber-truss/[a-
   | while read p; do [ -f "./$p/index.html" ] || [ -z "$p" ] || echo "BROKEN: /$p"; done
 ```
 
+That loop checks pages only, and a link to a renamed heading still resolves to its page.
+Check `#fragment` targets too, after any heading rename or section move:
+
+```sh
+cd dist && for f in $(find . -name '*.html'); do grep -o 'href="/cyber-truss/[a-z0-9/-]*#[a-z0-9-]*"' $f; done \
+  | sort -u | sed 's|href="/cyber-truss/||;s|"||' \
+  | while read l; do p="${l%%#*}"; a="${l##*#}"; \
+      grep -q "id=\"$a\"" "./$p/index.html" 2>/dev/null || echo "BROKEN ANCHOR: /$l"; done
+```
+
 ## Interactive Components
 
 Client-side logic lives in `src/lib/<name>.ts` as a pure, DOM-free module with its own
