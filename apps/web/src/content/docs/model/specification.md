@@ -93,7 +93,7 @@ Two consequences worth stating.
 worth writing down, only a formatter. Requiring a specification everywhere would
 manufacture ceremony in exactly the places the model exists to remove it from.
 
-**Connections join at a level.** Two specifications are comparable when they sit at the
+**Connections connect at a level.** Two specifications are comparable when they sit at the
 same rung. What "the same rung" means across artifact types is not yet defined, and it is
 the first thing this page needs that it does not have.
 

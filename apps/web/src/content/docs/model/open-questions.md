@@ -137,7 +137,7 @@ for settling it before there is more than one controller rather than after.
 - **Is the controller spectrum a total order?** It reads as one from judgement to
   mechanism, but that has not been tested against enough controllers to assert.
 - **Where does lifting live?** A line diff must be raised into artifact-set vocabulary
-  before anything joins. That it is required is settled; where it sits and how much
+  before anything can be matched. That it is required is settled; where it sits and how much
   judgement it needs is not.
 - **What is a topology diff, operationally?** The model's
   [acceptance test](/cyber-truss/model/confluence/#how-the-claim-is-tested) depends on

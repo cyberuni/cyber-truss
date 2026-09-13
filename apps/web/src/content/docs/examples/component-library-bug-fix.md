@@ -116,9 +116,9 @@ The run depends on three things the model does not yet say.
   [per-edge roles](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer)
   say both readings are allowed and give no rule for choosing. The choice decides the
   settled state.
-- **Where the connection joins.** `{spec}` joins `{code, test}` at behaviour. `{API docs}`
-  joins it at the exported props and their types, a rung below. The model has not said
-  [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level)
+- **Where the connection sits.** `{spec}` connects to `{code, test}` at behaviour.
+  `{API docs}` connects to it at the exported props and their types, a rung below. The
+  model has not said [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level)
   across artifact types, and this connection cannot be evaluated until it does.
 - **What distillation keeps.** Step 2 reads the new props as expression. A distiller could
   read *the component owns the page count* as part of the intent, and then the replay
