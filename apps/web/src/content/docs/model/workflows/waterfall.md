@@ -188,14 +188,16 @@ This is a limit, but it is not a shortfall against waterfall's own literature. R
 failure", adding feedback between adjacent phases. The model's refusal to encode direction
 reproduces the corrected waterfall and declines the caricature.
 
-**Status: Settled** as a consequence of undirected connections. **Open:** whether any
-process needs a *preferred* direction at a connection — a tie-break for which end yields —
-and whether that can be expressed as workflow rather than smuggled into the connection.
+**Status: Settled** as a consequence of undirected connections. A process that needs a
+*preferred* direction at a connection, a rule for which end yields, expresses it in the
+workflow's
+[inputs and outputs](/cyber-truss/model/workflow/#direction-lives-in-the-workflow) rather
+than in the connection.
 
 ## Waterfall as one selectable workflow
 
 A last consequence, from
-[workflow selection](/cyber-truss/model/canonical-execution/#workflow-selection-not-injection-depth).
+[workflow selection](/cyber-truss/model/workflow/#how-workflows-are-selected).
 
 Expressing waterfall does not make it the workflow. It makes it *a* workflow spanning
 this chain of sets — the appropriate one when a change genuinely reaches requirements, and

@@ -62,21 +62,21 @@ change of representation.
 ### Discharge
 
 Where a workflow requires strain on a crossing to be resolved. SDD's implementation gate is
-a discharge point. One of the four parameters of a [formal workflow](#formal-workflow).
+a discharge point. One of the parameters a [workflow](#workflow) declares.
 
 ### Distillation
 
 Reducing an arriving change to its [intent](#intent), separated from the particular
-expression of it. Produces nothing workflow-shaped: each workflow owns its own
-[Request](#request). Irreducibly agentic, and the step that carries the confluence
-guarantee. See
+expression of it, by reading back along the workflows the change
+[identified](#origin-candidate). Writes nothing, and produces nothing workflow-shaped:
+each workflow owns its own [Request](#request). Irreducibly agentic, and the step that
+carries the confluence guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
 
 ### Formal workflow
 
-A named policy over the lattice, fixing four things: which artifact-sets it spans, the
-shape of the connections between them, where discharge happens, and how much strain may
-cross. See [the catalog](/cyber-truss/model/workflows/).
+See [workflow](#workflow). The catalog uses the longer name for staged processes expressed
+in the model. See [the catalog](/cyber-truss/model/workflows/).
 
 ### Governance target
 
@@ -93,6 +93,13 @@ model reasons about its outcome, not its internals. A role, not a kind of artifa
 
 A specification and its implementation disagree while both are in hand. Intra-unit-of-change,
 and it blocks. See [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain).
+
+### Input and output
+
+Per [workflow](#workflow), whether each artifact-set in its span is read or written. A
+workflow never writes its inputs. Inputs and outputs are where direction lives, since a
+connection has none. See
+[Direction lives in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
 
 ### Intent
 
@@ -129,6 +136,12 @@ evaluable on a cold repository, with no diff. The axis-2 strain.
 A specification whose implementation lives elsewhere — an accepted ADR constrains modules
 it does not contain. Does not block, must be tracked, and can be **declined**.
 
+### Origin candidate
+
+A workflow whose outputs include a set a change landed in. The change skipped that
+workflow's derivation. Found by a lookup over declared outputs. See
+[A change identifies the workflows it bypassed](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+
 ### Request
 
 A distilled [intent](#intent) translated into one workflow's vocabulary, at that
@@ -138,10 +151,11 @@ the same intent must produce the same Request. See
 
 ### Selection
 
-Finding the workflows a change needs: those whose span covers a strained connection, with
-intent breaking ties where several span the same one. Extended as replays strain
-connections further out. See
-[How workflows are selected](/cyber-truss/model/canonical-execution/#how-workflows-are-selected).
+Finding the workflows a change needs: the [origin candidates](#origin-candidate) whose
+inputs do not already hold the change's criteria, and the workflows whose span covers a
+strained connection and whose outputs include the end that has to change. Intent breaks
+ties. Extended as replays strain connections further out. See
+[How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
 
 ### Specification
 
@@ -174,6 +188,12 @@ diffs.
 [Axis 1](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change). Artifacts that must
 move together for a change to be complete — what belongs in one commit to be coherent.
 Delta-driven.
+
+### Workflow
+
+A named policy over the lattice. It declares its span, the [input or output](#input-and-output)
+role of each set in it, its shape, where discharge happens, and its strain policy. See
+[Workflow](/cyber-truss/model/workflow/).
 
 ## Terms deliberately not used
 

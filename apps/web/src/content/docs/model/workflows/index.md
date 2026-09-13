@@ -17,6 +17,10 @@ staged process examined since has fit it, which makes it worth stating as a defi
 > artifact-sets it spans, the shape of the connections between them, where discharge
 > happens, and how much strain may be carried across each crossing.
 
+The [Workflow](/cyber-truss/model/workflow/) page owns the definition, and has since added a
+fifth parameter, each set's role as input or output, which the examples needed and this
+catalog did not surface. The table below records the four it tested.
+
 Nothing else. A formal workflow introduces no mechanism the model does not already
 have — it is a *parameterisation* of artifact-sets, connections, discharge criteria, and
 [the three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain).

@@ -47,9 +47,10 @@ SDD's `{spec, suite}` and `{code, test, stories}` are connected. The mission loo
 traverses that connection spec-first; backfill traverses it implementation-first;
 build-to-learn works both ends at once. Three traversals, one relation.
 
-Direction is a property of *where the delta landed*, not of the connection. Writing
-direction into the connection bakes in one workflow and makes the others second-class —
-which is precisely the situation the model exists to fix.
+Direction is a property of *where the delta landed*, and of
+[the workflow that restores the relation](/cyber-truss/model/workflow/#direction-lives-in-the-workflow),
+not of the connection. Writing direction into the connection bakes in one workflow and
+makes the others second-class — which is precisely the situation the model exists to fix.
 
 **Status: Settled.**
 

@@ -87,7 +87,7 @@ down, plus one. That rule is the bug.
    spans the second. Both are selected.
 6. **Replay.** Feature delivery translates the intent into a Request at its starting point,
    `{PRD}`. The PRD is too coarse to hold a page-count rule, so the Request
-   [passes through](/cyber-truss/model/canonical-execution/#a-replay-starts-at-the-workflows-start)
+   [passes through](/cyber-truss/model/workflow/#a-replay-starts-at-the-workflows-start)
    to `{spec}`, which amends its criteria, and code and tests are derived. Design implementation
    translates the same intent into a Request at `{mockups}`, amends the page indicator, and
    derives the rendering code.
@@ -155,7 +155,7 @@ fourth kind or as a condition distillation reports.
 
 ## What it tests
 
-- [Selection](/cyber-truss/model/canonical-execution/#how-workflows-are-selected) starting
+- [Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) starting
   from strain. Variant B shows that strain-only selection misses changes whose intent no
   specification states.
 - [Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent).
@@ -169,7 +169,7 @@ fourth kind or as a condition distillation reports.
 - A triangle of connections. `{spec}` reaches `{code, test}` directly and through
   `{mockups}`, so two workflows derive the same code from one intent, in an order nobody
   chooses. Variant A is the case where the orders reconcile.
-- [A replay starts at the workflow's start](/cyber-truss/model/canonical-execution/#a-replay-starts-at-the-workflows-start).
+- [A replay starts at the workflow's start](/cyber-truss/model/workflow/#a-replay-starts-at-the-workflows-start).
   Feature delivery visits `{PRD}` and passes through it, and the settled state leaves the
   PRD unchanged.
 - Obligations and tickets. The what-is story mentions a ticket that was never opened. In

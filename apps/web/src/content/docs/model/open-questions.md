@@ -15,9 +15,10 @@ Ordered by how much depends on the answer.
 ## Does an intent determine one set of workflows?
 
 [Confluence by canonicalization](/cyber-truss/model/confluence/#two-ways-to-buy-it-and-why-one-is-impractical)
-requires one canonical execution per distilled intent. Selection yields every workflow
-whose span covers a strained connection, so that execution is a set of workflows working
-toward one state. Canonicalization holds only if two things do.
+requires one canonical execution per distilled intent.
+[Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) yields every workflow
+the change bypassed and every workflow propagation reaches, so that execution is a set of
+workflows working toward one state. Canonicalization holds only if two things do.
 
 **The set is unique.** The same intent, arriving at the same strain, must select the same
 workflows. This plainly fails per connection-pair, since several workflows can span the

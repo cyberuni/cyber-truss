@@ -1,6 +1,6 @@
 ---
 title: Canonical execution
-description: How confluence is bought. Distill a change to its intent, derive criteria, select and replay workflows, compare
+description: How confluence is bought. Identify the workflows a change bypassed, distill its intent, derive criteria, select and replay, compare
 ---
 
 :::caution[Design, not implementation]
@@ -25,13 +25,17 @@ A change arriving in the middle of a workflow is not applied outward from where 
 landed. It is lifted, distilled, and replayed:
 
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
-2. **Distill** it to its **intent**: what the change is for, separated from the particular
-   expression of it.
-3. **Derive the criteria** the settled state must satisfy, from the intent.
-4. **Select** the workflows whose span covers a connection the change has strained.
-5. **Replay.** Each selected workflow translates the intent into its own **Request** and
+2. **Identify** the workflows whose outputs include a changed set. See
+   [Workflow](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+3. **Distill** the change to its **intent** by
+   [reading back](#distillation-reads-backward) along those workflows: what the change is
+   for, separated from the particular expression of it.
+4. **Derive the criteria** the settled state must satisfy, from the intent.
+5. **Select** the workflows that apply. See
+   [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
+6. **Replay.** Each selected workflow translates the intent into its own **Request** and
    replays it from its own starting point.
-6. **Compare** the replayed deltas against the change that arrived.
+7. **Compare** the replayed deltas against the change that arrived.
 
 The replay is an *independent derivation*. It does not read the incoming change as an
 answer; it derives its own and then looks.
@@ -41,10 +45,10 @@ loop's shape is agreed; several of its parts are not.
 
 ## Criteria are derived before the replay, not after
 
-Step 3 is ordered deliberately, and the order is the whole of its value.
+Step 4 is ordered deliberately, and the order is the whole of its value.
 
 A [specification](/cyber-truss/model/specification/) is intent plus criteria, and the
-comparison in step 6 is a comparison of criteria. If those criteria were read off the
+comparison in step 7 is a comparison of criteria. If those criteria were read off the
 replay's output, the comparison would be checking the workflow against itself and could
 only ever conclude *"the incoming change is wrong."*
 
@@ -63,7 +67,7 @@ intent is not.
 
 ## The inversion
 
-Step 6 changes what the incoming change *is*.
+Step 7 changes what the incoming change *is*.
 
 The designer's mockup is not the deliverable. It is a **prediction of the settled state**,
 and the replay is the independent derivation that checks it. The comparison is where the
@@ -106,15 +110,46 @@ intent — a mockup, a prose description, a failing test — and check that the 
 intents match. On current reading this is the single highest-value thing to evaluate in
 the whole system.
 
+### Distillation reads backward
+
+A diff alone cannot say what a change is for. Whether the rule it introduces is already
+stated, stated differently, or stated nowhere depends on the specifications the change
+bypassed.
+
+So distillation walks each
+[identified workflow](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed)
+in reverse, from the changed set to that workflow's inputs, and reads each input's intent
+and criteria. Where an input is itself the output of another workflow, the walk continues
+along that one. It stops at an input that holds or contradicts what the change implies, or
+at a set no workflow outputs.
+
+This is the inverse of a workflow, and it is not a workflow. A workflow reads its inputs
+and writes its outputs. Distillation follows the same path the other way and writes
+nothing. Reading on the way up and writing on the way down keeps a change to one ascent and
+one descent. If every step up wrote, each set reached would start its own pass back down.
+
+It also removes an ambiguity. Two workflows can span one connection with opposite inputs
+and outputs. Distillation follows only the workflows whose outputs the change landed in, so
+for one change it never reads a connection in both directions.
+
+What distillation reads is bounded in time. It reads the specifications as they stood when
+the change was made. Reading later state lets hindsight into the intent, which the
+[trading example](/cyber-truss/examples/stock-trade-without-thesis/) shows backfilling a
+thesis the trader never held.
+
+**Status: Thesis.** **Open:** how far up a walk should go before it stops, and what form
+the time bound takes.
+
 ### Distillation stops at intent
 
 Distillation produces intent and nothing workflow-shaped. Each selected workflow owns the
 translation of that intent into its own Request. Three reasons fix the boundary here.
 
-- **It keeps distillation testable.** If distillation also produced workflow-shaped
-  output, that output would depend on which workflows were selected. A selection mistake
-  would then read as a stability failure, and the step that most needs evaluating could
-  no longer be evaluated alone.
+- **It keeps distillation testable.** Distillation reads along the workflows a change
+  identified, and identification is a lookup over declared outputs. Hold the lookup fixed
+  and distillation can be evaluated alone. If distillation also produced workflow-shaped
+  output, it would depend on selection, which involves judgement, and a selection mistake
+  would read as a stability failure.
 - **Ownership follows knowledge.** A workflow knows what a Request at its starting point
   looks like. A central distiller would need every workflow's input shape, and that
   coupling grows with each workflow added.
@@ -137,59 +172,7 @@ intent while each workflow owns its Request. **Open:** whether distillation can 
 stable enough to carry the guarantee, which is the thesis's main risk, and whether
 per-workflow translation is stable too.
 
-## Workflow selection, not injection depth
-
-There is no single global workflow with one starting point.
-
-Several workflows can span the same pair of artifact-sets, and the right ones depend on
-the change. A refactor inside `{code, test, stories}` fires a signal to
-`{website content}` — and it must **not** drag the whole mission loop in from the spec.
-Routing every change through the longest path would reintroduce exactly the ceremony the
-model removes.
-
-A change also rarely needs only one. The strain it leaves can cross several connections,
-and each crossing may call for a different workflow. So selection yields **every workflow
-that applies**. Each translates the intent into its own Request at its own starting
-point, and together they work toward one settled state. None of them is the route on its
-own.
-
-### How workflows are selected
-
-Selection has a mechanical skeleton with two points of judgement.
-
-1. **Lifting** names the artifact-sets the change touched.
-2. **Strain detection** checks each connection on those sets for whether its relation
-   still holds. This is judgement, because evaluating criteria needs evaluation.
-3. **Candidate lookup** is mechanical. A formal workflow declares the artifact-sets it
-   spans and the shape of their connections, so the candidates are the workflows whose
-   span covers a strained connection.
-4. **Tie-breaking** is judgement. Where several candidates span the same strained
-   connection, the intent decides between them.
-
-Intent does less of the selecting than it appears to. In the refactor above, a
-behaviour-preserving change does not strain the connection to the spec at all, because
-that relation still holds. The mission loop drops out at step 2, before intent is
-consulted.
-
-Selection is also not decided once, up front. A replay changes artifacts, those changes
-can strain connections further out, and further workflows are selected. Reach is
-discovered by propagation rather than predicted from intent, because predicting reach is
-the step people fail at today.
-
-This is where the guarantee is currently weakest, and plural selection moves the question
-rather than removing it. Canonicalization now needs two things: an intent must pick out
-one set of workflows, and the set's results must settle in a state that meets the same
-criteria whatever order they run in. The second is a composition obligation that a single
-workflow never carried. The order-theoretic reading of the lattice suggests where it is
-met: criteria combine by [join](/cyber-truss/model/join/), which cannot depend on order,
-and a conflict that has no usable join is settled by a recorded decision. That is a
-direction, not a construction.
-
-**Status: Settled** that selection is plural, and discovered by propagation from strain.
-**Open**, and load-bearing: whether the set is unique, and how its results combine. See
-[Open questions](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows).
-
-### Order is not controlled
+## Order is not controlled
 
 The order in which selected workflows run cannot be fixed in advance. A workflow with a
 human in the loop takes as long as the human takes, and a design review can return more
@@ -220,7 +203,7 @@ and that a run may settle in any state that meets its criteria provided choices 
 states are recorded. **Open:** whether work a human adds during a replay, beyond what the
 Request asked for, carries the original intent or is distilled as a new one.
 
-### Cycles must come to rest
+## Cycles must come to rest
 
 Nothing so far makes a run stop. Two workflows can amend each other's side on every cycle,
 each state locally reasonable, and never settle. Every cycle costs tokens, so this is the
@@ -234,7 +217,7 @@ limit has both weaknesses.
 
 Four rules make the constraint.
 
-1. **Criteria are versioned and frozen for a run.** The criteria derived in step 3 are
+1. **Criteria are versioned and frozen for a run.** The criteria derived in step 4 are
    version 1. During a run only two events create a new version: a person adds criteria,
    or a disagreement is settled by a recorded decision. An agent cannot create a version
    by adding criteria. This is SDD's frozen `.feature` suite, extended from one gate to a
@@ -258,7 +241,7 @@ The check in rule 3 is a lookup, which puts it at the deterministic end of the
 record a cycle that resolves nothing new, so the bound does not depend on an agent
 following an instruction.
 
-#### A reversal renamed as a new criterion
+### A reversal renamed as a new criterion
 
 Rule 1 depends on a judgement: whether a proposed criterion is new, or a reversal of a
 decision under a new name. An agent could route a reversal through that door.
@@ -274,7 +257,7 @@ This narrows the weakness without closing it. A contradiction is caught. A crite
 erodes a decision without contradicting it, such as an exception broad enough to hollow it
 out, is caught only if the controller judges balance as well as consistency.
 
-#### Append-only history, not append-only criteria
+### Append-only history, not append-only criteria
 
 The record the rules read is append-only. Each version, resolution, and decision is added
 and never edited, the way an ADR is superseded rather than rewritten. The criteria
@@ -288,23 +271,6 @@ specification controller catches erosion as well as contradiction, and what hold
 record. See
 [What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
 
-## A replay starts at the workflow's start
-
-A workflow replays from its declared starting point, wherever the change landed. At each
-node the Request either changes that node's criteria or passes to the next node unchanged.
-
-A node passes the Request on when it is too coarse to hold the criteria the intent implies.
-A PRD states what a feature must do and has no place for a page-count rule, so a pagination
-fix passes through it to the feature spec, which is where the rule belongs.
-
-Starting at the highest node the intent changes would give the same result when the guess
-is right. It needs that node predicted up front, and predicting reach is the step
-[selection](#how-workflows-are-selected) already declines to make. The visit also checks
-something. Passing through is a judgement that the intent does not change that node, and it
-is the same judgement that catches a change that does.
-
-**Status: Settled.**
-
 ## Replay output must not re-trigger replay
 
 Canonical execution produces deltas that land in the repository. Without provenance,
@@ -315,7 +281,7 @@ Deltas therefore need a marker for *produced by canonical execution*. A small me
 easy to miss until it bites.
 
 The marker does not stop propagation, and must not. Replay output that strains a
-connection further out is how [selection](#how-workflows-are-selected) discovers reach. The
+connection further out is how [selection](/cyber-truss/model/workflow/#how-workflows-are-selected) discovers reach. The
 distinction is what the output carries: it is never distilled again into a new intent,
 and the strain it produces carries the original intent onward. Without intent owned by
 distillation, "do not re-trigger replay" and "discover reach by propagation" would

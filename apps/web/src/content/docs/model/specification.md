@@ -41,6 +41,10 @@ The model therefore treats the roles as **per-edge**:
 Both roles attach to the same artifact on different edges, and asking whether an artifact
 "is a spec" without naming the edge is the question that produces the confusion.
 
+Where an edge allows either reading, the roles do not choose. The workflow that restores
+the edge does, through its
+[inputs and outputs](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
+
 This is orthogonal to what a specification *contains*, below. One decomposition is
 vertical and per-edge; the other is internal to a single specification. Conflating them is
 the failure mode this section exists to prevent.

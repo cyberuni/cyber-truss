@@ -86,7 +86,7 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
 5. **Select.** Rebalance and thesis-first trade.
 6. **Replay.** Thesis-first trade translates the intent into a Request at `{theses}`,
    writes the thesis, and derives a position from it. Rebalance's Request
-   [passes through](/cyber-truss/model/canonical-execution/#a-replay-starts-at-the-workflows-start)
+   [passes through](/cyber-truss/model/workflow/#a-replay-starts-at-the-workflows-start)
    `{mandate}`, which the intent does not change, and derives the sales that bring the
    position and the sector within the limits.
 7. **Compare.** The builder lens reports holes: no thesis, and two limits broken. The
