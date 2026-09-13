@@ -56,9 +56,10 @@ Nobody should have to go back to the drawing board to move a button.
 Two halves, and both matter.
 
 **Path independence.** Whichever artifact you touch first, the repository settles into a
-state that meets the same criteria. This is the order-theoretic reading of [the lattice](/cyber-truss/model/lattice/):
-a join is a *unique* least upper bound, and merge into a join-semilattice is confluent by
-construction. Confluence is the property; the rest of the model is how it is bought.
+state that meets the same criteria. This is the order-theoretic reading of
+[the lattice](/cyber-truss/model/lattice/), taken over criteria: criteria arriving by
+different routes join to the same set whichever arrives first, even though several states
+can meet that set. Confluence is the property; the rest of the model is how it is bought.
 
 **Uninterrupted focus.** The ceremony is deferred, not skipped. A designer prototypes in
 dumb HTML without stopping to write a spec. The obligations to spec, implementation, and

@@ -97,7 +97,8 @@ too, and [distillation](#distillation) is what separates it from the change's ex
 ### Lattice
 
 The concept the system is worked out from, in three readings: the crystal that settles
-back, the graph that redistributes load, and the order-theoretic structure with a join.
+back, the graph that redistributes load, and the order-theoretic structure whose join
+combines criteria.
 Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/lattice/).
 
 ### Lifting

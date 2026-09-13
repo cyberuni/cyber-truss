@@ -178,10 +178,11 @@ the step people fail at today.
 
 This is where the guarantee is currently weakest, and plural selection moves the question
 rather than removing it. Canonicalization now needs two things: an intent must pick out
-one set of workflows, and the set's results must combine into one state whatever order
-they run in. The second is a composition obligation that a single workflow never carried.
-The order-theoretic reading of the lattice suggests where it could be met: results that
-combine by join cannot depend on order. That is a direction, not a construction.
+one set of workflows, and the set's results must settle in a state that meets the same
+criteria whatever order they run in. The second is a composition obligation that a single
+workflow never carried. The order-theoretic reading of the lattice suggests where it is
+met: criteria combine by join, which cannot depend on order, and a conflict that has no
+usable join is settled by a recorded decision. That is a direction, not a construction.
 
 **Status: Settled** that selection is plural, and discovered by propagation from strain.
 **Open**, and load-bearing: whether the set is unique, and how its results combine. See
