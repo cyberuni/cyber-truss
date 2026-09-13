@@ -52,7 +52,7 @@ written down and worked forward. The round trip improves the change instead of o
 recording it.
 
 The guarantee this buys is [confluence](/cyber-truss/model/confluence/). Whichever
-artifact you started from, the system settles into the same state.
+artifact you started from, the system settles into a state that meets the same criteria.
 
 ## Where this goes
 

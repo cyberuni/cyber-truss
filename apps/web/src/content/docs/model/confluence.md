@@ -23,11 +23,21 @@ quality**, and that difference is the reason `cyber-truss` exists.
 
 ## The claim
 
-> Whichever artifact you change first, the repository settles into the same state.
+> Whichever artifact you change first, the repository settles into a state that satisfies
+> the same criteria.
 
-This is confluence in the rewriting sense — Church-Rosser. If a term can be reduced along
-several routes, all of them reach the same normal form. Applied here: the entry point is a
-choice about *how you work*, and it should have no bearing on *what you end up with*.
+This is confluence in the rewriting sense, Church-Rosser, taken modulo an equivalence.
+Strict confluence requires every route to reach the same normal form. That cannot hold
+here, because criteria rarely determine one state. A set of criteria can be met by several
+states, the way a truss can have several stable equilibria. Two states that satisfy the
+same criteria are treated as equivalent, and confluence is claimed up to that equivalence.
+The entry point is a choice about *how you work*, and it should have no bearing on *which
+criteria the result meets*.
+
+Criteria a person adds during a run are new input, not a different route. The claim
+compares runs given the same criteria. When a difference between two settled states turns
+out to matter, that difference is a criterion nobody had stated, and adding it starts the
+next iteration.
 
 It is also the third reading of [the lattice](/cyber-truss/model/lattice/), and the
 central one rather than an aside. An order-theoretic lattice has a **join**: a unique
@@ -47,8 +57,16 @@ The claim is over **topology**:
 > Scenarios, actors, and edges are topology and must converge. Prose, section order, and
 > file organisation are coordinates and are free.
 
+Topology is what the criteria constrain. Scenarios, actors, and edges are its usual
+members because criteria are usually stated over them. Coordinates are free because no
+criterion constrains them. When one does, as a style guide constrains prose, that part
+becomes topology.
+
 Two runs producing different *layouts* of the same graph is not a failure. Two runs
-producing a different **edge set** is.
+producing a different **edge set** is. Two runs that settle in different states, both
+meeting the criteria, are not a failure either, provided the choice between the states was
+recorded rather than left to timing. See
+[Order is not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled).
 
 This distinction is not a detail of how results are reported. It is **the statement of
 what the system guarantees**. Without it the guarantee is either unachievable — if you

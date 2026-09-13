@@ -55,8 +55,8 @@ Nobody should have to go back to the drawing board to move a button.
 
 Two halves, and both matter.
 
-**Path independence.** Whichever artifact you touch first, the repository settles into the
-same place. This is the order-theoretic reading of [the lattice](/cyber-truss/model/lattice/):
+**Path independence.** Whichever artifact you touch first, the repository settles into a
+state that meets the same criteria. This is the order-theoretic reading of [the lattice](/cyber-truss/model/lattice/):
 a join is a *unique* least upper bound, and merge into a join-semilattice is confluent by
 construction. Confluence is the property; the rest of the model is how it is bought.
 

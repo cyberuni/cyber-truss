@@ -29,10 +29,9 @@ sets that the mission loop also connects. Whether the set is unique at the level
 **The results converge.** Workflows in the set start from different Requests and can reach
 overlapping artifacts. The order they run in is
 [not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled), and when
-their results disagree another cycle runs. The number of cycles may depend on order. The
-settled state must not, and the cycles must terminate. Combining results by the lattice
-join would make both hold by construction, but nothing yet shows that workflow results form
-a join-semilattice.
+their results disagree another cycle runs. Order may change how many cycles pass and which
+settled state is reached, provided every settled state meets the same criteria and each
+choice between states is recorded. The cycles must also come to rest.
 
 **What breaks if it resolves badly:** the whole confluence construction. If the set is not
 unique, or its results do not converge, path-independence needs a different mechanism than

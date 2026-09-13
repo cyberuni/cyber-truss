@@ -199,20 +199,24 @@ further work is needed. When they disagree, the disagreement is a strained conne
 it selects further workflows in another cycle. Disagreement costs cycles. It is not an
 error.
 
-Order may change the path: which workflows run, and how many cycles pass. It may not change
-the settled state, in [topology](/cyber-truss/model/confluence/#what-confluence-is-claimed-over).
-Two orders that settle in different places have lost confluence, however many cycles each
-took. That is the composition obligation above, stated as a condition on cycles: they
-terminate, and at one state.
+Order may change the path: which workflows run, and how many cycles pass. It may also change
+where the run settles. A settled state is any state in which every connection holds, and
+criteria rarely fix only one. Two orders can reach different settled states that meet the
+same criteria, and neither is wrong. That is why
+[confluence](/cyber-truss/model/confluence/#the-claim) is claimed over criteria rather
+than over one state. The Transformation Priority Premise in test-driven development makes
+the same observation: the order of transformations can change which algorithm you end up
+with.
 
-The Transformation Priority Premise in test-driven development also holds that order
-matters. The comparison has a limit. There, the order of transformations can change which
-algorithm you end up with. Here, that outcome is the failure.
+What order must not do is choose between settled states silently. When workflows disagree
+and a decision takes one side, the decision is recorded. Without the record, whichever
+workflow finished last decides, and that is the old habit of believing whichever artifact
+was touched first, decided by timing instead.
 
-**Status: Settled** that order is not controlled and that disagreement runs further
-cycles. **Open:** that the cycles terminate at one state, and whether work a human adds
-during a replay, beyond what the Request asked for, carries the original intent or is
-distilled as a new one.
+**Status: Settled** that order is not controlled, that disagreement runs further cycles,
+and that a run may settle in any state that meets its criteria provided choices between
+states are recorded. **Open:** whether work a human adds during a replay, beyond what the
+Request asked for, carries the original intent or is distilled as a new one.
 
 ## A replay starts at the workflow's start
 

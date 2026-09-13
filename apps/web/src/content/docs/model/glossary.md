@@ -26,8 +26,8 @@ A group of artifacts, grouped along one of [two orthogonal axes](/cyber-truss/mo
 
 ### Confluence
 
-The guarantee: whichever artifact you change first, the repository settles into the same
-state. Claimed over [topology](#topology), not over bytes. See
+The guarantee: whichever artifact you change first, the repository settles into a state
+that meets the same criteria. Claimed over [topology](#topology), not over bytes. See
 [Confluence](/cyber-truss/model/confluence/).
 
 ### Connection
@@ -150,7 +150,8 @@ the three, never a score on each.
 
 ### Topology
 
-The properties that must converge across entry points — scenarios, actors, and edges. The
+What the criteria constrain, and so what must converge across entry points. Usually
+scenarios, actors, and edges. The
 thing [confluence](#confluence) is claimed over, and the thing the model's acceptance test
 diffs.
 
