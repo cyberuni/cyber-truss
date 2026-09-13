@@ -76,6 +76,11 @@ Criteria are stated over the **outcome** of the implementation rather than its i
 That is what makes them survive a change of representation: the same criteria hold whether
 the mockup is Figma or dumb HTML, whether the module is TypeScript or Rust.
 
+An outcome includes when it was produced. A criterion such as *no older than two days* is
+stated over the outcome, and it can go false with nothing changed. How the loop handles
+that is in
+[The loop starts only from a change](/cyber-truss/model/canonical-execution/#the-loop-starts-only-from-a-change).
+
 **Status: Settled** that intent and criteria are distinct and that a specification is
 both.
 

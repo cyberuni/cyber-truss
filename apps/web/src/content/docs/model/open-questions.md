@@ -92,6 +92,23 @@ obligations accumulate, and the branch cannot retire while topology is strained.
 Coordinates never block. Transient inconsistency becomes designed, with a stated window,
 rather than accidental.
 
+## What bounds retries across runs?
+
+The [rules that make cycles come to rest](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest)
+bound one run. They do not bound a sequence of runs.
+
+A criterion over time, such as *market data must not be older than two days*, goes false on
+schedule. If the controller that refreshes the data keeps failing, every tick starts a new
+run, selects the refresh, and fails again. Each run is bounded. The sequence is not, and no
+rule sees it, because each attempt belongs to a different run.
+
+Something must notice a failure that repeats across runs and hand it to a person. The
+record in [the run ledger](https://github.com/cyberuni/cyber-truss/blob/main/docs/backlog.md)
+could carry it, if it is kept past the run that wrote it.
+
+**What breaks if it resolves badly:** the most expensive failure the loop has, running
+without end, returns through the gap between runs that the per-run rules closed.
+
 ## Can the comparison indict the workflow?
 
 Canonicalization guarantees confluence of the executed path, not its correctness. A

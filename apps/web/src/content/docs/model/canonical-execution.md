@@ -43,6 +43,40 @@ answer; it derives its own and then looks.
 **Status: Thesis.** Flagged by its author as needing further design and analysis. The
 loop's shape is agreed; several of its parts are not.
 
+## The loop starts only from a change
+
+Nothing enters the loop except a change to an artifact-set. Work that must happen with
+nobody changing anything is stated as a criterion, and a controller makes the change that
+tests it.
+
+A criterion can depend on time. *Market data must not be older than two days* becomes
+false as the days pass, with no artifact touched. The cron job that refreshes the data is
+a [controller](/cyber-truss/model/artifact-sets/#controllers), and its run is a change like
+any other. If the job fails, the criterion still goes false, and the strain says so. The
+[compliance audit](/cyber-truss/model/workflows/#compliance-audit--soc-2-iso-27001) in the
+catalog has the same shape: *controls verified within the last twelve months*, and a
+scheduled controller whose run is the change.
+
+Whether a source is inside the system is a choice about the boundary, not a property of the
+source. A vendor feed is outside until a `{market data}` set is declared, and after that its
+changes start runs. A change like that can carry an intent as thin as *the data is
+current*. What happens downstream is driven by the criteria the specifications already
+state, which take part in the [join](/cyber-truss/model/join/#within-a-run) wherever the
+intent does not replace them.
+
+Two requirements follow.
+
+- **Checking a criterion over time must be a lookup.** Every tick reaches every such
+  criterion. Judgement at that rate keeps agents running when nothing has changed.
+- **Retries across runs need their own bound.** The rules in
+  [Cycles must come to rest](#cycles-must-come-to-rest) bound one run. A refresh that fails
+  on every tick starts a new run on every tick, and none of those runs repeats a resolution
+  within itself.
+
+**Status: Settled** that the loop starts only from a change, and that anything else is
+stated as a criterion a controller tests. **Open:** the bound on retries across runs. See
+[Open questions](/cyber-truss/model/open-questions/#what-bounds-retries-across-runs).
+
 ## Criteria are derived before the replay, not after
 
 Step 4 is ordered deliberately, and the order is the whole of its value.
