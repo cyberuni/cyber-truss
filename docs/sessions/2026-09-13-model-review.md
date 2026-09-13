@@ -31,7 +31,7 @@ examples section, and the Workflow and Controller pages. Read this, then
 | Three roles: input (read), owned (read + revise), output (emitted, supersede only) | workflow |
 | Candidates by lookup: upstream (own/output a changed set), downstream (read one) | workflow |
 | A workflow reads a change in its inputs, never one in sets it owns or outputs | workflow |
-| Six selection steps, incl. routing strain the read found, waiting on strained inputs, raising unrestorable strain as obligation | workflow |
+| Six selection steps, incl. routing strain the read found, waiting on strained inputs (settled by the backward read, so opposite roles cannot deadlock), raising unrestorable strain as obligation | workflow |
 | Leash: owned writes proceed when criteria pass; output writes need approval; architect/oracle go to a person; confidence only tightens | workflow |
 | Controller page: workflow owns sets and works between them; controller holds one set, carries out the join, receives the handoff | controller |
 | Fourth strain kind: missing (change's criteria not held upstream; relative to a change) | connections |
@@ -39,9 +39,16 @@ examples section, and the Workflow and Controller pages. Read this, then
 
 ## Examples (test cases)
 
-Five examples in `apps/web/src/content/docs/examples/`. Status table lives in
-`examples/index.md`. They were being re-graded against the three roles when this note was
-written; check the index for the current statuses.
+Five examples in `apps/web/src/content/docs/examples/`, re-graded against the three roles
+and the wait rule. The status table lives in `examples/index.md`; at handoff it read:
+
+| Example | Status |
+| --- | --- |
+| Bug fixed directly in code | A Holds, B Holds |
+| Bug fixed in a component library | A Holds, B Holds |
+| Twist written mid-draft | A Holds, B Unresolved (coarse input; coupling inside a set) |
+| Trade placed before its thesis | A Holds, B Unresolved (time bound form; human hindsight), C Holds |
+| Ad rewritten mid-campaign | A Holds, B Unresolved (scope; unread evidence) |
 
 Rule for new examples: write the expected run from what the system's people want before
 reading the model pages, and prefer cases the model should struggle with.
@@ -85,6 +92,13 @@ reading the model pages, and prefer cases the model should struggle with.
 - Hindsight a person brings into distillation, which no time bound covers (trading B).
 - Stability of splitting a change into several intents; stability cost of embedded
   specifications along the backward read.
+- How long obligation on an output may be carried before a superseding emission (trading A
+  and C). Belongs to strain policy, and nothing sets it yet.
+- Evidence no workflow reads (marketing `{campaign results}`): selection step 6 only
+  catches strained sets, not unread ones. Also, walks stop at the first contradicting set,
+  so evidence never reaches marketing B's distillation.
+- The default leash lets an agent make a large owned rewrite (a whole ending) that meets
+  the criteria without approval. Whether the architect lens catches it is unstated.
 
 ## Working agreements observed
 
