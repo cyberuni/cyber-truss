@@ -1,0 +1,215 @@
+---
+title: Trade placed before its thesis
+description: A trader buys on a headline and writes down why afterwards. The model has to settle a change that has already acted on the world.
+sidebar:
+  order: 4
+---
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+A trader reads a headline and buys before writing down why. Trading has the problem the
+model starts from in its sharpest form. A thesis written after the trade is written by
+someone who has watched the price move, and it fits the trade for that reason. The field's
+usual fix is the one [preregistration](/cyber-truss/model/workflows/#preregistered-study)
+uses: no order goes in without a thesis. That rule is a gate, and removing gates is what
+the model is for.
+
+## The system
+
+A long-only equity portfolio run by one trader.
+
+| Artifact-set | Holds |
+| --- | --- |
+| `{mandate}` | The investment policy: position and sector limits, and what every thesis must state |
+| `{theses}` | One document per holding: why it is held, and the condition that would prove it wrong |
+| `{portfolio}` | The positions at the broker, with the trade log |
+
+`{portfolio}` does not live in git. It is the broker's record, and a change to it is an
+executed order. The model does not require an artifact to be a file, and the
+[workflow catalog](/cyber-truss/model/workflows/#double-entry-bookkeeping) already
+includes a ledger.
+
+Connections:
+
+- `{mandate}` to `{portfolio}`: no position above 5% of the portfolio, and no sector above
+  25%.
+- `{mandate}` to `{theses}`: every thesis states an invalidation condition.
+- `{theses}` to `{portfolio}`: every position has a thesis, and no position is held past its
+  invalidation.
+
+Before the change, semiconductors are 22% of the portfolio.
+
+## Workflows
+
+| Workflow | Span | Shape |
+| --- | --- | --- |
+| Thesis-first trade | `{theses}`, `{portfolio}` | one link |
+| Rebalance | `{mandate}`, `{portfolio}` | one link |
+| Thesis review | `{mandate}`, `{theses}` | one link |
+
+## The change
+
+Orrin Micro announces a recall of its flagship chip. Within minutes the trader buys shares
+of its competitor, Kessler Semi, in the broker's app. No thesis is written. Variants A and
+B differ in the size of the order. Variant C is a later event with no change at all.
+
+## Variant A: the trade breaks the mandate
+
+The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
+
+### Expected run
+
+1. **Lift.** The change touches `{portfolio}`.
+2. **Distill.** Intent: *hold Kessler Semi for the market share it gains from Orrin's
+   recall.* The size is expression. It records how sure the trader felt in the minute after
+   the headline.
+3. **Criteria.**
+   - A thesis states the market-share mechanism and a condition that would prove it wrong:
+     Orrin ships a replacement chip within one quarter.
+   - The position is at most 5% of the portfolio, and semiconductors at most 25%.
+4. **Strain.** `{mandate}` to `{portfolio}` is strained, because both limits are broken.
+   `{theses}` to `{portfolio}` is strained, because a position has no thesis.
+5. **Select.** Rebalance and thesis-first trade.
+6. **Replay.** Thesis-first trade translates the intent into a Request at `{theses}`,
+   writes the thesis, and derives a position from it. Rebalance's Request
+   [passes through](/cyber-truss/model/canonical-execution/#a-replay-starts-at-the-workflows-start)
+   `{mandate}`, which the intent does not change, and derives the sales that bring the
+   position and the sector within the limits.
+7. **Compare.** The builder lens reports holes: no thesis, and two limits broken. The
+   replayed position cannot replace the arriving one. The order has executed and the price
+   has moved, so the state before the trade no longer exists. What lands is a new order.
+   Bringing the sector to 25% means selling 5 points of semiconductors, and the replay can
+   take them all from Kessler Semi or split them with the other chip holdings. Both meet
+   the criteria, and the choice is recorded.
+8. **Propagate.** The new thesis states an invalidation condition, so `{mandate}` to
+   `{theses}` holds. Nothing else is strained.
+
+### Settled state
+
+- `{mandate}` is unchanged.
+- `{theses}` holds a Kessler Semi thesis with its invalidation condition.
+- `{portfolio}` is within both limits.
+
+### Status: Holds
+
+The run reaches a state that meets the criteria. The criteria are stated over the outcome,
+and a later sale meets them as well as a smaller first order would have.
+
+What the run does not bound is how long the breach lasted. For that whole window the
+portfolio carried risk the mandate forbids. The
+[proposed boundary](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
+lets strain accumulate during work and blocks it at a merge. A broker order has no merge.
+The change acted on the world the moment it was made, so the only place a block could have
+stopped it was the order ticket, and a block there is the gate this example set out to
+remove. The settled state is right. The window is a cost the model has not priced.
+
+## Variant B: the thesis is written afterwards
+
+The order takes Kessler Semi to 3%, within both limits. The run is out of band and reaches
+the change two days later. By then the stock is up 12%, and analysts credit the rise to a
+rumoured data-centre contract.
+
+### Expected run
+
+1. **Lift.** The change touches `{portfolio}`.
+2. **Distill.** The order carries a ticker, a size, and a time. The headline the trader
+   read is not in it. The distiller reads what is available now, which includes the rise
+   and the analysts' account of it. Intent: *hold Kessler Semi for data-centre growth.*
+3. **Criteria.** A thesis states the data-centre mechanism and an invalidation condition:
+   no contract announced by year end. The position is within both limits.
+4. **Strain.** `{theses}` to `{portfolio}`, because a position has no thesis.
+5. **Select.** Thesis-first trade.
+6. **Replay.** Thesis-first trade writes the data-centre thesis and derives a 3% position.
+7. **Compare.** Match. The arriving change was an order, and the replay derives the same
+   order.
+
+### Settled state
+
+- `{theses}` holds a data-centre thesis the trader never had.
+- `{portfolio}` is unchanged.
+
+The trader's desk wanted a record of the recall trade, with a condition that could prove
+the recall reasoning wrong. It got a thesis whose invalidation has not been tested yet and
+was never the reason for the trade.
+
+### Status: Gap
+
+Every step ran as the model specifies, and the result is the backfill the
+[problem statement](/cyber-truss/model/#the-problem) describes: a specification that fits
+the implementation because it was written from the implementation's outcome.
+
+[Deriving criteria before the replay](/cyber-truss/model/canonical-execution/#criteria-are-derived-before-the-replay-not-after)
+stops the replay from setting the bar it is judged against. It does not stop the distiller
+from reading information that arrived after the change. In software that matters less,
+because code does not collect results while it waits for a run. A position does. Deferring
+the ceremony, which is [half the guarantee](/cyber-truss/model/#the-guarantee), widens the
+window in which it collects them.
+
+The missing piece is an as-of bound on distillation: read the repository and the world as
+they stood when the change was made. For market data the bound is mechanical, since every
+price and every analyst note has a timestamp. It does not cover the trader. Asked two days
+later what the trade was for, they remember the rise, and no bound restricts what a person
+remembers. So the bound catches the leak from data and not the leak from people, and a
+distiller that asks the trader launders the second through the first.
+
+## Variant C: the thesis is invalidated with nothing changed
+
+Take the portfolio settled by variant A. In week ten Orrin ships a replacement chip, the
+condition the Kessler Semi thesis names. Nobody touches the mandate, the theses, or the
+portfolio.
+
+### Expected run
+
+1. **Lift.** There is nothing to lift. No artifact changed. The world did.
+
+Nothing after step 1 starts.
+
+The strain is real. `{theses}` to `{portfolio}` no longer holds, because the portfolio
+holds a position past its invalidation. That is
+[nonconformance](/cyber-truss/model/connections/#nonconformance): evaluable on a cold
+repository, with no change. A cold check would find it. The trader wants the position
+sold.
+
+Declaring a `{market data}` artifact-set does not help. Orrin's announcement then changes
+it, and lifting has something to work on, but distillation does not. A press release
+carries no intent of the portfolio's owner. The announcement means something only against
+the thesis.
+
+### Settled state
+
+None. The position is held past its invalidation until someone notices.
+
+### Status: Gap
+
+[Canonical execution](/cyber-truss/model/canonical-execution/#the-loop) begins at a lifted
+change. Nonconformance is defined as strain that needs no change, and no step of the loop
+starts from it. A cold check can report the strain, and nothing then selects a workflow.
+
+The intent the replay needs already exists: the thesis states it, invalidation included.
+What the model lacks is a second entry to the loop, one that takes its intent from the
+strained specification rather than distilling it from a change. The
+[component library example](/cyber-truss/examples/component-library-bug-fix/#what-it-tests)
+met a nonconformance that a change happened to clear. This one has no change to clear it.
+
+## What it tests
+
+- [Criteria over the outcome](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)
+  where the earlier state cannot be restored. Variant A settles by a new order rather than
+  by undoing the old one, and the criteria do not tell the two apart.
+- The window between a change and its settled state, when the change acts on the world at
+  once. Variant A reaches the right state and cannot bound the time it took. See
+  [What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
+- [Criteria derived before the replay](/cyber-truss/model/canonical-execution/#criteria-are-derived-before-the-replay-not-after)
+  against hindsight. Variant B shows that the ordering protects the comparison and leaves
+  distillation exposed.
+- A change with almost no expression. An order is a ticker, a size, and a time.
+  Distillation has to find the intent in context, and context keeps changing after the
+  change.
+- [Nonconformance](/cyber-truss/model/connections/#nonconformance) as a start. Variant C is
+  the strain with no change, and the loop has no step that begins there.
+- An artifact outside the repository. The broker holds `{portfolio}`, and nothing in the
+  model needs git to reason about it.
+  [Lifting](/cyber-truss/model/artifact-sets/#lifting) does: a trade log has to be raised
+  into artifact-set vocabulary the same way a diff is.
