@@ -58,20 +58,10 @@ A lattice has a *join*: a unique least upper bound for any two elements. Merge i
 join-semilattice is therefore confluent by construction. No two routes can reach
 different answers, because the answer is *defined* as the least thing above both.
 
-The join is taken over criteria, not over states. Order sets of criteria by inclusion, and
-the join of two sets is their union, the same whichever set arrived first. The states that
-meet a set of criteria have no such structure. There are usually several, and none of them
-is least. That is why [confluence](/cyber-truss/model/confluence/#the-claim) is claimed
-over criteria.
-
-The join can also fail to give anything usable. Two criteria that contradict each other
-have a union no state can meet. That is a conflict, and order does not settle it. A
-[recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) does,
-and it creates the next version of the criteria.
-
-The reading holds within a run, where criteria are only added or superseded by a recorded
-decision. Between runs a specification changes freely, criteria can be removed, and the
-next run starts from whatever the specification then says.
+The join is taken over criteria, not over states: criteria arriving by different routes
+combine to their union whichever arrives first, while several states can meet that union.
+Where criteria contradict each other, the union is a conflict that only a recorded
+decision resolves. The full account is on [Join](/cyber-truss/model/join/).
 
 This is the reading the guarantee rests on, and buying it is what the rest of the model
 is for.

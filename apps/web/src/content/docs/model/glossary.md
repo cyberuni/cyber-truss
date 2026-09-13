@@ -24,6 +24,12 @@ A group of artifacts, grouped along one of [two orthogonal axes](/cyber-truss/mo
 — unit of change or governance target. The unit the model reasons about, and the node in
 [the lattice graph](/cyber-truss/model/lattice/#a-graph-of-interconnected-nodes).
 
+### Conflict
+
+A [join](#join) no state can meet: two criteria that stand together and contradict each
+other. Resolved by a recorded decision, not by running workflows again. See
+[Join](/cyber-truss/model/join/#conflict).
+
 ### Confluence
 
 The guarantee: whichever artifact you change first, the repository settles into a state
@@ -93,6 +99,13 @@ and it blocks. See [three kinds of strain](/cyber-truss/model/connections/#three
 The half of a [specification](#specification) stating what the thing is for and which
 direction it should move in. Argued with, not evaluated. An arriving change carries intent
 too, and [distillation](#distillation) is what separates it from the change's expression.
+
+### Join
+
+The operation that combines sets of [criteria](#criteria): their union, the same in any
+order. Taken over criteria, not over states. Where a [connection](#connection) says where
+criteria flow, the join says how criteria reaching one place combine. See
+[Join](/cyber-truss/model/join/).
 
 ### Lattice
 

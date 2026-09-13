@@ -25,6 +25,7 @@ export default defineConfig({
 						{ label: 'Artifact-sets', link: '/model/artifact-sets/' },
 						{ label: 'Specification', link: '/model/specification/' },
 						{ label: 'Connections', link: '/model/connections/' },
+						{ label: 'Join', link: '/model/join/' },
 						{ label: 'Confluence', link: '/model/confluence/' },
 						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
 						{ label: 'Relationship to SDD', link: '/model/relationship-to-sdd/' },

@@ -42,10 +42,8 @@ next iteration.
 It is also the third reading of [the lattice](/cyber-truss/model/lattice/), and the
 central one rather than an aside. An order-theoretic lattice has a **join**: a unique
 least upper bound for any two elements. Merge into a join-semilattice is confluent by
-construction. The join is over criteria. Two sets of criteria join to their union whichever
-arrives first, while the states that meet the union are many. Criteria that contradict
-each other have no join a state can meet, and that is where a recorded decision is
-required.
+construction. The [join](/cyber-truss/model/join/) is over criteria, not over states,
+which is why the claim above is stated over criteria.
 
 **Status: Settled** as the system's guarantee.
 
