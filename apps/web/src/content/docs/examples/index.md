@@ -55,6 +55,7 @@ An example can have variants, and each variant gets its own status.
 | [Bug fixed in a component library](/cyber-truss/examples/component-library-bug-fix/) | software | A: Unresolved. B: Holds |
 | [Twist written mid-draft](/cyber-truss/examples/fiction-plot-twist/) | fiction | A: Holds. B: Gap |
 | [Trade placed before its thesis](/cyber-truss/examples/stock-trade-without-thesis/) | trading | A: Holds. B: Gap. C: Gap |
+| [Ad rewritten mid-campaign](/cyber-truss/examples/marketing-campaign-headline/) | marketing | A: Holds. B: Unresolved |
 
 ## Adding an example
 
