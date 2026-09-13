@@ -54,12 +54,17 @@ be strained.
 
 ## Workflows
 
-| Workflow | Span | Shape |
-| --- | --- | --- |
-| Feature delivery | `{PRD}`, `{spec}`, `{code, test}` | chain |
-| Docs update | `{spec}`, `{user docs}` | one link |
-| Design update | `{spec}`, `{mockups}` | one link |
-| Design implementation | `{mockups}`, `{code, test}` | one link |
+| Workflow | Inputs | Outputs | Shape |
+| --- | --- | --- | --- |
+| Feature delivery | none | `{PRD}`, `{spec}`, `{code, test}` | chain |
+| Docs update | `{spec}` | `{user docs}` | one link |
+| Design update | `{spec}` | `{mockups}` | one link |
+| Design implementation | `{mockups}` | `{code, test}` | one link |
+
+Feature delivery has no inputs. It starts at `{PRD}` and may write every set it spans. The
+other three each read one set and write one, so
+[direction lives in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow):
+design implementation can derive code from the mockups, and it can never change the mockups.
 
 ## The change
 
@@ -75,37 +80,46 @@ down, plus one. That rule is the bug.
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`.
-2. **Distill.** Intent: *every page shows at least one item, and the last page shows
-   whatever remains.*
-3. **Criteria.** Derived from the intent: the page count is the item count divided by the
-   page size, rounded up. An exact multiple produces no empty page. An empty list shows one
-   page with an empty state, not zero pages.
-4. **Strain.** Two connections are strained. The code no longer satisfies the spec's
-   stated rule, which strains `{spec}` to `{code, test}`. The mockups' page indicator
-   still shows the empty last page, which strains `{mockups}` to `{code, test}`.
-5. **Select.** Feature delivery spans the first connection and design implementation
-   spans the second. Both are selected.
+2. **Identify.** Two workflows output `{code, test}`, so both are
+   [origin candidates](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed):
+   feature delivery and design implementation.
+3. **Distill.** Distillation
+   [reads back](/cyber-truss/model/canonical-execution/#distillation-reads-backward) along
+   both. Along feature delivery it reaches `{spec}`, which states *round down, plus one*.
+   The change contradicts that rule, so the walk stops there. Along design implementation it
+   reaches `{mockups}`, whose page indicator shows the empty last page. Intent: *every page
+   shows at least one item, and the last page shows whatever remains.*
+4. **Derive criteria.** The page count is the item count divided by the page size, rounded
+   up. An exact multiple produces no empty page. An empty list shows one page with an empty
+   state, not zero pages. These are version 1 of the run's criteria.
+5. **Select.** `{spec}` contradicts the first criterion and says nothing of the third, which
+   is [missing](/cyber-truss/model/connections/#missing), so feature delivery runs.
+   `{mockups}` contradicts the second, so design implementation runs as well. No workflow
+   both spans `{mockups}` to `{code, test}` and writes `{mockups}`, so propagation adds
+   nothing yet.
 6. **Replay.** Feature delivery translates the intent into a Request at its starting point,
    `{PRD}`. The PRD is too coarse to hold a page-count rule, so the Request
    [passes through](/cyber-truss/model/workflow/#a-replay-starts-at-the-workflows-start)
-   to `{spec}`, which amends its criteria, and code and tests are derived. Design implementation
-   translates the same intent into a Request at `{mockups}`, amends the page indicator, and
-   derives the rendering code.
+   to `{spec}`, which amends its criteria, and code and tests are derived. Design
+   implementation translates the same intent into a Request at `{mockups}`. It reads the
+   mockups and cannot write them, so it derives rendering code that meets the run's criteria
+   and leaves the stale page indicator in place. `{mockups}` to `{code, test}` stays
+   strained.
 7. **Compare.** The developer's fix matches on exact multiples. It does not handle the
    empty list, which the criteria name and the fix never considered. The comparison
    reports an improvement to the change.
-8. **Propagate.** The amended spec now disagrees with `{user docs}`, which states the old
-   page count, so docs update is selected and replays under the original intent. The rest
-   depends on which replay finishes first, and that
-   [is not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled).
-   - If feature delivery finishes first, the amended spec disagrees with the mockups.
-     Design update is selected in another cycle and amends the page indicator, which design
-     implementation has done or will do the same way.
-   - If design implementation finishes first, the amended mockups disagree with the old
-     spec. Design update is selected, and its Request at `{spec}` amends the criteria that
-     feature delivery amends too.
+8. **Propagate.** The amended spec strains two connections. `{user docs}` states the old
+   page count, so docs update is selected. `{mockups}` still shows the empty last page, so
+   design update is selected and amends the page indicator from the spec. The code already
+   meets the amended mockups, so `{mockups}` to `{code, test}` clears too.
 
-   Either order takes one extra cycle and settles in the same state.
+   The order of the replays
+   [is not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled), and
+   here it cannot change the outcome. Only design update writes `{mockups}`, and it reads
+   `{spec}`, so in every order it runs after feature delivery has amended the spec. Until
+   then `{mockups}` to `{code, test}` is strained. Feature delivery and design
+   implementation both write `{code, test}`, against the same version 1 criteria, so their
+   results [join](/cyber-truss/model/join/#join-and-connection) at the code.
 
 ### Settled state
 
@@ -116,12 +130,17 @@ down, plus one. That rule is the bug.
 
 ### Status: Holds
 
-Both orders in step 8 reconcile after one extra cycle, because every workflow derives
-against the same criteria and none of them adds anything the Request did not ask for. That
-is the easy case. If the design review in step 8 returned a new design, the workflows
-would disagree and further cycles would run, and whether those cycles settle in one state
-is still
-[open](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows).
+Every order settles in the same state. Each set that has to change is written by one
+workflow, and every workflow derives against the same version 1 criteria, adding nothing
+the Request did not ask for. If the design review in step 8 returned a new design, the
+workflows would disagree and further cycles would run, and those are bounded by
+[the rules that make cycles come to rest](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest).
+
+One replay is spent for nothing. Design implementation is selected because its input
+contradicts the change, and it cannot clear the strain that selected it, since the stale
+side of that connection is its own input. It can only wait for design update. The model
+does not say whether selection should skip a candidate whose strain only another workflow
+can clear.
 
 ## Variant B: the spec says nothing about the boundary
 
@@ -130,42 +149,60 @@ The spec's criteria never mention how the page count is calculated.
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`.
-2. **Distill.** The same intent as variant A.
-3. **Strain.** None. The code satisfied the spec before the fix and still satisfies it
-   after, because the spec states no rule it could break. No connection is strained.
-4. **Select.** Nothing, because selection starts from strain.
+2. **Identify.** The same two origin candidates as variant A.
+3. **Distill.** Along feature delivery, `{spec}` neither holds nor contradicts the change,
+   so the walk continues to `{PRD}`, the workflow's start, which is too coarse to hold a
+   page-count rule. Along design implementation, `{mockups}` depicts a list that is not an
+   exact multiple and has no place for a page-count rule. The intent is the same as in
+   variant A.
+4. **Derive criteria.** The same as variant A.
+5. **Select.** `{spec}` states none of the criteria, so all three are
+   [missing](/cyber-truss/model/connections/#missing), and feature delivery runs.
+   `{mockups}` has no place for a page-count rule, the same judgement that passes a
+   Request through a PRD, so design implementation does not run.
+6. **Replay.** Feature delivery passes through `{PRD}`. `{spec}` gains the round-up rule
+   and the empty-list case, and code and tests are derived.
+7. **Compare.** The same as variant A: the fix misses the empty list, and the comparison
+   reports the improvement.
+8. **Propagate.** The amended spec now states a page count that `{user docs}` contradicts,
+   so docs update is selected.
 
-Nothing propagates. The spec never learns the rule, the empty-list case is never found,
-and the docs and mockups keep showing the empty page.
+The mockups no longer decide the outcome. If a mockup happens to depict an exact multiple,
+design implementation runs as it does in variant A, and design update amends the drawing
+once the spec is amended. Either way the rule lands in the spec, because missing strain
+comes from the change's criteria, not from what a drawing depicts.
 
-The mockups can hide this. If a mockup happens to depict an exact multiple, the fix
-strains `{mockups}` to `{code, test}`, design implementation is selected, and the
-mockup is amended. The rule now has a home, but in the mockups. `{spec}` to `{mockups}`
-still holds, because the spec states nothing the amended mockup contradicts. The spec
-still never learns the rule, so the gap stays open. Whether it shows depends on what a
-drawing happened to depict.
+### Settled state
 
-### Status: Gap
+The same as variant A.
 
-This is the case the what-is page promises to handle, and the model as written does not.
-The intent is real but no specification holds it, and none of the
-[three kinds of strain](/cyber-truss/model/connections/#kinds-of-strain) describes
-an intent with no home. The model needs a way for that to count as strain, whether as a
-fourth kind or as a condition distillation reports.
+### Status: Holds
+
+Missing strain gives the intent a home. The status rests on two judgements. The criteria
+are derived by distillation, so an unstable distillation produces unstable missing strain.
+And that `{mockups}` has no place for a page-count rule is a call about
+[levels](/cyber-truss/model/specification/#specifications-exist-at-every-level), which the
+model has not said how to make across artifact types.
 
 ## What it tests
 
-- [Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) starting
-  from strain. Variant B shows that strain-only selection misses changes whose intent no
-  specification states.
-- [Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent).
-  Both variants distill the same intent. Only the strain differs.
+- [Identification](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+  Both variants identify the same two workflows. Only what distillation finds along them
+  differs.
+- [Missing strain](/cyber-truss/model/connections/#missing). Variant B was a gap until the
+  kind existed. Strain-only selection found nothing, because the spec stated no rule the
+  fix could break.
+- The contradiction case. In variant A the code contradicts a rule `{spec}` states, across
+  two units of change. Which kind of strain that is
+  [remains open](/cyber-truss/model/open-questions/#which-strain-does-an-implementation-that-contradicts-its-specification-leave).
+- [Distillation reads backward](/cyber-truss/model/canonical-execution/#distillation-reads-backward)
+  along a workflow with no inputs. The model says the walk goes to a workflow's inputs.
+  Feature delivery declares none, so this example walks its chain back toward its start.
+- [Direction lives in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
+  Design implementation reads the mockups, so the page indicator can only change through
+  the spec and design update.
 - [Criteria derived before the replay](/cyber-truss/model/canonical-execution/#criteria-are-derived-before-the-replay-not-after).
   The empty-list case comes from the criteria, not from the fix.
-- The [strain kinds](/cyber-truss/model/connections/#kinds-of-strain) in the
-  direction they were not written for. In variant A the implementation moved ahead of its
-  specification. The kinds are defined from the specification's side, and it is not clear
-  which kind this strain is.
 - A triangle of connections. `{spec}` reaches `{code, test}` directly and through
   `{mockups}`, so two workflows derive the same code from one intent, in an order nobody
   chooses. Variant A is the case where the orders reconcile.
