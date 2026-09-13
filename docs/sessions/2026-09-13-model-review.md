@@ -36,6 +36,7 @@ examples section, and the Workflow and Controller pages. Read this, then
 | Controller page: workflow owns sets and works between them; controller holds one set, carries out the join, receives the handoff | controller |
 | Fourth strain kind: missing (change's criteria not held upstream; relative to a change) | connections |
 | Run ledger MVP includes pruning of closed runs | docs/backlog.md C11 |
+| Only workflows the run's criteria strain get intent and a Request. A workflow reached only through a changed input hands its controller a reference to that input, with no re-distillation. Strain does not carry intent; the provenance marker names the run, whose record holds the intent for non-spec inputs (user-directed) | workflow, canonical-execution, controller |
 
 ## Examples (test cases)
 

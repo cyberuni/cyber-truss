@@ -61,8 +61,9 @@ intents.
 ## Is per-workflow translation stable?
 
 [Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent),
-and each selected workflow translates that intent into its own Request. Translation is a
-second agentic step, and it runs once per workflow.
+and each workflow the run's criteria strain translates that intent into its own Request.
+Translation is a second agentic step, and it runs once per such workflow. A workflow
+reached only through a changed input does not translate.
 
 It is narrower than distillation, one intent into one vocabulary, and it can be evaluated
 per workflow: hand one workflow the same intent several times and compare the Requests.
@@ -151,9 +152,9 @@ should proceed or letting one through that should wait.
 Controllers span a spectrum from agent definition to deterministic code. What they have
 in common — what a controller is *handed* and what it *returns* — is undefined. A first
 draft is on [the Controller page](/cyber-truss/model/controller/#the-handoff): a workflow
-hands over the Request, the joined criteria, and the set's current state, and the
-controller returns the write, whether the criteria are met, and anything it changed beyond
-the Request.
+hands over a Request or a reference to the changed input, the joined criteria, and the
+set's current state, and the controller returns the write, whether the criteria are met,
+and anything it changed beyond what it was asked.
 
 This is the contract every controller ever written will encode, so it is expensive to
 change later. It is also the thing plugin ecosystems most reliably die on, which argues

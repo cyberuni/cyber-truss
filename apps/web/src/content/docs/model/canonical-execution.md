@@ -34,8 +34,10 @@ landed. It is lifted, distilled, and replayed:
 4. **Derive the criteria** the settled state must satisfy, from the intent.
 5. **Select** the workflows that apply. See
    [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
-6. **Replay.** Each selected workflow translates the intent into its own **Request** and
-   replays it from its own starting point.
+6. **Replay.** Each workflow the run's criteria strain translates the intent into its own
+   **Request** and replays it from its own starting point. A workflow reached only through a
+   changed input works from that input instead. See
+   [What a workflow reads](/cyber-truss/model/workflow/#what-a-workflow-reads).
 7. **Compare** the replayed deltas against the change that arrived.
 
 The replay is an *independent derivation*. It does not read the incoming change as an
@@ -178,8 +180,8 @@ the time bound takes.
 
 ### Distillation stops at intent
 
-Distillation produces intent and nothing workflow-shaped. Each selected workflow owns the
-translation of that intent into its own Request. Three reasons fix the boundary here.
+Distillation produces intent and nothing workflow-shaped. Each workflow the run's criteria
+strain owns the translation of that intent into its own Request. Three reasons fix the boundary here.
 
 - **It keeps distillation testable.** Distillation reads along the workflows a change
   identified, and identification is a lookup over declared outputs. Hold the lookup fixed
@@ -192,8 +194,11 @@ translation of that intent into its own Request. Three reasons fix the boundary 
 - **Criteria stay neutral.** Criteria derive from the shared intent, so no workflow
   authors the bar it is judged against.
 
-The cost is that translation is a second agentic step, run once per selected workflow,
-which spreads back out some of the risk canonicalization concentrated. Translation is
+The cost is that translation is a second agentic step, run once per workflow the criteria
+strain, which spreads back out some of the risk canonicalization concentrated. A workflow
+reached only through a changed input does not translate. Its input already states what it
+must meet, and restating that as a Request would add a step that can drift from the
+artifact it came from. Translation is
 narrower than distillation, one intent into one vocabulary, and each workflow can be
 evaluated in isolation: the same intent must yield the same Request. That is several
 places that can be checked, which is still unlike per-relation confluence, where the
@@ -318,13 +323,18 @@ easy to miss until it bites.
 
 The marker does not stop propagation, and must not. Replay output that strains a
 connection further out is how [selection](/cyber-truss/model/workflow/#how-workflows-are-selected) discovers reach. The
-distinction is what the output carries: it is never distilled again into a new intent,
-and the strain it produces carries the original intent onward. Without intent owned by
-distillation, "do not re-trigger replay" and "discover reach by propagation" would
-contradict each other.
+distinction is what happens to the output: it is never distilled into a new intent. A
+workflow that reads it treats it as a changed input, and a settled input already states
+what that workflow must meet, so there is nothing to distil. Strain does not carry the
+intent onward, and it does not need to.
 
-**Status: Settled** that provenance is required, and that marked output propagates strain
-under the original intent. **Open:** the marker's form.
+The marker names the run that produced the output. Rules 2 and 3 pair resolutions with
+that run's criteria version, and a workflow whose input states no intent, such as release
+reading `{code, test}`, reads the intent from that run's record.
+
+**Status: Settled** that provenance is required, and that marked output propagates as a
+changed input rather than as a new intent. **Thesis** that the marker names its run and the
+run records its distilled intent. **Open:** the marker's form.
 
 ## The failure mode to design against
 

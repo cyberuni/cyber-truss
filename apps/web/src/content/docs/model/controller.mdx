@@ -111,13 +111,24 @@ it holds.
 What a workflow hands a controller, and what the controller returns, is the contract every
 controller will encode.
 
-A workflow hands over the Request for the set, the joined criteria that reach it, and the
-set's current state. It does not hand over a change that landed in this set during the run,
-for the reason on
-[What a workflow reads](/cyber-truss/model/workflow/#what-a-workflow-reads).
+A workflow hands over what the set must now meet, the joined criteria that reach it, and
+the set's current state. What the set must meet takes one of two forms.
+
+- **A Request**, from a workflow the run's criteria strain. The change skipped that
+  workflow's derivation, so the intent had to be distilled and translated.
+- **A reference to the changed input and its diff**, from a workflow reached only through
+  that input. The controller reads the criteria from the input itself. Nothing restates
+  them, so nothing can drift from them.
+
+The workflow passes the reference rather than leaving the controller to find the input. A
+controller sees only the inside of its set, and which inputs bear on the set is the
+workflow's declaration.
+
+A workflow does not hand over a change that landed in this set during the run, for the
+reason on [What a workflow reads](/cyber-truss/model/workflow/#what-a-workflow-reads).
 
 A controller returns the write, whether the criteria are met, and any change it made inside
-the set beyond what the Request asked, so that the comparison can see it.
+the set beyond what it was asked, so that the comparison can see it.
 
 **Status: Open**, and expensive to change later. See
 [Where does the controller interface sit?](/cyber-truss/model/open-questions/#where-does-the-controller-interface-sit)

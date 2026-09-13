@@ -41,8 +41,9 @@ lifted out of line diffs into artifact-set vocabulary, then distilled into the *
 behind it, separated from the particular expression you used. From that intent the system
 derives the criteria the settled state has to meet. Those criteria exist before anything
 is replayed. The strain then picks out every workflow it touches: often several, and never
-the whole process by default. Each workflow turns the intent into its own request, replays
-it from its own starting point, and derives its own answer without reading yours. The
+the whole process by default. Each workflow your change bypassed turns the intent into its
+own request, replays it from its own starting point, and derives its own answer without
+reading yours. A workflow that only reads what changed works from it directly. The
 results are compared against the change you made.
 
 So the criteria that come back to your change were authored by neither party to the

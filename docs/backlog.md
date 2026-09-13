@@ -245,6 +245,10 @@ controls, and when their results disagree further cycles run
   [Cycles must come to rest](https://cyberuni.github.io/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest)
   read, and without it a run has no bound except a turn limit. `truss` refuses to record a
   cycle that resolves no new pair.
+- **MVP: the run's distilled intent.** A provenance marker names its run, and a workflow
+  whose changed input is not a specification (release reading `{code, test}` to write a
+  changelog entry) reads the intent from the run's record rather than distilling again.
+  Added 2026-09-13.
 - **Later: the chain of custody.** Each cycle's Requests and deltas, the comparison
   outcomes, and which parts a person authored rather than a replay produced. From that, a
   change spanning several cycles is summarized for a person to review as one thing, not as

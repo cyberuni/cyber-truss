@@ -52,7 +52,8 @@ works within a set, where a [workflow](#workflow) works between sets. A controll
 ### Downstream candidate
 
 A workflow that reads a changed set as an [input](#input-owned-output). Found by a lookup
-over declared roles. See
+over declared roles. When nothing else selects it, it works from the changed input and
+writes no [Request](#request). See
 [A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 
 ### Coordinates
@@ -159,7 +160,9 @@ it does not contain. Does not block, must be tracked, and can be **declined**.
 ### Request
 
 A distilled [intent](#intent) translated into one workflow's vocabulary, at that
-workflow's starting point. Owned by the workflow, not by distillation. One workflow given
+workflow's starting point. Owned by the workflow, not by distillation. Only a workflow the
+run's criteria strain writes one; a workflow reached only through a changed input works
+from that input. One workflow given
 the same intent must produce the same Request. See
 [Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent).
 

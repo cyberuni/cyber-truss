@@ -105,19 +105,35 @@ no workflow at all.
 
 ## What a workflow reads
 
-A workflow always reads the distilled intent and its inputs as they now stand. Whether it
-also reads the arriving change depends on where the change landed.
+A workflow always reads its inputs as they now stand. What else it reads depends on why it
+was selected.
 
-- **The change landed in one of its inputs.** The workflow reads it, including the diff.
-  The input is authoritative for this workflow, and the diff narrows the work without
-  biasing the answer.
-- **The change landed in a set the workflow owns or outputs.** The workflow does not read
-  it. That change is the prediction the replay exists to check, and a replay that reads it
-  first agrees with it instead of checking it. Only the
-  [comparison](/cyber-truss/model/canonical-execution/#reading-the-comparison) reads it,
-  afterwards.
+- **The run's criteria strain it.** It is an upstream candidate, or it owns or outputs a
+  set the backward read found lacking or contradicting the criteria. The change skipped
+  its derivation, so nothing it reads states the intent. It reads the distilled intent and
+  translates it into a Request.
+- **Only a changed input strains it.** It is a downstream candidate and nothing else
+  selected it. Its input already states what it must meet, because a specification is
+  intent plus criteria, and the [wait](#how-workflows-are-selected) means the input has
+  settled before the workflow starts. The workflow reads the changed input, including the
+  diff, and passes it to its controllers as a reference. It writes no Request, and nothing
+  distills the input again. The diff narrows the work without biasing the answer.
 
-**Status: Settled**, as a consequence of the replay being an independent derivation.
+An input that is not a specification states no intent. Release reads `{code, test}` and
+owns `{changelog}`, and a changelog entry has to say why the code changed. The change's
+[provenance marker](/cyber-truss/model/canonical-execution/#replay-output-must-not-re-trigger-replay)
+names its run, and the run records its distilled intent, so release looks the intent up.
+That is a lookup, not a second distillation.
+
+**A workflow never reads a change that landed in a set it owns or outputs.** That change is
+the prediction the replay exists to check, and a replay that reads it first agrees with it
+instead of checking it. Only the
+[comparison](/cyber-truss/model/canonical-execution/#reading-the-comparison) reads it,
+afterwards.
+
+**Status: Settled** that a workflow never reads a change in a set it owns or outputs, as a
+consequence of the replay being an independent derivation. **Thesis** that a workflow
+reached only through a changed input works from that input, with no Request.
 
 ## How workflows are selected
 
@@ -145,8 +161,9 @@ starting point, and a change rarely needs only one.
    two workflows span one edge with opposite roles, one of them waits and the other runs,
    and they never wait on each other. This does not control order. It fixes when a
    workflow can start, so a workflow does not run against an input about to change.
-5. **Break ties.** Where several workflows remain for one strained set, the intent decides.
-   Judgement.
+5. **Break ties.** Where several workflows remain for one strained set, the intent decides:
+   the run's, or for a workflow reached only through a changed input, the intent that input
+   states. Judgement.
 6. **Raise what nothing can restore.** Strain on a set that no declared workflow owns or
    outputs cannot be cleared by any run. It is raised as an obligation against that set.
    It also means the declarations have a gap: the team needs a workflow it has not
@@ -219,7 +236,8 @@ channel. An approval is a decision, and it is recorded like one, so
 ## Workflow and controller
 
 A workflow works between sets. It decides what must become true of each set it writes: a
-Request, and the criteria that reach that set. The set's
+Request, or a reference to the changed input that already states it, and the criteria that
+reach that set. The set's
 [controller](/cyber-truss/model/controller/) works within the set, and decides how the set
 meets them.
 

@@ -110,7 +110,8 @@ down, plus one. That rule is the bug.
    [passes through](/cyber-truss/model/workflow/#a-replay-starts-at-the-workflows-start)
    to `{spec}`, which amends its criteria, and code and tests are derived. The amended
    `{spec}` is a change of its own. Docs update and design update read it, so both are
-   downstream candidates. `{user docs}` states the old page count, so docs update runs.
+   downstream candidates. `{user docs}` states the old page count, so docs update runs. It
+   writes no Request: it hands the amended `{spec}` to the docs controller as its reference.
    Design update was already waiting on this input, and now amends the page indicator.
    When design implementation's input settles, `{mockups}` to `{code, test}` already holds,
    so its replay changes nothing.
