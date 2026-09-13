@@ -65,20 +65,24 @@ criterion on an exact multiple, and nothing has noticed.
 
 ## Workflows
 
-| Workflow | Inputs | Outputs | Shape |
-| --- | --- | --- | --- |
-| Component delivery | `{spec}` | `{code, test}` | one link |
-| Docs update | `{spec}` | `{API docs}` | one link |
-| API contract | `{API docs}` | `{code, test}` | one link |
-| Design update | `{spec}` | `{mockups}` | one link |
-| Design implementation | `{mockups}` | `{code, test}` | one link |
+| Workflow | Input | Owned | Output | Shape |
+| --- | --- | --- | --- | --- |
+| Component delivery | `{spec}` | `{code, test}` | none | one link |
+| Docs update | `{spec}` | `{API docs}` | none | one link |
+| API contract | `{API docs}` | `{code, test}` | none | one link |
+| Design update | `{spec}` | `{mockups}` | none | one link |
+| Design implementation | `{mockups}` | `{code, test}` | none | one link |
 
-API contract reads the reference page and writes the code. The published API is a contract
+API contract reads the reference page and owns the code. The published API is a contract
 with consumers, so the code must accept what the page documents. A team could declare the
-opposite, an API reference workflow that reads the code and writes the page. That workflow
+opposite, an API reference workflow that reads the code and owns the page. That workflow
 documents whatever shipped, and on this change it would rewrite the page to the new props
 and publish the break. The
 [declaration decides](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
+
+Every set in the table is revised in place, so none is an
+[output](/cyber-truss/model/workflow/#three-roles). The published package would be one: a
+released version cannot be edited, only superseded. Publishing is left out of this example.
 
 ## The change
 
@@ -95,8 +99,10 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`.
-2. **Identify.** Three workflows output `{code, test}`: component delivery, API contract,
-   and design implementation.
+2. **Find candidates.** Three workflows own `{code, test}`, so all three are
+   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates):
+   component delivery, API contract, and design implementation. No workflow reads the code,
+   so there are no downstream candidates.
 3. **Distill.** Distillation
    [reads back](/cyber-truss/model/canonical-execution/#distillation-reads-backward) along
    all three. `{spec}` holds the change's rule, since the documented way to compute the total
@@ -106,52 +112,53 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
    expressed it.
 4. **Derive criteria.** An exact multiple produces no empty page, and the documented way to
    reach a page count rounds up.
-5. **Select.** `{spec}` and `{mockups}` already hold the criteria, so component delivery and
-   design implementation do not run. `{API docs}` to `{code, test}` is strained, because
-   the page documents a prop the code no longer accepts. API contract spans it and writes
-   the code, the end that has to change under its declaration, so it runs. The usage
-   example also contradicts the second criterion. The page is API contract's input, though,
-   and docs update, the one workflow that writes it, spans `{spec}` to `{API docs}`. That
-   connection is not on the changed set, so no step selects docs update.
-6. **Replay.** API contract translates the intent into a Request at `{API docs}`. It cannot
-   change the page, so it derives code that accepts `totalPages` as documented.
+5. **Select**, by the [six steps](/cyber-truss/model/workflow/#how-workflows-are-selected).
+   - *Check strain.* `{spec}` and `{mockups}` already hold the criteria, so component
+     delivery and design implementation are not strained. `{API docs}` documents a prop the
+     code no longer accepts, so API contract is strained.
+   - The walk also found the usage example contradicting the second criterion. `{API docs}`
+     is strained even though no upstream candidate can write it. Docs update owns it, so docs
+     update is selected.
+   - *Wait on inputs.* API contract reads `{API docs}`, which is strained, so it waits for
+     docs update. Docs update reads `{spec}`, which holds, so it starts.
+6. **Replay.** Docs update translates the intent into a Request at `{spec}`, which holds the
+   rule, and amends the usage example to round up. The spec does not name props, so the
+   page keeps documenting `totalPages`. The amended page is a change of its own, and API
+   contract reads it, but API contract is already waiting on it. With its input settled, API
+   contract derives code that accepts `totalPages` as documented.
 7. **Compare.** The developer's change meets the first criterion and breaks every consumer
-   to do it. The architect lens reports *change course*. The replay keeps the contract and
-   has a hole: the documented way to compute the page count still rounds down, so the
-   second criterion is unmet. The comparison reports the hole, and nothing carries it to
-   docs update.
-8. **Propagate.** The replay restores `{API docs}` to `{code, test}`. Nothing else it wrote
-   is strained.
+   to do it. The architect lens reports *change course*. The replay meets both criteria and
+   keeps the contract.
 
-Without the `{API docs}` to `{code, test}` connection, step 5 finds no strain at all. The
-run selects nothing, the reference page documents a removed prop, and the break reaches
-consumers first.
+The [leash](/cyber-truss/model/workflow/#leash) stops here. An architect outcome goes to a
+person whatever the roles, so the maintainer confirms the course change before the
+developer's props are replaced. The confirmation is a recorded decision.
+
+Without the `{API docs}` to `{code, test}` connection, step 5 finds no strain on API
+contract. Docs update would still fix the example, but the code would keep the new props,
+the reference page would document a removed prop, and the break would reach consumers
+first.
 
 ### Settled state
 
-None. The run ends with the comparison's hole open.
-
 - `{spec}` is unchanged.
 - `{code, test}` accepts `totalPages` as before.
-- `{API docs}` still computes the page count by rounding down.
+- `{API docs}` computes the page count by rounding up.
 - `{mockups}` is unchanged.
 
-### Status: Gap
+### Status: Holds
 
-The declaration keeps the break from shipping, which the earlier reading of this example
-could not promise. The consumer's bug is still there. Distillation reads the defective
-usage example and the criterion it contradicts, but selection checks only connections on
-the changed set, and the one identified workflow that reads the page cannot write it. The
-contradiction is seen and not routed. The
-[fiction example](/cyber-truss/examples/fiction-plot-twist/) finds the same gap with
-criteria no selected workflow can hold.
+The declaration keeps the break from shipping, and the strain the walk found in the docs
+now reaches the one workflow that can clear it. The gap in the earlier reading closes:
+selection acts on strain wherever the walk finds it, not only on the changed set.
 
-Two further points stay open.
+Two judgements carry the status.
 
 - **Where the connection sits.** `{spec}` connects to `{code, test}` at behaviour.
   `{API docs}` connects to it at the exported props and their types, a rung below. The
   model has not said [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level)
-  across artifact types, and this connection cannot be evaluated until it does.
+  across artifact types. Here the rung is plain from the prop list, and in general it
+  may not be.
 - **What distillation keeps.** Step 3 reads the new props as expression. A distiller could
   read *the component owns the page count* as part of the intent. Its criteria would then
   say consumers never compute the page count, while `{API docs}` documents that they do.
@@ -170,28 +177,26 @@ page only.
 ### Expected run
 
 1. **Lift.** The change touches `{API docs}`.
-2. **Identify.** Docs update is the one workflow that outputs `{API docs}`.
-3. **Distill.** The walk reaches `{spec}`, which holds the rule the correction implements.
-   The intent is the same as in variant A.
+2. **Find candidates.** Docs update owns `{API docs}`, so it is the upstream candidate. API
+   contract reads the page, so it is a downstream candidate.
+3. **Distill.** The walk along docs update reaches `{spec}`, which holds the rule the
+   correction implements. The intent is the same as in variant A.
 4. **Derive criteria.** The same as variant A.
-5. **Select.** `{spec}` holds the criteria, so docs update does not run. On the changed set,
-   `{spec}` to `{API docs}` now holds, and `{API docs}` to `{code, test}` holds, because the
-   props the page documents are the props the code accepts. Nothing is selected.
+5. **Select.** `{spec}` holds the criteria, so docs update is not strained. API contract
+   reads the changed page, and the code still accepts the props it documents, so API
+   contract is not strained either. Nothing is selected.
 6. **Replay.** Nothing replays. The correction stands as made.
 
 ### Settled state
 
-- `{spec}` is unchanged.
-- `{code, test}` accepts `totalPages` as before.
-- `{API docs}` computes the page count by rounding up.
-- `{mockups}` is unchanged.
+The same as variant A.
 
 ### Status: Holds
 
 The correction lands where the defect lived, and the contract keeps a docs fix from pulling
-in any code workflow. This is the state variant A should reach and does not. Until A's gap
-closes, one intent entering at two points ends in two places, and the model does not yet
-deliver [confluence](/cyber-truss/model/confluence/) on this pair.
+in any code workflow. Variant A now reaches the same state from the code side, so one
+intent entering at two points ends in one place, and this pair meets
+[confluence](/cyber-truss/model/confluence/).
 
 ## What it tests
 
@@ -202,21 +207,22 @@ deliver [confluence](/cyber-truss/model/confluence/) on this pair.
 - [Direction lives in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow)
   on an edge where either side can be the specification. Declaring API contract rather
   than API reference is what keeps the break from shipping.
-- [Distillation reads backward](/cyber-truss/model/canonical-execution/#distillation-reads-backward)
-  against [selection](/cyber-truss/model/workflow/#how-workflows-are-selected). Variant A
-  distills a contradiction in a set no selected workflow may write, and no selection step
-  reaches the workflow that writes it.
+- [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
+  Variant A reaches docs update through strain the walk found in a set no upstream
+  candidate may write, and API contract waits on that set instead of replaying against it.
+- [Candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates) on both sides.
+  Variant B finds API contract as a downstream candidate and correctly leaves it idle.
 - [Distillation carries the weight](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
   The two variants are the test that section proposes: two expressions of one intent,
-  which must distill to the same thing. A wider reading in variant A now surfaces as a
+  which must distill to the same thing. A wider reading in variant A surfaces as a
   conflict rather than a silent break.
 - [Reading the comparison](/cyber-truss/model/canonical-execution/#reading-the-comparison)
-  past the builder lens. The developer's change conforms, and the comparison rejects it on
-  shape. The replay conforms to the contract, and the comparison finds its hole.
+  and the [leash](/cyber-truss/model/workflow/#leash). The developer's change conforms, the
+  comparison rejects it on shape, and that outcome goes to a person.
 - Strain that predates the change. The docs example broke the spec long before either
-  variant. Distillation reads it in variant A, and selection still does not act on it.
-  Only variant B, or a cold [nonconformance](/cyber-truss/model/connections/#nonconformance)
-  check, clears it.
+  variant. In variant A the walk reads it and selection clears it. Without any change
+  touching the component, only a
+  [criterion a controller tests on schedule](/cyber-truss/model/canonical-execution/#the-loop-starts-only-from-a-change)
+  would find it.
 - Versioning is left out. A breaking change obliges a major version and a migration note,
-  which the [workflow catalog](/cyber-truss/model/workflows/) would treat as obligations
-  rather than artifact-sets.
+  and the published package is an output whose strain clears only by a new release.

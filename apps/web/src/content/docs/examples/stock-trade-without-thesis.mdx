@@ -26,16 +26,23 @@ A long-only equity portfolio run by one trader.
 | --- | --- |
 | `{mandate}` | The investment policy: position and sector limits, and what every thesis must state |
 | `{theses}` | One document per holding: why it is held, and the condition that would prove it wrong |
-| `{portfolio}` | The positions at the broker, with the trade log |
+| `{orders}` | Every order sent to the broker: ticker, side, size, and time |
+| `{portfolio}` | The positions at the broker, as the fills of `{orders}` leave them |
 | `{market data}` | Prices, company announcements, and analyst notes, each with a timestamp |
 
-`{portfolio}` does not live in git. It is the broker's record, and a change to it is an
-executed order. The model does not require an artifact to be a file, and the
+`{orders}` and `{portfolio}` do not live in git. They are the broker's records. The model
+does not require an artifact to be a file, and the
 [workflow catalog](/cyber-truss/model/workflows/#double-entry-bookkeeping) already
 includes a ledger.
 
-`{market data}` is written by a feed job, its
-[controller](/cyber-truss/model/controller/). No workflow writes it. It is
+An order, once it fills, cannot be recalled. A later order can offset it, and nothing can
+revise it. That makes `{orders}` an
+[output](/cyber-truss/model/workflow/#three-roles) wherever a workflow writes it.
+`{portfolio}` is state: the broker's fills are its
+[controller](/cyber-truss/model/controller/), and a workflow changes it only by emitting an
+order.
+
+`{market data}` is written by a feed job, its controller. No workflow writes it. It is
 inside the system only because it is declared here, and once declared, a new announcement
 is a change like any other.
 
@@ -46,34 +53,42 @@ Connections:
 - `{mandate}` to `{theses}`: every thesis states an invalidation condition.
 - `{theses}` to `{portfolio}`: every position has a thesis, and no position is held past its
   invalidation.
+- `{orders}` to `{portfolio}`: every position is the net of the orders that filled.
 - `{market data}` to `{theses}`: no thesis stands while market data meets its invalidation
   condition, and the data is no older than one trading day.
 
 <ConnectionGraph
-	label="Four artifact-sets. {mandate}, {theses}, and {portfolio} are each connected to the other two, and {market data} connects to {theses}."
+	label="Five artifact-sets. {mandate}, {theses}, and {portfolio} are each connected to the other two. {orders} connects to {portfolio}, and {market data} connects to {theses}."
 	nodes={[
 		{ id: "mandate", label: "{mandate}", x: 220, y: 20 },
 		{ id: "theses", label: "{theses}", x: 0, y: 150 },
 		{ id: "portfolio", label: "{portfolio}", x: 440, y: 150 },
 		{ id: "market", label: "{market data}", x: 0, y: 280 },
+		{ id: "orders", label: "{orders}", x: 440, y: 280 },
 	]}
-	edges={[["mandate", "portfolio"], ["mandate", "theses"], ["theses", "portfolio"], ["market", "theses"]]}
+	edges={[["mandate", "portfolio"], ["mandate", "theses"], ["theses", "portfolio"], ["orders", "portfolio"], ["market", "theses"]]}
 />
 
 Before the change, semiconductors are 22% of the portfolio.
 
 ## Workflows
 
-| Workflow | Inputs | Outputs | Shape |
-| --- | --- | --- | --- |
-| Thesis-first trade | `{market data}` | `{theses}`, `{portfolio}` | chain |
-| Rebalance | `{mandate}` | `{portfolio}` | one link |
-| Thesis review | `{mandate}` | `{theses}` | one link |
+| Workflow | Input | Owned | Output | Shape |
+| --- | --- | --- | --- | --- |
+| Thesis-first trade | `{market data}` | `{theses}`, `{portfolio}` | `{orders}` | chain |
+| Rebalance | `{mandate}` | `{portfolio}` | `{orders}` | one link |
+| Thesis review | `{mandate}` | `{theses}` | none | one link |
 
-Thesis-first trade reads the market and writes a thesis, then a position. It
+Thesis-first trade reads the market, writes a thesis, decides a position, and emits the
+order that reaches it. It
 [never writes its inputs](/cyber-truss/model/workflow/#direction-lives-in-the-workflow), so
 no replay can keep a thesis alive by amending the data it is tested against. A trade does
 not change the policy, so rebalance and thesis review read `{mandate}` and never write it.
+
+Both trading workflows keep the default
+[leash](/cyber-truss/model/workflow/#leash). Writes to `{theses}` and `{portfolio}` proceed
+when the criteria pass. Emitting an order needs a person's approval, because an order
+cannot be taken back.
 
 ## The change
 
@@ -88,34 +103,45 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
 
 ### Expected run
 
-1. **Lift.** The change touches `{portfolio}`.
-2. **Identify.** Thesis-first trade and rebalance both output `{portfolio}`, so the order
-   bypassed both. See
-   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-3. **Distill.** The walk back along thesis-first trade reaches `{market data}` as it stood
-   when the order went in, which holds Orrin's recall announcement. The walk along
-   rebalance reaches `{mandate}`. Intent: *hold Kessler Semi for the market share it gains
-   from Orrin's recall.* The size is expression. It records how sure the trader felt in the
-   minute after the headline.
+1. **Lift.** The change touches `{orders}`, and the fill touches `{portfolio}`.
+2. **Find candidates.** Thesis-first trade and rebalance both own `{portfolio}` and output
+   `{orders}`, so the order bypassed both. They are
+   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates). No
+   workflow reads `{orders}` or `{portfolio}` as an input, so there are no downstream
+   candidates.
+3. **Distill.** The walk back along thesis-first trade reaches `{theses}`, which holds
+   nothing for Kessler Semi, and then `{market data}` as it stood when the order went in,
+   which holds Orrin's recall announcement. The walk along rebalance reaches `{mandate}`.
+   Intent: *hold Kessler Semi for the market share it gains from Orrin's recall.* The size is
+   expression. It records how sure the trader felt in the minute after the headline.
 4. **Criteria.**
    - A thesis states the market-share mechanism and a condition that would prove it wrong:
      Orrin ships a replacement chip within one quarter.
    - The position is at most 5% of the portfolio, and semiconductors at most 25%.
-5. **Select.** `{mandate}` to `{portfolio}` is strained, because both limits are broken,
-   so rebalance runs. `{theses}` to `{portfolio}` is strained, because a position has no
-   thesis, and thesis-first trade outputs `{theses}`, so it runs too.
-6. **Replay.** Thesis-first trade starts at `{market data}`, its input, so the Request
+5. **Select.**
+   - Thesis-first trade is strained. The walk read `{theses}`, which lacks a thesis the
+     criteria require. That is [missing strain](/cyber-truss/model/connections/#missing).
+   - Rebalance is strained. `{mandate}` contradicts the position and the sector weight.
+   - The arriving order is strained too. It is an output, so it cannot be revised. The
+     strain clears only when a superseding order is emitted, and until then it is held as
+     [obligation](/cyber-truss/model/connections/#obligation).
+   - Neither workflow has a strained input, so neither waits.
+6. **Replay.** Neither workflow reads the arriving order, because it landed in a set they
+   output. Thesis-first trade starts at `{market data}`, its input, and the Request
    [passes through](/cyber-truss/model/workflow/#a-replay-starts-at-the-workflows-start) to
-   `{theses}`. There it writes the thesis and derives a position. Rebalance's Request passes
-   through `{mandate}` the same way and derives the sales that bring the position and the
-   sector within the limits.
+   `{theses}`. There it writes the thesis and derives a position of at most 5%. Rebalance's
+   Request passes through `{mandate}` the same way and derives the sales that bring the
+   position and the sector within the limits.
 7. **Compare.** The builder lens reports holes: no thesis, and two limits broken. The
-   replayed position cannot replace the arriving one. The order has executed and the price
-   has moved, so the state before the trade no longer exists. What lands is a new order.
-   Bringing the sector to 25% means selling 5 points of semiconductors, and the replay can
-   take them all from Kessler Semi or split them with the other chip holdings. Both meet
-   the criteria, and the choice is recorded.
-8. **Propagate.** The new thesis states an invalidation condition, so `{mandate}` to
+   replayed position cannot replace the arriving one. The order has filled and the price
+   has moved, so the state before the trade no longer exists. What the replay produces is a
+   new sell order. Bringing the sector to 25% means selling 5 points of semiconductors, and
+   the replay can take them all from Kessler Semi or split them with the other chip
+   holdings. Both meet the criteria, and the choice is recorded.
+8. **Leash.** The thesis is an owned write and the criteria pass, so it proceeds. The sell
+   order is an output, so it goes to the trader for approval. Once approved and filled, it
+   supersedes the arriving order, and the obligation clears.
+9. **Propagate.** The new thesis states an invalidation condition, so `{mandate}` to
    `{theses}` holds. Market data does not meet that condition, so `{market data}` to
    `{theses}` holds. Nothing else is strained.
 
@@ -123,20 +149,27 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
 
 - `{mandate}` is unchanged.
 - `{theses}` holds a Kessler Semi thesis with its invalidation condition.
+- `{orders}` holds the arriving buy and the approved sell that offsets part of it.
 - `{portfolio}` is within both limits.
 
 ### Status: Holds
 
-The run reaches a state that meets the criteria. The criteria are stated over the outcome,
+The run reaches a state that meets the criteria, and it passes the leash: the one
+irreversible write it makes waits for a person. The criteria are stated over the outcome,
 and a later sale meets them as well as a smaller first order would have.
 
-What the run does not bound is how long the breach lasted. For that whole window the
-portfolio carried risk the mandate forbids. The
+The roles now explain the breach window rather than only recording it. The arriving order
+is an output, so no run can undo it. Its strain is held as obligation from the moment it
+fills until a superseding order fills, and the window is that obligation's lifetime. It
+includes the time the sell order waits for approval.
+
+What the model still does not say is how long that obligation may be carried. The
 [proposed boundary](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
-lets strain accumulate during work and blocks it at a merge. A broker order has no merge.
-The change acted on the world the moment it was made, so the only place a block could have
-stopped it was the order ticket, and a block there is the gate this example set out to
-remove. The settled state is right. The window is a cost the model has not priced.
+blocks carried strain at a merge, and a broker order has no merge. The workflow's
+[strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) is where a limit
+belongs, such as *mandate strain on an order is cleared within one trading session*. This
+instance does not state one, and the only earlier point a block could act is the order
+ticket, which is the gate this example set out to remove.
 
 ## Variant B: the thesis is written afterwards
 
@@ -146,10 +179,10 @@ rumoured data-centre contract.
 
 ### Expected run
 
-1. **Lift.** The change touches `{portfolio}`.
-2. **Identify.** Thesis-first trade and rebalance.
+1. **Lift.** The change touches `{orders}` and `{portfolio}`.
+2. **Find candidates.** Thesis-first trade and rebalance, as upstream candidates.
 3. **Distill.** The order carries a ticker, a size, and a time. The walk back along
-   thesis-first trade reaches `{market data}`, and
+   thesis-first trade reaches `{theses}` and then `{market data}`, and
    [distillation is bounded in time](/cyber-truss/model/canonical-execution/#distillation-reads-backward):
    it reads the data as it stood when the order went in. At that minute the data holds
    Orrin's recall announcement. The rise and the analysts' account of it come two days
@@ -157,17 +190,20 @@ rumoured data-centre contract.
    gains from Orrin's recall.*
 4. **Criteria.** A thesis states the market-share mechanism and an invalidation condition:
    Orrin ships a replacement chip within one quarter. The position is within both limits.
-5. **Select.** `{theses}` to `{portfolio}` is strained, because a position has no thesis, so
-   thesis-first trade runs. The mandate already holds the limits, so rebalance does not.
+5. **Select.** Thesis-first trade is strained, because `{theses}` lacks the thesis. The
+   mandate already holds the limits, so rebalance is not strained. The arriving order meets
+   the criteria, so the output carries no strain.
 6. **Replay.** Thesis-first trade passes through `{market data}`, writes the recall thesis,
    and derives a 3% position.
-7. **Compare.** Match. The arriving change was an order, and the replay derives the same
-   order.
+7. **Compare.** Match. The replay derives the position the order already reached, so it
+   emits no order.
+8. **Leash.** The thesis is an owned write and proceeds. No order is emitted, so nothing
+   waits for approval.
 
 ### Settled state
 
 - `{theses}` holds the recall thesis, with the condition that would prove it wrong.
-- `{portfolio}` is unchanged.
+- `{orders}` and `{portfolio}` are unchanged.
 
 Without the bound, the distiller would read the data as it is two days on, write a
 data-centre thesis the trader never had, and the comparison would still report a match.
@@ -193,49 +229,57 @@ not closed.
 
 Take the portfolio settled by variant A. In week ten Orrin ships a replacement chip, the
 condition the Kessler Semi thesis names. The feed job records the announcement in
-`{market data}`. Nobody touches the mandate, the theses, or the portfolio.
+`{market data}`. Nobody touches the mandate, the theses, the orders, or the portfolio.
 
 ### Expected run
 
 1. **Lift.** The change touches `{market data}`.
-2. **Identify.** No workflow outputs `{market data}`. Its controller is the feed job, so the
-   change bypassed nothing.
+2. **Find candidates.** No workflow owns or outputs `{market data}`. Its controller is the
+   feed job, so there are no upstream candidates. Thesis-first trade reads `{market data}`
+   as an input, so it is a
+   [downstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 3. **Distill.** There is nothing to walk back along. The intent is the change's own, and it
    is thin: *market data is current as of week ten.* A press release carries no intent of
    the portfolio's owner, and the run does not need one.
 4. **Criteria.** The intent adds none. The criteria the specifications already state take
    part in the [join](/cyber-truss/model/join/#within-a-run), and the thesis states its
    own invalidation condition.
-5. **Select.** `{market data}` to `{theses}` is strained, because the data now meets the
-   Kessler Semi thesis's invalidation condition. The set that has to change is `{theses}`,
-   and thesis-first trade spans that connection and outputs `{theses}`, so it runs.
-6. **Replay.** Thesis-first trade passes through `{market data}`, its input, and cannot
-   touch it. At `{theses}` it closes the Kessler Semi thesis as invalidated. At
-   `{portfolio}` it derives no position, which is a sale.
+5. **Select.** Thesis-first trade is strained. `{theses}`, which it owns, no longer meets
+   what its changed input states: the data now meets the Kessler Semi thesis's invalidation
+   condition. Its input is not strained, since the data is fresh, so it does not wait.
+6. **Replay.** The change landed in thesis-first trade's input, so the workflow
+   [reads it](/cyber-truss/model/workflow/#what-a-workflow-reads), diff included. It cannot
+   write `{market data}`. At `{theses}` it closes the Kessler Semi thesis as invalidated. At
+   `{portfolio}` it derives no position, and it emits a sell order to reach it.
 7. **Compare.** The arriving change was data from the feed job, and the replay did not touch
    the data. Nothing disagrees.
-8. **Propagate.** The sale takes semiconductors further under 25%, so `{mandate}` to
-   `{portfolio}` holds. `{theses}` to `{portfolio}` holds, because no position outlives its
-   thesis.
+8. **Leash.** Closing the thesis is an owned write and proceeds. The sell order is an output
+   and goes to the trader for approval.
+9. **Propagate.** Once the order fills, semiconductors fall further under 25%, so
+   `{mandate}` to `{portfolio}` holds. `{theses}` to `{portfolio}` holds, because no
+   position outlives its thesis.
 
 ### Settled state
 
 - `{theses}` records the Kessler Semi thesis as invalidated in week ten.
+- `{orders}` holds the approved sell.
 - `{portfolio}` no longer holds Kessler Semi.
 - `{mandate}` and `{market data}` are unchanged by the run.
 
 ### Status: Holds
 
 The loop [starts only from a change](/cyber-truss/model/canonical-execution/#the-loop-starts-only-from-a-change),
-and declaring `{market data}` gives the announcement one. The earlier objection, that a
-press release carries no intent of the portfolio's owner, is true and does not matter.
-The intent the run needs is the thesis's, and the thesis states it as a criterion.
+and declaring `{market data}` gives the announcement one. The trading workflow is found by a
+lookup over its declared input, not by noticing a stale thesis first. The earlier objection,
+that a press release carries no intent of the portfolio's owner, is true and does not
+matter. The intent the run needs is the thesis's, and the thesis states it as a criterion.
 
 Two things remain outside the settled state.
 
-- How fast the sale happens. The strain crosses two units of change, and nothing in this
-  instance says it blocks. That is the workflow's strain policy to state, and variant A's
-  window applies here too.
+- How fast the sale happens. Between the announcement and the fill, `{theses}` to
+  `{portfolio}` is strained: a position is held past its invalidation. The sell order waits
+  for approval, and nothing in this instance limits how long. That is the workflow's strain
+  policy to state, as in variant A.
 - A feed that stops. The freshness criterion on `{market data}` to `{theses}` goes false
   when the job fails, and the strain says so. A job that fails on every run starts a run
   on every tick, and what bounds that sequence is
@@ -243,12 +287,17 @@ Two things remain outside the settled state.
 
 ## What it tests
 
+- [Outputs](/cyber-truss/model/workflow/#three-roles) that cannot be revised. An order is
+  emitted, so strain on it clears only by a superseding order, and variant A's breach window
+  is the lifetime of that obligation.
+- The [leash](/cyber-truss/model/workflow/#leash) on an irreversible write. Every order the
+  runs produce waits for the trader, while theses proceed on the criteria alone.
 - [Criteria over the outcome](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)
   where the earlier state cannot be restored. Variant A settles by a new order rather than
   by undoing the old one, and the criteria do not tell the two apart.
 - The window between a change and its settled state, when the change acts on the world at
-  once. Variant A reaches the right state and cannot bound the time it took. See
-  [What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
+  once. The roles explain it. How long it may last is the strain policy's to state, and this
+  instance states nothing.
 - [The time bound on distillation](/cyber-truss/model/canonical-execution/#distillation-reads-backward)
   against hindsight. Variant B shows that deriving criteria before the replay protects the
   comparison and leaves distillation exposed, and that the bound closes the leak from data
@@ -256,15 +305,16 @@ Two things remain outside the settled state.
 - A change with almost no expression. An order is a ticker, a size, and a time.
   Distillation finds the intent only by walking back to `{market data}`, and the walk is
   there because the trade workflow declares the data as an input.
-- A change with no owner intent. Variant C starts from a feed job's write, and the stated
-  invalidation criterion drives the whole run.
-- [Declared inputs](/cyber-truss/model/workflow/#direction-lives-in-the-workflow) as a guard.
-  Thesis-first trade reads `{market data}` and writes the thesis, so no replay can rewrite
-  the data to keep a thesis alive.
+- [Downstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
+  Variant C reaches the trade workflow by a lookup over its input, from a feed job's write
+  that carries no owner intent.
+- [Declared roles](/cyber-truss/model/workflow/#direction-lives-in-the-workflow) as a guard.
+  Thesis-first trade reads `{market data}` and owns the thesis, so no replay can rewrite the
+  data to keep a thesis alive.
 - A source brought inside the boundary. The market is outside the system until
   `{market data}` is declared, and its freshness is a
   [criterion over time](/cyber-truss/model/canonical-execution/#the-loop-starts-only-from-a-change).
-- An artifact outside the repository. The broker holds `{portfolio}`, and nothing in the
-  model needs git to reason about it.
+- An artifact outside the repository. The broker holds `{orders}` and `{portfolio}`, and
+  nothing in the model needs git to reason about them.
   [Lifting](/cyber-truss/model/artifact-sets/#lifting) does: a trade log has to be raised
   into artifact-set vocabulary the same way a diff is.
