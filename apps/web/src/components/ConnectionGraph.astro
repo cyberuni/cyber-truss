@@ -1,0 +1,97 @@
+---
+/**
+ * A static drawing of an example's artifact-sets and the connections between them, in
+ * the visual language of `SetDiagram.astro`: dashed boxes are artifact-sets. Connections
+ * are plain lines with no arrowheads, because a connection is undirected.
+ *
+ * Geometry lives in `src/lib/connection-graph.ts`. Props are read inline as
+ * `Astro.props` rather than through a frontmatter const: Biome lints the frontmatter
+ * without seeing the template, so a const used only below reads to it as dead code.
+ */
+// biome-ignore lint/correctness/noUnusedImports: called in the template, which Biome does not lint
+import { type EdgeInput, layoutGraph, type NodeInput } from '../lib/connection-graph.js'
+
+interface Props {
+	/** Each artifact-set, placed by its centre. */
+	nodes: NodeInput[]
+	/** Each connection, as the ids of the two sets it relates. */
+	edges: EdgeInput[]
+	/** Text alternative describing the sets and connections. */
+	label: string
+}
+---
+
+{/* `not-content` opts the figure's children out of Starlight's markdown spacing,
+    which otherwise lands a 1rem margin on every element that follows a sibling. */}
+<figure class="conngraph not-content">
+	{
+		[layoutGraph(Astro.props.nodes, Astro.props.edges)].map(({ nodes, edges, viewBox }) => (
+			<svg
+				viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+				style={`max-width: calc(${viewBox.width}px + 1.5rem)`}
+				role="img"
+				aria-label={Astro.props.label}
+			>
+				{edges.map((e) => (
+					<line class="edge" x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} />
+				))}
+				{nodes.map((n) => (
+					<g class="node">
+						<rect x={n.x - n.width / 2} y={n.y - n.height / 2} width={n.width} height={n.height} rx="8" />
+						<text x={n.x} y={n.y}>
+							{n.label}
+						</text>
+					</g>
+				))}
+			</svg>
+		))
+	}
+	{Astro.slots.has('default') && <figcaption><slot /></figcaption>}
+</figure>
+
+<style>
+	.conngraph {
+		margin: 1.5rem 0;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: var(--sl-color-black);
+	}
+
+	.conngraph svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin: 0 auto;
+		padding: 0.75rem;
+		box-sizing: border-box;
+	}
+
+	.edge {
+		stroke: var(--sl-color-gray-3);
+		stroke-width: 1.5;
+	}
+
+	/* An artifact-set: dashed, because membership is declared rather than physical. */
+	.node rect {
+		fill: var(--sl-color-gray-6);
+		stroke: var(--sl-color-accent);
+		stroke-width: 1.5;
+		stroke-dasharray: 6 5;
+	}
+
+	.node text {
+		fill: var(--sl-color-white);
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 13px;
+		text-anchor: middle;
+		dominant-baseline: central;
+	}
+
+	.conngraph figcaption {
+		padding: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+</style>

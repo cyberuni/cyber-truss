@@ -5,6 +5,8 @@ sidebar:
   order: 2
 ---
 
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
@@ -39,6 +41,17 @@ Connections:
 - `{spec}` to `{mockups}`
 - `{mockups}` to `{code, test}`
 - `{API docs}` to `{code, test}`
+
+<ConnectionGraph
+	label="Four artifact-sets. {spec} connects to {API docs}, {mockups}, and {code, test}. {API docs} and {mockups} each also connect to {code, test}."
+	nodes={[
+		{ id: "spec", label: "{spec}", x: 0, y: 110 },
+		{ id: "docs", label: "{API docs}", x: 250, y: 20 },
+		{ id: "mockups", label: "{mockups}", x: 250, y: 200 },
+		{ id: "code", label: "{code, test}", x: 500, y: 110 },
+	]}
+	edges={[["spec", "code"], ["spec", "docs"], ["spec", "mockups"], ["mockups", "code"], ["docs", "code"]]}
+/>
 
 The last connection is the one the application example did not need. The spec states
 behaviour and does not name props. A spec that says *the consumer supplies the page count*

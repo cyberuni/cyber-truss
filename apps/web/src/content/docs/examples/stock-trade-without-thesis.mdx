@@ -5,6 +5,8 @@ sidebar:
   order: 4
 ---
 
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
@@ -38,6 +40,16 @@ Connections:
 - `{mandate}` to `{theses}`: every thesis states an invalidation condition.
 - `{theses}` to `{portfolio}`: every position has a thesis, and no position is held past its
   invalidation.
+
+<ConnectionGraph
+	label="Three artifact-sets, each connected to the other two: {mandate}, {theses}, and {portfolio}."
+	nodes={[
+		{ id: "mandate", label: "{mandate}", x: 220, y: 20 },
+		{ id: "theses", label: "{theses}", x: 0, y: 150 },
+		{ id: "portfolio", label: "{portfolio}", x: 440, y: 150 },
+	]}
+	edges={[["mandate", "portfolio"], ["mandate", "theses"], ["theses", "portfolio"]]}
+/>
 
 Before the change, semiconductors are 22% of the portfolio.
 

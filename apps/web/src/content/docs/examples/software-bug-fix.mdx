@@ -5,6 +5,8 @@ sidebar:
   order: 1
 ---
 
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
@@ -31,6 +33,18 @@ Connections:
 - `{spec}` to `{user docs}`
 - `{spec}` to `{mockups}`
 - `{mockups}` to `{code, test}`
+
+<ConnectionGraph
+	label="Five artifact-sets. {PRD} connects to {spec}. {spec} connects to {user docs}, {mockups}, and {code, test}. {mockups} also connects to {code, test}."
+	nodes={[
+		{ id: "prd", label: "{PRD}", x: 0, y: 110 },
+		{ id: "spec", label: "{spec}", x: 220, y: 110 },
+		{ id: "docs", label: "{user docs}", x: 440, y: 20 },
+		{ id: "mockups", label: "{mockups}", x: 440, y: 200 },
+		{ id: "code", label: "{code, test}", x: 660, y: 110 },
+	]}
+	edges={[["prd", "spec"], ["spec", "code"], ["spec", "docs"], ["spec", "mockups"], ["mockups", "code"]]}
+/>
 
 The last connection exists because the mockups constrain the rendered list in ways the
 spec does not state, such as how the page indicator looks. On that edge `{mockups}` is the

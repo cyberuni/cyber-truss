@@ -5,6 +5,8 @@ sidebar:
   order: 3
 ---
 
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
@@ -36,6 +38,17 @@ Connections:
 - `{outline}` to `{manuscript}`
 - `{story bible}` to `{outline}`
 - `{story bible}` to `{manuscript}`
+
+<ConnectionGraph
+	label="Four artifact-sets. {premise} connects to {outline}, and {outline} to {manuscript}. {story bible} connects to both {outline} and {manuscript}."
+	nodes={[
+		{ id: "premise", label: "{premise}", x: 0, y: 20 },
+		{ id: "outline", label: "{outline}", x: 240, y: 20 },
+		{ id: "manuscript", label: "{manuscript}", x: 480, y: 20 },
+		{ id: "bible", label: "{story bible}", x: 360, y: 150 },
+	]}
+	edges={[["premise", "outline"], ["outline", "manuscript"], ["bible", "outline"], ["bible", "manuscript"]]}
+/>
 
 The last connection holds what the outline does not state: eye colour, how far a horse
 travels in a day, where a character was in a given year. On that edge `{story bible}` is
@@ -133,6 +146,16 @@ than left to timing.
 The book has no `{outline}`. The connections are `{premise}` to `{manuscript}` and
 `{story bible}` to `{manuscript}`. Drafting spans `{premise}` and `{manuscript}`, and
 continuity pass is unchanged.
+
+<ConnectionGraph
+	label="Three artifact-sets with no outline. {manuscript} connects to {premise} and to {story bible}."
+	nodes={[
+		{ id: "premise", label: "{premise}", x: 0, y: 20 },
+		{ id: "manuscript", label: "{manuscript}", x: 260, y: 20 },
+		{ id: "bible", label: "{story bible}", x: 520, y: 20 },
+	]}
+	edges={[["premise", "manuscript"], ["bible", "manuscript"]]}
+/>
 
 ### Expected run
 

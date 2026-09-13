@@ -5,6 +5,8 @@ sidebar:
   order: 5
 ---
 
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
 :::
@@ -30,6 +32,17 @@ Connections:
 - `{messaging}` to `{ads}`
 - `{messaging}` to `{landing page}`
 - `{ads}` to `{landing page}`
+
+<ConnectionGraph
+	label="Four artifact-sets. {brief} connects to {messaging}. {messaging} connects to {ads} and {landing page}, and {ads} also connects to {landing page}."
+	nodes={[
+		{ id: "brief", label: "{brief}", x: 0, y: 110 },
+		{ id: "messaging", label: "{messaging}", x: 230, y: 110 },
+		{ id: "ads", label: "{ads}", x: 470, y: 20 },
+		{ id: "landing", label: "{landing page}", x: 470, y: 200 },
+	]}
+	edges={[["brief", "messaging"], ["messaging", "ads"], ["messaging", "landing"], ["ads", "landing"]]}
+/>
 
 The last connection is message match: a visitor who clicks on a promise expects to find it
 at the top of the page. The framework does not say which headline a page must open on for a
