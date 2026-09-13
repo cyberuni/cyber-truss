@@ -169,13 +169,14 @@ family. The diff touches chapter 14 only.
 - `{manuscript}` carries the author's chapter 14, with derived setup scenes and a derived
   ending.
 
-### Status: Unresolved
+### Status: Holds
 
-The run carries the twist back through the outline and out to the chapters that need it,
-once the wait in step 5 is broken. The rule as written makes a workflow wait on a strained
-input, and on an edge with opposite roles each side waits on the other. The run above
-breaks the cycle by treating the set the intent keeps as settled. The model does not say
-that, and until it does this run can stall.
+The run carries the twist back through the outline and out to the chapters that need it.
+The wait in step 5 is where it could stall: on an edge with opposite roles, each side's
+input is the other side's owned set. The
+[wait rule](/cyber-truss/model/workflow/#how-workflows-are-selected) settles it by the
+backward read. The manuscript, where the change landed, counts as settled, so reverse
+outlining runs and drafting waits.
 
 The reverse workflows matter. With only plotting, drafting, worldbuilding, and continuity
 pass, nothing owns `{outline}` or `{story bible}` from the manuscript's side. Step 6 of
@@ -253,10 +254,9 @@ The run finishes the book. The setup criterion survives, because the change land
 drafting owns, and drafting's vocabulary holds scenes where continuity pass's vocabulary of
 facts could not. The hole the comparison reports reaches the manuscript through drafting.
 
-Three things remain open.
+Two things remain open. The wait between continuity pass and canon update settles by the
+same rule as variant A.
 
-- **Waiting on an input the intent keeps.** The same deadlock as variant A, between
-  continuity pass and canon update.
 - **Missing strain against an input too coarse to hold it.** The premise is the only input
   drafting has, and a premise has no place for a setup beat. In the pagination example a PRD
   passed the rule through to a spec below it. Here nothing lies between the premise and the

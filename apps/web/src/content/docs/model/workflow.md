@@ -138,7 +138,12 @@ starting point, and a change rarely needs only one.
    - A set the walk read that contradicts or lacks the change's criteria is strained even
      when no candidate spans it. The workflows that own or output that set are selected.
 4. **Wait on inputs.** A selected workflow whose inputs are still strained waits until the
-   workflow that writes those inputs has run. This does not control order. It fixes when a
+   workflow that writes those inputs has run, then checks its strain again, because the
+   wait may have cleared it. Which side counts as strained follows the backward read. The
+   set the change landed in, and any set the read found holding the change's criteria, are
+   settled. Only a set the read found lacking or contradicting them is strained. So where
+   two workflows span one edge with opposite roles, one of them waits and the other runs,
+   and they never wait on each other. This does not control order. It fixes when a
    workflow can start, so a workflow does not run against an input about to change.
 5. **Break ties.** Where several workflows remain for one strained set, the intent decides.
    Judgement.
