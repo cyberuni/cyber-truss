@@ -25,10 +25,11 @@ A change arriving in the middle of a workflow is not applied outward from where 
 landed. It is lifted, distilled, and replayed:
 
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
-2. **Identify** the workflows whose outputs include a changed set. See
-   [Workflow](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+2. **Find candidates**: the workflows that own or output a changed set, and the workflows
+   that read one. See
+   [A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 3. **Distill** the change to its **intent** by
-   [reading back](#distillation-reads-backward) along those workflows: what the change is
+   [reading back](#distillation-reads-backward) along the first group: what the change is
    for, separated from the particular expression of it.
 4. **Derive the criteria** the settled state must satisfy, from the intent.
 5. **Select** the workflows that apply. See
@@ -51,7 +52,7 @@ tests it.
 
 A criterion can depend on time. *Market data must not be older than two days* becomes
 false as the days pass, with no artifact touched. The cron job that refreshes the data is
-a [controller](/cyber-truss/model/artifact-sets/#controllers), and its run is a change like
+a [controller](/cyber-truss/model/controller/), and its run is a change like
 any other. If the job fails, the criterion still goes false, and the strain says so. The
 [compliance audit](/cyber-truss/model/workflows/#compliance-audit--soc-2-iso-27001) in the
 catalog has the same shape: *controls verified within the last twelve months*, and a
@@ -151,19 +152,20 @@ stated, stated differently, or stated nowhere depends on the specifications the 
 bypassed.
 
 So distillation walks each
-[identified workflow](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed)
-in reverse, from the changed set to that workflow's inputs, and reads each input's intent
-and criteria. Where an input is itself the output of another workflow, the walk continues
-along that one. It stops at an input that holds or contradicts what the change implies, or
-at a set no workflow outputs.
+[upstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates) in
+reverse, along its shape from the changed set toward its declared start, and reads the
+intent and criteria of each set it passes. Where the walk reaches a set another workflow
+owns or outputs, it can continue along that one. It stops at the first set that holds or
+contradicts what the change implies, or at a declared start with nothing above it.
 
 This is the inverse of a workflow, and it is not a workflow. A workflow reads its inputs
-and writes its outputs. Distillation follows the same path the other way and writes
-nothing. Reading on the way up and writing on the way down keeps a change to one ascent and
-one descent. If every step up wrote, each set reached would start its own pass back down.
+and writes the sets it owns or outputs. Distillation follows the same path the other way
+and writes nothing. Reading on the way up and writing on the way down keeps a change to one
+ascent and one descent. If every step up wrote, each set reached would start its own pass
+back down.
 
-It also removes an ambiguity. Two workflows can span one connection with opposite inputs
-and outputs. Distillation follows only the workflows whose outputs the change landed in, so
+It also removes an ambiguity. Two workflows can span one connection with opposite roles.
+Distillation follows only the workflows that own or output the set the change landed in, so
 for one change it never reads a connection in both directions.
 
 What distillation reads is bounded in time. It reads the specifications as they stood when
@@ -271,7 +273,7 @@ person in it is bounded. A run with people in it continues as long as they keep 
 criteria, which is iteration somebody chose.
 
 The check in rule 3 is a lookup, which puts it at the deterministic end of the
-[controller spectrum](/cyber-truss/model/artifact-sets/#controllers). `truss` can refuse to
+[controller spectrum](/cyber-truss/model/controller/). `truss` can refuse to
 record a cycle that resolves nothing new, so the bound does not depend on an agent
 following an instruction.
 
@@ -280,7 +282,7 @@ following an instruction.
 Rule 1 depends on a judgement: whether a proposed criterion is new, or a reversal of a
 decision under a new name. An agent could route a reversal through that door.
 
-The [controller](/cyber-truss/model/artifact-sets/#controllers) of the specification set
+The [controller](/cyber-truss/model/controller/) of the specification set
 is placed to catch it. Its job is to hold the set's intent and criteria consistent and
 balanced, and a criterion that contradicts a recorded decision is an inconsistency inside
 the set. It is not the workflow proposing the criterion, so it is not judging its own work.

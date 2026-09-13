@@ -43,7 +43,7 @@ Both roles attach to the same artifact on different edges, and asking whether an
 
 Where an edge allows either reading, the roles do not choose. The workflow that restores
 the edge does, through its
-[inputs and outputs](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
+[roles](/cyber-truss/model/workflow/#three-roles).
 
 This is orthogonal to what a specification *contains*, below. One decomposition is
 vertical and per-edge; the other is internal to a single specification. Conflating them is
@@ -98,7 +98,7 @@ its own, narrower ones.
 Two consequences worth stating.
 
 **Not every artifact-set has a specification.** Many are held entirely by their
-[controller](/cyber-truss/model/artifact-sets/#controllers) — formatting has no intent
+[controller](/cyber-truss/model/controller/) — formatting has no intent
 worth writing down, only a formatter. Requiring a specification everywhere would
 manufacture ceremony in exactly the places the model exists to remove it from.
 

@@ -28,7 +28,7 @@ A paid campaign for Tally, a budgeting app, aimed at people aged 25 to 34.
 | `{campaign results}` | Spend, clicks, sign-ups, and cost per sign-up for each ad and page variant |
 
 `{campaign results}` is written by the ad platform's and the analytics tool's reporting,
-its [controller](/cyber-truss/model/artifact-sets/#controllers). No workflow writes it.
+its [controller](/cyber-truss/model/controller/). No workflow writes it.
 
 Connections:
 
@@ -95,7 +95,7 @@ touches `{ads}`.
 1. **Lift.** The change touches `{ads}`.
 2. **Identify.** Creative production outputs `{ads}`, so the headline bypassed it. Message
    match reads `{ads}`, so it is not an
-   [origin candidate](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+   [upstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 3. **Distill.** The walk back along creative production reaches `{messaging}`, and on
    along campaign planning to `{brief}`. Intent: *lead paid social with the savings figure.*
    The results are why the marketer kept the headline. They are not what the headline is

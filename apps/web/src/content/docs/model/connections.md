@@ -9,10 +9,11 @@ Nothing described here is built. See [the model overview](/cyber-truss/model/).
 
 ## The hole is at the connections
 
-Every artifact-set has a controller, and most of them are good. The compiler owns
-`{TypeScript files}`. Biome owns formatting. Astro and Starlight own `{website content}`.
+Every artifact-set has a [controller](/cyber-truss/model/controller/), and most of them are
+good. The compiler holds `{TypeScript files}`. Biome holds formatting. Astro and Starlight
+hold `{website content}`.
 
-None of them reach past the set they own. And the couplings that matter most run
+None of them reach past the set they hold. And the couplings that matter most run
 *between* sets:
 
 | Connection | Owner today |
@@ -113,8 +114,8 @@ State-driven, evaluable on a cold repository, and requires no delta.
 Implementation ahead of its specification. *A bug fix introduces a rule the spec never
 stated.*
 
-A change's criteria are not held by the inputs of a workflow the change
-[bypassed](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed). The
+A change's criteria are not held by the sets the backward read reaches in a workflow the
+change [bypassed](/cyber-truss/model/workflow/#a-change-finds-its-candidates). The
 implementation now meets something its specification does not state, and the
 specification is the side left behind.
 

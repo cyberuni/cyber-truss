@@ -149,7 +149,11 @@ should proceed or letting one through that should wait.
 ## Where does the controller interface sit?
 
 Controllers span a spectrum from agent definition to deterministic code. What they have
-in common — what a controller is *handed* and what it *returns* — is undefined.
+in common — what a controller is *handed* and what it *returns* — is undefined. A first
+draft is on [the Controller page](/cyber-truss/model/controller/#the-handoff): a workflow
+hands over the Request, the joined criteria, and the set's current state, and the
+controller returns the write, whether the criteria are met, and anything it changed beyond
+the Request.
 
 This is the contract every controller ever written will encode, so it is expensive to
 change later. It is also the thing plugin ecosystems most reliably die on, which argues

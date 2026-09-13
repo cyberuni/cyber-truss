@@ -35,7 +35,7 @@ executed order. The model does not require an artifact to be a file, and the
 includes a ledger.
 
 `{market data}` is written by a feed job, its
-[controller](/cyber-truss/model/artifact-sets/#controllers). No workflow writes it. It is
+[controller](/cyber-truss/model/controller/). No workflow writes it. It is
 inside the system only because it is declared here, and once declared, a new announcement
 is a change like any other.
 
@@ -91,7 +91,7 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
 1. **Lift.** The change touches `{portfolio}`.
 2. **Identify.** Thesis-first trade and rebalance both output `{portfolio}`, so the order
    bypassed both. See
-   [origin candidates](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 3. **Distill.** The walk back along thesis-first trade reaches `{market data}` as it stood
    when the order went in, which holds Orrin's recall announcement. The walk along
    rebalance reaches `{mandate}`. Intent: *hold Kessler Semi for the market share it gains

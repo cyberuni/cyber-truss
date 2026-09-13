@@ -194,7 +194,7 @@ reproduces the corrected waterfall and declines the caricature.
 **Status: Settled** as a consequence of undirected connections. A process that needs a
 *preferred* direction at a connection, a rule for which end yields, expresses it in the
 workflow's
-[inputs and outputs](/cyber-truss/model/workflow/#direction-lives-in-the-workflow) rather
+[roles](/cyber-truss/model/workflow/#three-roles) rather
 than in the connection.
 
 ## Waterfall as one selectable workflow

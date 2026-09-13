@@ -81,7 +81,7 @@ down, plus one. That rule is the bug.
 
 1. **Lift.** The change touches `{code, test}`.
 2. **Identify.** Two workflows output `{code, test}`, so both are
-   [origin candidates](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed):
+   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates):
    feature delivery and design implementation.
 3. **Distill.** Distillation
    [reads back](/cyber-truss/model/canonical-execution/#distillation-reads-backward) along
@@ -149,7 +149,7 @@ The spec's criteria never mention how the page count is calculated.
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`.
-2. **Identify.** The same two origin candidates as variant A.
+2. **Identify.** The same two upstream candidates as variant A.
 3. **Distill.** Along feature delivery, `{spec}` neither holds nor contradicts the change,
    so the walk continues to `{PRD}`, the workflow's start, which is too coarse to hold a
    page-count rule. Along design implementation, `{mockups}` depicts a list that is not an
@@ -186,7 +186,7 @@ model has not said how to make across artifact types.
 
 ## What it tests
 
-- [Identification](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
+- [Identification](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
   Both variants identify the same two workflows. Only what distillation finds along them
   differs.
 - [Missing strain](/cyber-truss/model/connections/#missing). Variant B was a gap until the

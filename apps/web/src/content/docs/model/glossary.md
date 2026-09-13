@@ -45,8 +45,15 @@ implementations. See [Connections](/cyber-truss/model/connections/).
 ### Controller
 
 Whatever holds one artifact-set consistent, on a spectrum from agent definition through
-skill, instruction, and governance to deterministic code. A compiler is a controller. See
-[Controllers](/cyber-truss/model/artifact-sets/#controllers).
+skill, instruction, and governance to deterministic code. A compiler is a controller. It
+works within a set, where a [workflow](#workflow) works between sets. A controller
+**holds** a set; a workflow **owns** one. See [Controller](/cyber-truss/model/controller/).
+
+### Downstream candidate
+
+A workflow that reads a changed set as an [input](#input-owned-output). Found by a lookup
+over declared roles. See
+[A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 
 ### Coordinates
 
@@ -67,8 +74,8 @@ a discharge point. One of the parameters a [workflow](#workflow) declares.
 ### Distillation
 
 Reducing an arriving change to its [intent](#intent), separated from the particular
-expression of it, by reading back along the workflows the change
-[identified](#origin-candidate). Writes nothing, and produces nothing workflow-shaped:
+expression of it, by reading back along the change's
+[upstream candidates](#upstream-candidate). Writes nothing, and produces nothing workflow-shaped:
 each workflow owns its own [Request](#request). Irreducibly agentic, and the step that
 carries the confluence guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
@@ -94,12 +101,12 @@ model reasons about its outcome, not its internals. A role, not a kind of artifa
 A specification and its implementation disagree while both are in hand. Intra-unit-of-change,
 and it blocks. See [kinds of strain](/cyber-truss/model/connections/#kinds-of-strain).
 
-### Input and output
+### Input, owned, output
 
-Per [workflow](#workflow), whether each artifact-set in its span is read or written. A
-workflow never writes its inputs. Inputs and outputs are where direction lives, since a
-connection has none. See
-[Direction lives in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
+The three roles a set can hold in a [workflow](#workflow). An input is read and never
+written. An owned set is read and written, and can be revised in place. An output is
+emitted: it cannot be revised, only superseded. Roles are where direction lives, since a
+connection has none. See [Three roles](/cyber-truss/model/workflow/#three-roles).
 
 ### Intent
 
@@ -121,6 +128,13 @@ back, the graph that redistributes load, and the order-theoretic structure whose
 combines criteria.
 Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/lattice/).
 
+### Leash
+
+Which writes an agent may make in a [workflow](#workflow) without a person's approval.
+Owned writes proceed when criteria pass, output writes need approval, and architect or
+oracle outcomes always go to a person. Confidence only tightens it. See
+[Leash](/cyber-truss/model/workflow/#leash).
+
 ### Lifting
 
 Raising a raw line diff into artifact-set vocabulary. A prerequisite for everything
@@ -128,8 +142,8 @@ downstream, because an unlifted diff and a connection are written in different l
 
 ### Missing strain
 
-A change's criteria are not held by the inputs of a workflow the change bypassed: the
-implementation meets something its specification does not state. Relative to a change,
+A change's criteria are not held by the sets the backward read reached in a workflow the
+change bypassed: the implementation meets something its specification does not state. Relative to a change,
 unlike the other kinds. See [kinds of strain](/cyber-truss/model/connections/#missing).
 
 ### Nonconformance strain
@@ -142,12 +156,6 @@ evaluable on a cold repository, with no diff. The axis-2 strain.
 A specification whose implementation lives elsewhere — an accepted ADR constrains modules
 it does not contain. Does not block, must be tracked, and can be **declined**.
 
-### Origin candidate
-
-A workflow whose outputs include a set a change landed in. The change skipped that
-workflow's derivation. Found by a lookup over declared outputs. See
-[A change identifies the workflows it bypassed](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed).
-
 ### Request
 
 A distilled [intent](#intent) translated into one workflow's vocabulary, at that
@@ -157,10 +165,11 @@ the same intent must produce the same Request. See
 
 ### Selection
 
-Finding the workflows a change needs: the [origin candidates](#origin-candidate) whose
-inputs do not already hold the change's criteria, and the workflows whose span covers a
-strained connection and whose outputs include the end that has to change. Intent breaks
-ties. Extended as replays strain connections further out. See
+Finding the workflows a change needs: its [upstream](#upstream-candidate) and
+[downstream](#downstream-candidate) candidates that are strained, and the workflows that own
+or output any set the backward read found strained. Intent breaks ties. Strain no declared
+workflow can clear is raised as an obligation. Extended as replays produce changes of their
+own. See
 [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
 
 ### Specification
@@ -195,10 +204,18 @@ diffs.
 move together for a change to be complete — what belongs in one commit to be coherent.
 Delta-driven.
 
+### Upstream candidate
+
+A workflow that owns or outputs a set a change landed in. The change skipped that
+workflow's derivation, so distillation reads back along it. Found by a lookup over declared
+roles. See
+[A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
+
 ### Workflow
 
-A named policy over the lattice. It declares its span, the [input or output](#input-and-output)
-role of each set in it, its shape, where discharge happens, and its strain policy. See
+A named policy over the lattice. It declares its span, the [role](#input-owned-output) of
+each set in it, its shape, where discharge happens, its strain policy, and its
+[leash](#leash). It works between sets; a [controller](#controller) works within one. See
 [Workflow](/cyber-truss/model/workflow/).
 
 ## Terms deliberately not used

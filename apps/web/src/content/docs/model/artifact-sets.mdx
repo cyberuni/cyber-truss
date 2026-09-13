@@ -84,52 +84,8 @@ same query and neither subsumes the other.
 
 ## Controllers
 
-Each artifact-set is governed by a **controller** — the thing you define or implement to
-hold it consistent. Controllers sit on a spectrum:
-
-| Controller | Character |
-| --- | --- |
-| Agent definition | Judgement, full context |
-| Skill | Procedure an agent follows |
-| Instruction | A standing rule, always in force |
-| Governance | Criteria loaded on demand |
-| Deterministic code | A script or check |
-
-Two things follow.
-
-**Existing tools are already controllers.** The compiler and type-checker control
-`{TypeScript files}`. Biome controls formatting. Astro and Starlight control
-`{website content}`. Each is mature and well-built. None of them reach past the boundary
-of the set they own — which is the subject of [Connections](/cyber-truss/model/connections/).
-
-**Sets on the same axis may nest, and controllers stack where they do.** Containment is
-the one set relationship that needs no connection to resolve: an artifact inside a nested
-set answers to every controller whose boundary encloses it.
-
-<SetDiagram variant="nesting">
-	Two governance targets on the same axis, one inside the other. Every file here is held
-	by tsc and Biome; only the command modules are additionally held to the agent-CLI
-	principles — `--json` handled in `output.ts`, no `process.exit` inside a command. The
-	inner set is not a separate concern bolted on, it is a stricter reading of the same
-	axis, so a violation there is a nonconformance strain against the inner controller alone.
-</SetDiagram>
-
-Most pairs of sets, on either axis, simply do not touch: `{ADR documents}` and
-`{Starlight stylesheets}` share no member and constrain nothing about each other. The
-model has nothing to say about those, and that is the point — it looks only where sets
-meet.
-
-**The spectrum has a direction of travel.** A controller should migrate toward
-deterministic code as the coupling it enforces turns out to be encodable. That migration
-is a first-class move, not an aspiration, and it is why `cyber-truss` is an agent plugin
-rather than only a CLI: a shell command can host the bottom of the spectrum and nothing
-above it.
-
-The migration is not always available. Some couplings resist encoding, and the attempt
-makes them worse — see the worked case in [Connections](/cyber-truss/model/connections/#a-coupling-that-resists-encoding).
-
-**Status: Settled** that controllers are a per-set choice across this spectrum.
-**Open:** whether the spectrum is a total order, and what a controller's interface is.
+Each artifact-set is held consistent by a [controller](/cyber-truss/model/controller/), on
+a spectrum from agent definition to deterministic code.
 
 ## Lifting
 

@@ -1,0 +1,123 @@
+---
+title: Controller
+description: What holds one artifact-set consistent, how it differs from a workflow, and what a workflow hands it
+---
+
+import SetDiagram from '../../../components/SetDiagram.astro'
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+## What a controller is
+
+Each artifact-set is held consistent by a **controller**, the thing you define or implement
+to keep it that way. Controllers sit on a spectrum:
+
+| Controller | Character |
+| --- | --- |
+| Agent definition | Judgement, full context |
+| Skill | Procedure an agent follows |
+| Instruction | A standing rule, always in force |
+| Governance | Criteria loaded on demand |
+| Deterministic code | A script or check |
+
+**Existing tools are already controllers.** The compiler and type-checker control
+`{TypeScript files}`. Biome controls formatting. Astro and Starlight control
+`{website content}`. Each is mature and well-built. None of them reach past the boundary
+of the set they hold, which is the subject of [Connections](/cyber-truss/model/connections/).
+
+The name follows established use. A Kubernetes controller reconciles one kind of resource
+toward its desired state, and this controller does the same for one artifact-set.
+
+**Status: Settled** that controllers are a per-set choice across this spectrum.
+**Open:** whether the spectrum is a total order.
+
+## Nesting
+
+**Sets on the same axis may nest, and controllers stack where they do.** Containment is
+the one set relationship that needs no connection to resolve: an artifact inside a nested
+set answers to every controller whose boundary encloses it.
+
+<SetDiagram variant="nesting">
+	Two governance targets on the same axis, one inside the other. Every file here is held
+	by tsc and Biome; only the command modules are additionally held to the agent-CLI
+	principles — `--json` handled in `output.ts`, no `process.exit` inside a command. The
+	inner set is not a separate concern bolted on, it is a stricter reading of the same
+	axis, so a violation there is a nonconformance strain against the inner controller alone.
+</SetDiagram>
+
+Most pairs of sets, on either axis, simply do not touch: `{ADR documents}` and
+`{Starlight stylesheets}` share no member and constrain nothing about each other. The
+model has nothing to say about those, and that is the point — it looks only where sets
+meet.
+
+**Status: Settled.**
+
+## The spectrum has a direction of travel
+
+A controller should migrate toward deterministic code as the coupling it enforces turns
+out to be encodable. That migration is a first-class move, not an aspiration, and it is why
+`cyber-truss` is an agent plugin rather than only a CLI: a shell command can host the bottom
+of the spectrum and nothing above it.
+
+The migration is not always available. Some couplings resist encoding, and the attempt
+makes them worse. See the worked case in
+[Connections](/cyber-truss/model/connections/#a-coupling-that-resists-encoding).
+
+**Status: Settled.**
+
+## Between sets, within a set
+
+A [workflow](/cyber-truss/model/workflow/) and a controller split the work at the set
+boundary.
+
+| | Workflow | Controller |
+| --- | --- | --- |
+| Works | Between sets | Within one set |
+| Decides | What must become true of each set it writes | How the set meets that and stays consistent |
+| Relation to a set | Owns it, reads it as an input, or emits it as an output | Holds it |
+| Sees | The connections its shape traverses | The set's inside |
+
+A workflow hands each write to the set's controller. The controller writes. Its job inside
+the set is the architect's: structure, conventions, and balance, scoped to one set. A
+coupling between two parts of one set, such as a setup planted three chapters before the
+twist that pays it off, is invisible to the model by design. It is the controller's to
+keep.
+
+Two verbs keep the roles apart. A workflow **owns** a set: it may make decisions there. A
+controller **holds** a set consistent. Several workflows can own one set. A set has one
+controller, plus the controllers of any set enclosing it.
+
+**Status: Thesis.**
+
+## The join happens at the controller
+
+Criteria reach a set from every workflow that writes it. The set's controller is the one
+place that meets their [join](/cyber-truss/model/join/), and the one place that sequences
+their writes. When no state of the set can meet the joined criteria, the controller cannot
+resolve it by writing, and the conflict needs a
+[recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest).
+
+The controller of a specification set also guards the criteria themselves. It catches
+[a reversal renamed as a new criterion](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion),
+because a criterion that contradicts a recorded decision is an inconsistency inside the set
+it holds.
+
+**Status: Thesis.**
+
+## The handoff
+
+What a workflow hands a controller, and what the controller returns, is the contract every
+controller will encode.
+
+A workflow hands over the Request for the set, the joined criteria that reach it, and the
+set's current state. It does not hand over a change that landed in this set during the run,
+for the reason on
+[What a workflow reads](/cyber-truss/model/workflow/#what-a-workflow-reads).
+
+A controller returns the write, whether the criteria are met, and any change it made inside
+the set beyond what the Request asked, so that the comparison can see it.
+
+**Status: Open**, and expensive to change later. See
+[Where does the controller interface sit?](/cyber-truss/model/open-questions/#where-does-the-controller-interface-sit)

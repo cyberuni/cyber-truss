@@ -74,7 +74,8 @@ documentation are raised and discharged out-of-band.
 | [Specification](/cyber-truss/model/specification/) | What a specification is, why it is a role rather than a layer, and what connections actually relate |
 | [Connections](/cyber-truss/model/connections/) | The relation between sets, why nothing owns it today, and the kinds of strain |
 | [Join](/cyber-truss/model/join/) | How criteria arriving by different routes combine, and where they conflict |
-| [Workflow](/cyber-truss/model/workflow/) | What a workflow declares, why direction lives in it, and how a change finds the workflows it needs |
+| [Workflow](/cyber-truss/model/workflow/) | What a workflow declares, the three roles a set can hold in it, and how a change finds the workflows it needs |
+| [Controller](/cyber-truss/model/controller/) | What holds one set consistent, how it differs from a workflow, and what a workflow hands it |
 | [Confluence](/cyber-truss/model/confluence/) | What path-independence means precisely, and what it is claimed over |
 | [Canonical execution](/cyber-truss/model/canonical-execution/) | How confluence is bought: distill, replay, compare |
 | [Relationship to SDD](/cyber-truss/model/relationship-to-sdd/) | SDD as the two-set instance of this model |

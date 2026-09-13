@@ -27,6 +27,7 @@ export default defineConfig({
 						{ label: 'Connections', link: '/model/connections/' },
 						{ label: 'Join', link: '/model/join/' },
 						{ label: 'Workflow', link: '/model/workflow/' },
+						{ label: 'Controller', link: '/model/controller/' },
 						{ label: 'Confluence', link: '/model/confluence/' },
 						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
 						{ label: 'Relationship to SDD', link: '/model/relationship-to-sdd/' },
