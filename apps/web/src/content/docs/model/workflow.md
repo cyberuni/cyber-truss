@@ -27,7 +27,7 @@ evidence it is judged against.
 A workflow adds no mechanism of its own. It is a parameterisation of
 [artifact-sets](/cyber-truss/model/artifact-sets/),
 [connections](/cyber-truss/model/connections/), discharge, and
-[strain](/cyber-truss/model/connections/#three-kinds-of-strain).
+[strain](/cyber-truss/model/connections/#kinds-of-strain).
 
 **Status: Settled** that a workflow declares these five. **Thesis**, argued on the catalog
 page, that nothing further is needed.

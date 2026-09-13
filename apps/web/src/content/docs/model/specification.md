@@ -106,22 +106,27 @@ identified across artifact types.
 
 ## What the roles explain
 
-Read the three [kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain)
-through the relation and they stop being three observed cases.
+Read the [kinds of strain](/cyber-truss/model/connections/#kinds-of-strain) through the
+relation and they stop being observed cases.
 
 | Strain | Shape in this vocabulary |
 | --- | --- |
 | Incompleteness | a specification and its implementation disagree, and both are in hand |
 | Obligation | a specification whose implementation is **elsewhere** — an ADR constrains modules it does not contain |
 | Nonconformance | criteria evaluated with no counterpart implementation in the delta at all |
+| Missing | an implementation meets criteria a change introduced, and its specification does not state them |
 
 Obligation strain is the interesting one. An accepted ADR is a specification with no local
 implementation; the artifacts that implement it are owned by other units of change. That
 is not a special case bolted onto the taxonomy — it is what the relation predicts when the
 two ends of an edge land in different commits.
 
-**Status: Thesis.** The derivation fits the three kinds already identified; it has not
-been used to predict a fourth.
+The first three read the relation from the specification's side. Missing reads it from the
+implementation's side, which the derivation did not try until an example needed it.
+
+**Status: Thesis.** The derivation fits the three kinds identified first. It did not
+predict the fourth. The examples found it, and it fits once the relation is read from the
+other side.
 
 ## The trade this makes
 

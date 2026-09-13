@@ -72,7 +72,7 @@ documentation are raised and discharged out-of-band.
 | [The lattice](/cyber-truss/model/lattice/) | The concept the design is worked out from — three readings, and the one this page leans on |
 | [Artifact-sets](/cyber-truss/model/artifact-sets/) | The unit the model reasons about, on two orthogonal axes, and what controls each |
 | [Specification](/cyber-truss/model/specification/) | What a specification is, why it is a role rather than a layer, and what connections actually relate |
-| [Connections](/cyber-truss/model/connections/) | The relation between sets, why nothing owns it today, and the three kinds of strain |
+| [Connections](/cyber-truss/model/connections/) | The relation between sets, why nothing owns it today, and the kinds of strain |
 | [Join](/cyber-truss/model/join/) | How criteria arriving by different routes combine, and where they conflict |
 | [Workflow](/cyber-truss/model/workflow/) | What a workflow declares, why direction lives in it, and how a change finds the workflows it needs |
 | [Confluence](/cyber-truss/model/confluence/) | What path-independence means precisely, and what it is claimed over |

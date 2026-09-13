@@ -23,7 +23,7 @@ catalog did not surface. The table below records the four it tested.
 
 Nothing else. A formal workflow introduces no mechanism the model does not already
 have — it is a *parameterisation* of artifact-sets, connections, discharge criteria, and
-[the three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain).
+[the kinds of strain](/cyber-truss/model/connections/#kinds-of-strain).
 
 That is a falsifiable claim, and this page is the attempt to falsify it. The instances are
 drawn from deliberately distant fields, because a vocabulary that only fits the processes

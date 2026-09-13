@@ -92,7 +92,7 @@ model reasons about its outcome, not its internals. A role, not a kind of artifa
 ### Incompleteness strain
 
 A specification and its implementation disagree while both are in hand. Intra-unit-of-change,
-and it blocks. See [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain).
+and it blocks. See [kinds of strain](/cyber-truss/model/connections/#kinds-of-strain).
 
 ### Input and output
 
@@ -125,6 +125,12 @@ Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/latti
 
 Raising a raw line diff into artifact-set vocabulary. A prerequisite for everything
 downstream, because an unlifted diff and a connection are written in different languages.
+
+### Missing strain
+
+A change's criteria are not held by the inputs of a workflow the change bypassed: the
+implementation meets something its specification does not state. Relative to a change,
+unlike the other kinds. See [kinds of strain](/cyber-truss/model/connections/#missing).
 
 ### Nonconformance strain
 
@@ -172,9 +178,9 @@ the system. The observable that strain describes.
 ### Strain
 
 A connection whose relation does not currently hold. Comes in
-[three kinds](/cyber-truss/model/connections/#three-kinds-of-strain) that block
-differently: incompleteness, obligation, and nonconformance. A strain is exactly one of
-the three, never a score on each.
+[four kinds](/cyber-truss/model/connections/#kinds-of-strain) that block
+differently: incompleteness, obligation, nonconformance, and missing. A strain is exactly
+one of the four, never a score on each.
 
 ### Topology
 

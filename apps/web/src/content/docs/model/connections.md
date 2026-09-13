@@ -1,6 +1,6 @@
 ---
 title: Connections
-description: The relation between artifact-sets, why nothing owns it today, and the three kinds of strain
+description: The relation between artifact-sets, why nothing owns it today, and the kinds of strain
 ---
 
 :::caution[Design, not implementation]
@@ -71,12 +71,12 @@ strained. Same relation, same fixed point, any entry point.
 
 **Status: Settled.**
 
-## Three kinds of strain
+## Kinds of strain
 
 Strain is a connection whose relation does not currently hold. Working the two axes
-against real cases produces three distinct kinds, and they behave differently. A strain is
-**exactly one** of them, so each is named for the defect rather than for the property it
-falls short of.
+against real cases produced three distinct kinds, and the examples added a fourth. They
+behave differently. A strain is **exactly one** of them, so each is named for the defect
+rather than for the property it falls short of.
 
 ### Incompleteness
 
@@ -108,14 +108,32 @@ Axis 2. *This skill violates the agent-instruction guidelines.*
 
 State-driven, evaluable on a cold repository, and requires no delta.
 
-The three are not an arbitrary list. Read through the specification relation they are the
-three ways a specification and its implementation can fail to meet: both in hand and
-disagreeing, the implementation elsewhere, or no implementation in the delta at all. That
-derivation is on the [Specification](/cyber-truss/model/specification/#what-the-roles-explain)
-page.
+### Missing
 
-**Status: Settled** that the three are distinct and block differently. **Open:** the
-precise boundary conditions on each.
+Implementation ahead of its specification. *A bug fix introduces a rule the spec never
+stated.*
+
+A change's criteria are not held by the inputs of a workflow the change
+[bypassed](/cyber-truss/model/workflow/#a-change-identifies-the-workflows-it-bypassed). The
+implementation now meets something its specification does not state, and the
+specification is the side left behind.
+
+Missing strain is relative to a change, which the other three are not. Every implementation
+shows behaviour nobody wrote down, and most of it is coordinates. Missing strain fires only
+for criteria a change's intent introduced, and it is found after distillation has derived
+them. A refactor introduces no criteria and strains nothing.
+
+The first three are not an arbitrary list. Read through the specification relation they are
+the three ways a specification and its implementation can fail to meet from the
+specification's side: both in hand and disagreeing, the implementation elsewhere, or no
+implementation in the delta at all. Missing is the relation read from the implementation's
+side. That derivation is on the
+[Specification](/cyber-truss/model/specification/#what-the-roles-explain) page.
+
+**Status: Settled** that the first three are distinct and block differently. **Thesis**
+on missing, found by the
+[bug-fix example](/cyber-truss/examples/software-bug-fix/). **Open:** the precise boundary
+conditions on each, and how missing strain blocks.
 
 ## A coupling that resists encoding
 

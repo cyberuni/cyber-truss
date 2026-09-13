@@ -117,7 +117,7 @@ against a real waterfall project's artifacts.
 
 The order is not the interesting part. Plenty of processes start at requirements. What
 distinguishes waterfall is that it **refuses to open the next set while strain remains
-behind it**, and the model's [three kinds of strain](/cyber-truss/model/connections/#three-kinds-of-strain)
+behind it**, and the model's [kinds of strain](/cyber-truss/model/connections/#kinds-of-strain)
 make the refusal precise:
 
 - **Incompleteness strain** must be zero — the phase's own artifacts are all present.
@@ -126,6 +126,9 @@ make the refusal precise:
 - **Obligation strain** must be zero — and this is the strict one. The model's default is
   that an obligation may be *carried*: raised now, discharged later, possibly by someone
   else. Waterfall forbids carrying one across a gate.
+- **Missing strain** must be zero — a later phase may not meet a rule an earlier phase never
+  stated. Waterfall's answer is the change request back through the gate, which the next
+  section takes apart.
 
 So waterfall is not a different mechanism. It is a **policy on the strain the model
 already tracks**, and the policy is a single sentence: *no strain of any kind may cross a

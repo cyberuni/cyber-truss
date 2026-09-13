@@ -31,7 +31,7 @@ Both paths end in the same place.
 cyber-truss lets you make the change where you understand it and get the rest anyway. It
 can do that because those artifacts are parts of the system too, with the
 [connections](/cyber-truss/model/connections/) between them declared rather than
-remembered. That change [strains](/cyber-truss/model/connections/#three-kinds-of-strain)
+remembered. That change [strains](/cyber-truss/model/connections/#kinds-of-strain)
 the connections it crosses, because a connection states a relation between two
 [artifact-sets](/cyber-truss/model/artifact-sets/) that has to hold, and it no longer
 does.
