@@ -290,7 +290,9 @@ condition the Kessler Semi thesis names. The feed job records the announcement i
    at every write to the set, so it catches this one although the workflow is a downstream
    candidate that asked nothing. The change came from a feed job, so there is no requester to
    ask. The stop reaches the trader, the only approver on this desk. The sell order is
-   an output and waits for the same person. The trader approves both, and the closure is
+   an output and waits for the same person. The trader can approve both at once, or approve
+   the closure and [pre-approve](/cyber-truss/model/workflow/#leash) the rest of the run's
+   gates, which covers the sell order if its criteria pass. Either way the closure is
    recorded as a decision.
 8. **Propagate.** Once the order fills, semiconductors fall further under 25%, so
    `{mandate}` to `{portfolio}` holds. `{theses}` to `{portfolio}` holds, because no
@@ -322,8 +324,14 @@ closure carries out that criterion. The [leash](/cyber-truss/model/workflow/#lea
 the write with the standing specification and asks only whether it removes or reverses part
 of it. It does not ask whether another standing
 criterion demands the removal. Here that costs nothing, because the sell order waits for the
-same person at the same moment. On a set with no output next to it, the same stop would be
-ceremony, and the only remedy the model offers is loosening the whole set's leash.
+same person at the same moment, and one answer can cover both.
+
+Pre-approval does not reach the closure itself. A feed job starts this run, so no approver
+is present at its start, and the closure is the run's first stop. Pre-approval widens the
+leash for the rest of the run, after a person has spoken, so it can spare the second ask and
+not the first. On a set with no output next to it, the closure would be the only stop, and it
+would be ceremony. The remedy there is loosening the set's leash for every run, which is the
+wider tool, and this desk declines it for `{theses}`.
 
 Two things remain outside the settled state.
 
@@ -348,8 +356,9 @@ Two things remain outside the settled state.
   [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
   Variant C closes a thesis from a downstream run that asked nothing and has no requester,
   and the stop still reaches the trader. It fires even though another standing criterion
-  requires the closure. Variant B shows the other side: an angle added beyond the derived
-  criteria only adds, so the leash lets it through.
+  requires the closure, and pre-approval can cover only the sell order after it. Variant B
+  shows the other side: an angle added beyond the derived criteria only adds, so the leash
+  lets it through.
 - The approver on a one-person desk. The trader approves every stop, whoever or whatever made
   the change.
 - [Criteria over the outcome](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)

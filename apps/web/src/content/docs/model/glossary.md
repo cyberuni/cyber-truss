@@ -16,7 +16,8 @@ and points at the definitions.
 ### Approver
 
 A person allowed to approve what the [leash](#leash) stops. Any approver may approve a stop in
-any workflow; approvers per workflow are deferred. SDD calls this role the Council. See
+any workflow, or pre-approve the gates of a run. Approvers per workflow are deferred. SDD calls
+this role the Council. See
 [Leash](/cyber-truss/model/workflow/#leash).
 
 ### Artifact

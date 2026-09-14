@@ -97,14 +97,13 @@ prop names, types, and defaults are criteria bound to it. By default the
 [leash](/cyber-truss/model/workflow/#leash) stops any write that removes one, and an
 approver approves it. In this library the approver who holds the API is the maintainer.
 
-The team keeps the default leash on every set but one. On `{API docs}` it loosens it for one
-kind of write: a change to the prop list that makes the page match the props the code
-exports. That write proceeds when the criteria pass, even when it removes a documented prop.
-A stop there would ask the maintainer whether the API may break, which release already asks
-at the set where the break cannot be taken back. The page follows the code, so the second
-stop is ceremony. A write that removes a prop the code still exports does not match the
-code, and it still stops. The usage example is not covered, because the spec constrains it.
-The loosening is safe only because release is declared.
+The team keeps the default leash on every set. A break in the API stops twice by default:
+at the reference page, which loses a documented prop, and at release. Both stops ask the
+maintainer one question, whether the API may break. The team does not loosen `{API docs}`
+for every run to avoid that. The stop there is ceremony only when release asks the same
+question in the same run, and a loosening would also drop it in a run where release is not
+reached. Instead the maintainer answers once, and on accepting the break
+[pre-approves](/cyber-truss/model/workflow/#leash) the rest of the run's gates.
 
 ## The change
 
@@ -144,31 +143,33 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
 6. **Propagate.** The downstream candidates run from the reconciled code.
    - API reference documents `totalItems` and `pageSize` and removes `totalPages`. The usage
      example no longer computes a count. Removing a documented prop contradicts the page's
-     standing specification. The page now matches the code's exports, so the loosened leash
-     on `{API docs}` lets the write proceed.
-   - The page is a change of its own. Docs update owns it, so it distills under the run's
-     intent and asks the `{spec}` controller, which holds. The docs controller reconciles
-     the new page against the spec: the documented way to reach a page count now produces no
-     empty page. The old rounding-down example is gone with the prop. The formula was
-     expression that the spec's criterion checked, not a criterion of the page, so removing
-     it removes nothing. Keeping the prop removal falls under the same loosening.
+     standing specification, so the [leash](/cyber-truss/model/workflow/#leash) stops the
+     write for approval.
    - Release reads the code. Its controller finds an exported prop removed, which its
      convention names a breaking change, so the emission needs a major version and a
      migration note. It is an output write, so it waits for approval. The report is
-     *change course*: the fix changed the component's API. The
-     [approval](/cyber-truss/model/workflow/#leash) comes from the maintainer, the
-     approver who holds the API. This is the only stop in the run.
-7. **Decide.** The maintainer's answer is a
-   [recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest).
+     *change course*: the fix changed the component's API.
+   - Both stops reach the maintainer, the approver who holds the API, with one question.
+7. **Decide.** The maintainer answers once, at whichever stop reaches them first. The answer
+   is a [recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest).
    - **Rejected.** The decision adds a criterion, *the component accepts `totalPages`*,
      and creates the next criteria version. The code controller reconciles again and
-     restores the prop. API reference documents it again. Docs update asks the spec, which
-     holds, and the docs controller finds the restored usage example rounding down, which
-     breaks the spec's criterion, so it amends the example to round up. Release has nothing
-     breaking left to emit. Each of these writes returns its set to its standing
+     restores the prop. Neither stopped write goes ahead, and API reference finds the page
+     already documents the restored prop. Docs update asks the spec, which holds, and the
+     docs controller finds the usage example rounding down, which breaks the spec's
+     criterion, so it amends the example to round up. Release has nothing breaking left to
+     emit. Each of these writes returns its set to its standing
      specification, and the formula is not a criterion of the page, so none of them stops.
    - **Accepted.** The decision widens the intent: *consumers no longer compute the page
-     count.* Release emits a major version with the migration note.
+     count.* The maintainer also pre-approves the rest of the run's gates. The other stopped
+     write proceeds if its criteria pass. The page documents the new props, and release
+     emits a major version with the migration note its convention requires. The page is
+     then a change of its own. Docs update owns it, so it distills under the run's intent
+     and asks the `{spec}` controller, which holds. The docs controller reconciles the new
+     page against the spec: the documented way to reach a page count now produces no empty
+     page. The old rounding-down example is gone with the prop. The formula was expression
+     that the spec's criterion checked, not a criterion of the page, so removing it removes
+     nothing. Keeping the prop removal falls under the same pre-approval.
 
 ### Settled state
 
@@ -185,16 +186,15 @@ If the maintainer accepts it, `{code, test}` and `{API docs}` carry the new prop
 
 ### Status: Holds
 
-The break reaches a person before it reaches a consumer, and it reaches them at the one set
+The break reaches a person before it reaches a consumer, and release holds it at the one set
 where it cannot be taken back. Either answer is recorded, so the settled state is chosen by
 a decision rather than by whichever workflow finished last.
 
-The break stops once. Under the default leash it would stop twice: at the API reference
-write, which removes a documented prop, and at release. Both stops reach the maintainer with
-one question. The model does not say that one recorded decision answers stops at two sets,
-so the maintainer would answer twice, or the run would need a rule the model lacks. The
-loosened leash on `{API docs}` avoids the second stop rather than resolving
-[that question](/cyber-truss/model/open-questions/#can-one-approval-cover-the-writes-that-carry-it-out).
+The maintainer is asked once. The break stops at two sets, and the pre-approval given with
+the first answer carries the second write, which still has to pass its criteria. At release
+those criteria include the convention, so a release with no major version or no migration
+note does not proceed. The pre-approval does not cover the quality of the note. A maintainer
+who wants to read it before it ships does not pre-approve, and answers again at release.
 
 An earlier version of this example declared an API contract workflow, reading the page and
 owning the code, and relied on it to stop the break. It never could. Docs update owns the
@@ -210,13 +210,14 @@ Four judgements carry the status.
 - **Declaring release at all.** With no workflow that reads the code and outputs the package,
   nothing in the run reaches the registry. That is a gap in the declarations, the same kind
   [selection raises](/cyber-truss/model/workflow/#how-workflows-are-selected) when a strained
-  set has no writer. Under the default leash the API reference write would still stop and
-  reach the maintainer. With `{API docs}` loosened nothing stops, and the break is found by
-  consumers. The loosening and the release declaration stand or fall together.
+  set has no writer. The API reference write would still stop and reach the maintainer,
+  because the team kept the default leash on `{API docs}`. Had it loosened that set for
+  every run, nothing would stop, and consumers would find the break.
 - **Whether `{code, test}` has a standing specification of its own.** The example gives it
   none beyond the criteria from above, so reconciliation at the source removes nothing. If
   the team authored the component's tests through use cases, `totalPages` would be a
-  criterion of the code, and the source would stop too, on the question release asks. The
+  criterion of the code, and the source would stop first, on the question release asks. The
+  maintainer would answer there and pre-approve the rest. The
   model says a set's criteria are authored through
   [use cases](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases), but
   not whether an implementation set carries use cases of its own or only the criteria of the
@@ -246,7 +247,7 @@ page only.
    report is a match. It compares the result with the page's standing specification. The
    prop list is unchanged. The formula is expression that the spec's criterion checks, not a
    criterion of the page, so correcting it removes nothing. The write proceeds under the
-   default leash, and the loosening is not needed.
+   default leash, and nobody is asked.
 6. **Propagate.** Nothing replays, and no other set changes.
 
 ### Settled state
@@ -281,9 +282,9 @@ Here the rule is the spec's criterion, and the formula is how the page failed it
   and the approval an emission needs, not a declaration on an edge between revisable sets.
 - The [leash](/cyber-truss/model/workflow/#leash) against a
   [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
-  Removing a documented prop contradicts the page, and by default it stops. The team loosens
-  `{API docs}` for writes that match the code, so the break is asked about once, at release.
-  Whether one decision could answer stops at two sets is left open.
+  Removing a documented prop contradicts the page, and it stops. So does release. The
+  maintainer answers once and pre-approves the rest of the run, so one decision covers
+  stops at two sets without loosening either set for every run.
 - [Reconciling at the source](/cyber-truss/model/canonical-execution/#reconciling-at-the-source).
   The developer's change meets the spec's criteria and is kept as written. What stops it is
   not the reconciliation but the output, because `{code, test}` states no criterion of its

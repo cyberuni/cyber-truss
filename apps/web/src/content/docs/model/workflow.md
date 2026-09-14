@@ -239,16 +239,25 @@ set the defaults.
 - **Confidence only tightens.** An agent unsure of a write asks, even where the leash lets it
   proceed. An agent sure of a write never passes a leash that requires approval.
   Self-reported confidence is the signal easiest to get wrong, so it never grants autonomy.
+- **An approver can pre-approve.** At the start of a run, or at any stop, an approver may
+  widen the leash for the rest of the run, up to approving every workflow gate in it. Writes
+  the pre-approval covers then proceed without a stop, provided their criteria pass. This is
+  how one decision covers the writes that carry it out: the approver who accepts a reversed
+  rule at the spec can pre-approve the docs and mockups that follow it, instead of being asked
+  again at each set. A pre-approval never passes a failed criterion, and it does not override
+  confidence, so an agent unsure of a write still asks. SDD sets the same thing at run start
+  as its run-level leash, from none to all gates.
 
 Approval comes from an **approver**, a person allowed to approve for the system. Any approver
 may approve a stop in any workflow. Which people may approve which workflow is permission
-management, and it is left out of the first version. Approvers are not declared per set, and
+management, and it is left out of the first version: for now an approver can approve, and
+pre-approve, every workflow gate. Approvers are not declared per set, and
 nothing picks one person per artifact-set. For a solo developer or a solo author the approver
 is also the person who made the change, and that is accepted.
 
-A team may loosen a default per set, for example letting an agent emit to a staging
-channel, or letting a fix that reverses a stated rule proceed where a stop would be
-ceremony. An approval is a decision, and it is recorded like one, so
+A team may also loosen a default per set for every run, for example letting an agent emit to
+a staging channel. Pre-approval is the narrower tool: it widens the leash for one run, so a
+set whose stop is sometimes the only check keeps it by default. An approval is a decision, and it is recorded like one, so
 [rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) applies to it.
 
 **Status: Thesis** on the defaults, and the contradiction default is expensive to change: it

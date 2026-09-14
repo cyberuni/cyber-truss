@@ -138,10 +138,11 @@ down, plus one. That rule is the bug.
    plus one*, so the write reverses a criterion of the spec's standing specification. The
    [leash](/cyber-truss/model/workflow/#leash) stops it for approval. The approver here is
    the product owner who keeps the PRD and the spec. On a solo project that is the developer
-   who made the fix, which the model
-   accepts. The product owner approves. The approval is a recorded decision under
-   [rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest), and it changes
-   no criterion. The empty-list case only adds, so it needs nothing of its own.
+   who made the fix, which the model accepts. The ledger already holds design update's job,
+   so the product owner can see that the mockups will follow. The product owner approves,
+   and pre-approves the rest of the run's gates. Both are recorded as a decision under
+   [rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest), and neither
+   changes a criterion. The empty-list case only adds, so it needs nothing of its own.
 7. **Reconcile at the source.** The code's controller receives the developer's fix, the
    intent, and references to the criteria of `{spec}`.
    [Reconciliation](/cyber-truss/model/canonical-execution/#reconciling-at-the-source) keeps
@@ -155,11 +156,11 @@ down, plus one. That rule is the bug.
    the rule the spec states, and the write still meets it, so nothing is reversed and it
    proceeds. Design update's job is now ready and amends the page indicator. The indicator
    drew an empty last page, and design implementation checks the code against that drawing,
-   so the drawing is a criterion of `{mockups}`. The write reverses it, and the leash stops
-   it for approval a second time. The same product owner is asked to accept the same
-   change of direction, now as a drawing. The product owner approves. Design implementation
-   then reconciles the code against the mockups. The code already meets them, so it keeps
-   everything and changes nothing.
+   so the drawing is a criterion of `{mockups}`. The write reverses it, which would stop it
+   for approval by default. The product owner's pre-approval covers it, and its criteria
+   pass, so it proceeds. The product owner is not asked the same question again as a
+   drawing. Design implementation then reconciles the code against the mockups. The code
+   already meets them, so it keeps everything and changes nothing.
 
 The ledger schedules this work. It does not decide the outcome. The spec's write waits on
 approval, and every job that reads `{spec}` waits with it. Design implementation's
@@ -178,10 +179,10 @@ criteria, so their writes [join](/cyber-truss/model/join/#join-and-connection) a
 - `{spec}` states the round-up rule and the empty-list case.
 - `{code, test}` implements both, with tests for an exact multiple and an empty list.
 - `{user docs}` and `{mockups}` match the spec.
-- Two approvals are recorded as decisions, one at `{spec}` and one at `{mockups}`, both for
-  the same change of direction.
+- One decision is recorded at `{spec}`: the approval of the change of direction, and the
+  pre-approval that carried it through `{mockups}`.
 
-### Status: Gap
+### Status: Holds
 
 The run settles. Every order settles in the same state. Each set that has to change is owned
 by one workflow that can reach it, and every write meets the same version 1 criteria, adding
@@ -192,15 +193,18 @@ disagree and further cycles would run, and those are bounded by
 The first stop is the right one. The spec stated the wrong rule, and a person accepts that
 it was wrong before three sets move to the new one.
 
-The second stop is ceremony, and the model has no way to avoid it. The leash compares a
-write with the set's standing specification as it stood before the run, and it checks every
-write to the set whichever workflow contributed. The approval recorded at `{spec}` does not
-change what `{mockups}` stood for, so the mockups' controller cannot see that the reversal
-it finds was already accepted upstream. The team could loosen the leash on `{mockups}`, but
-that also lets reconciliation undo a designer's change unasked, and it drops the stop in
-variant B where the mockups are the only place the change shows. What is missing is a way for
-an approval to cover a downstream write that only carries it out. See
-[Can one approval cover the writes that carry it out?](/cyber-truss/model/open-questions/#can-one-approval-cover-the-writes-that-carry-it-out)
+The second stop would be ceremony, and pre-approval removes it. The leash still compares
+the mockups' write with what `{mockups}` stood for before the run, and it still finds a
+reversal. What changes is that a person who already accepted the change said so for the rest
+of the run. The write still has to pass its criteria, and a controller unsure of it still
+asks. The team does not loosen the leash on `{mockups}` for every run. That would let
+reconciliation undo a designer's change unasked, and it would drop the stop in variant B,
+where the mockups are the only place the change shows. See
+[Leash](/cyber-truss/model/workflow/#leash).
+
+The status rests on the product owner choosing to pre-approve. Without it the default stops
+at `{mockups}` again, and the run still settles, one ask later. A product owner who wants to
+see the redrawn indicator can decline, and that is a choice, not a gap.
 
 The docs write avoids a stop only because the help page's criterion refers to the spec's rule
 rather than restating it. Had the team written the rule into the page's criteria, the docs
@@ -276,10 +280,11 @@ that call, which is where the knowledge of the set sits.
 The run passing without a stop rests on a third judgement, the one variant A's docs write
 rests on: that the help page's criterion refers to the spec's rule rather than restating it.
 
-The stop on a mockup that depicts an exact multiple is why variant A's gap cannot be closed by
+The stop on a mockup that depicts an exact multiple is why variant A cannot be settled by
 skipping downstream stops. The same write to `{mockups}` is ceremony in variant A and the
-only check in this case. Only whether an approval upstream already covers it tells them
-apart.
+only check in this case. What tells them apart is a person. In variant A the product owner
+was asked at `{spec}` and pre-approved the rest. Here the spec's write stops nobody, so no
+approver has spoken, nothing is pre-approved, and the default stops at `{mockups}`.
 
 ## What it tests
 
@@ -292,8 +297,9 @@ apart.
 - The [leash](/cyber-truss/model/workflow/#leash) against the
   [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
   Variant A's spec write reverses a stated rule and stops for approval. Variant B's only
-  adds and proceeds. The mockups' write in variant A stops again for a change already
-  accepted, which is the gap.
+  adds and proceeds. The mockups' write in variant A reverses a drawing and proceeds only
+  because the product owner pre-approved it at `{spec}`. In variant B the same kind of
+  write has no pre-approval, and it stops.
 - [Replacement](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) under the
   leash. The round-up rule removes *round down, plus one* rather than joining it, and the
   write that makes that replacement is the one the product owner approves.

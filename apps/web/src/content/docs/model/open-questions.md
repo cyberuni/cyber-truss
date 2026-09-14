@@ -188,25 +188,6 @@ controller answers correctly for its own set, and nobody is asked.
 **What breaks if it resolves badly:** a rule is hollowed out one permitted step at a time,
 and the run reports every step as additive.
 
-## Can one approval cover the writes that carry it out?
-
-The [leash](/cyber-truss/model/workflow/#leash) checks every write against the set's standing
-specification, and an approval at one set changes nothing another set held before the run. So
-a change an approver accepted once stops again at each set that has to follow it. A spec rule
-approved at `{spec}` stops again when the mockups redraw the page count. A brand lead who
-settles a conflict at the brief is asked again when the messaging framework is amended to
-match. A thesis closed because its own invalidation criterion requires it stops as though
-someone chose to close it.
-
-Every example that met this worked around it by loosening one set's leash, which is too wide.
-The narrow rule would be that a write needs no second approval when it only carries out a
-decision recorded in the same run. The difficulty is *only carries out*: a stop downstream is
-sometimes the only check a write gets, as when the mockups hold a case the spec never stated.
-
-**What breaks if it resolves badly:** too wide, and a single approval launders every write
-downstream of it. Too narrow, and one change asks the same person the same question at every
-set, and teams loosen leashes wholesale to escape it.
-
 ## Smaller, but unresolved
 
 - **Is the controller spectrum a total order?** It reads as one from judgement to

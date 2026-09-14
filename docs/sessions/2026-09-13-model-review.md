@@ -26,10 +26,10 @@ Clearance, the mis-bound rule, per-set owners, sending upstream use cases.
 Examples re-graded (`b98cbc0`); two added: insulin double check (erosion across sets) and
 aviation blade limit (long chain, three organisations). Statuses live in `examples/index.md`.
 
-**Next question:** can one approval cover the writes that carry it out? Four examples
-(software A, component library, marketing A, trading C) meet the same person asked twice for
-one decision and work around it by loosening a whole set's leash. See the section of that
-name on `open-questions.md`.
+Resolved next (user-directed): **one approval covers the writes that carry it out through
+pre-approval.** At run start or at any stop an approver may widen the leash for the rest of the
+run, up to every workflow gate, as SDD's run-level leash does. It never passes a failed
+criterion or overrides confidence. Per-set loosening stays, as the wider tool.
 
 Also open from this round: erosion across sets; whether an implementation set has use cases
 of its own (component library). Deferred past MVP (user-directed): approvers per workflow.

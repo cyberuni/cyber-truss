@@ -93,17 +93,17 @@ The declarations are top-down, the way the team plans. Every workflow
 and message match makes the ads the specification of the page. Only campaign planning owns
 `{messaging}`, and it reads the brief. No workflow owns `{brief}`.
 
-Every workflow keeps the default [leash](/cyber-truss/model/workflow/#leash) with one
-loosening, on each set it owns. A write that removes or reverses part of the set's
+Every workflow keeps the default [leash](/cyber-truss/model/workflow/#leash). A write that
+removes or reverses part of the set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-stops for approval, unless a decision recorded in the same run already removed that part
-and lands in the set. Then the write proceeds if it removes nothing more. The set's
-controller checks that against the decision, which it can read because
-[a decision lands in the set it affects](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion).
+stops for approval.
 
-The team wants this because a positioning call is the brand lead's. Asking the brand lead
-once to decide and again to approve the framework that carries the decision out adds a stop
-and no judgement. A write that goes past the decision still stops.
+A positioning call is the brand lead's. Asking the brand lead once to decide and again to
+approve the framework that carries the decision out adds a stop and no judgement. So when
+the brand lead makes a positioning call in a run, they
+[pre-approve](/cyber-truss/model/workflow/#leash) the rest of the run's writes to
+`{messaging}`, `{ads}`, and `{landing page}`. The model would let them pre-approve every
+gate. They leave launches out, because the team sends spend to the performance marketer.
 
 Under that leash, creative production's edits to ad copy proceed when the criteria pass and
 they only add. A launch commits spend, so it needs the performance marketer's approval.
@@ -165,7 +165,8 @@ touches `{ads}` and `{launches}`.
 7. **Decide.** The brand lead decides that paid social may lead with savings until the
    campaign ends, as a test, and that the proposition holds everywhere else. The decision is
    recorded, lands in `{messaging}` and `{brief}`, the sets it affects, and creates the next
-   version of the criteria.
+   version of the criteria. The run is stopped on the brand lead, so the brand lead also
+   pre-approves the run's remaining writes to the framework, the ads, and the page.
 8. **Replay from `{messaging}`.** The framework's controller amends it under the new
    version: savings-led headlines in paid social and on its landing page variant, with the
    basis stated. The amended framework is marked output of the run, and creative production
@@ -181,9 +182,8 @@ touches `{ads}` and `{launches}`.
     amended framework is different. Before the run it kept savings out of headlines, and
     the write reverses that for paid social. By the
     [default](/cyber-truss/model/workflow/#leash) it stops for approval, here from the brand
-    lead. The brand lead made exactly that call in step 7, and the decision is recorded in
-    `{messaging}`. The declared leash lets the write
-    proceed, because it removes nothing the decision did not. The brand lead is asked once.
+    lead. The brand lead made exactly that call in step 7 and pre-approved the writes that
+    follow it, so the write proceeds when its criteria pass. The brand lead is asked once.
     The reconciliation report is a builder outcome: a kept headline and a filled hole. The
     relaunch is an output, so it goes to the performance marketer for approval. Once live,
     it supersedes the arriving launch and the obligation clears.
@@ -221,12 +221,15 @@ The leash separates three things the earlier run treated as two. Rewriting copy 
 proceeds on the criteria. Reversing what the framework allows waits for the person who
 holds positioning. Relaunching spends money and waits for the person who holds spend.
 
-The run asks the brand lead once only because the team declared it. The model does not say
-whether a recorded decision is the approval for the write that carries it out. It says the
-converse: "An approval is a decision, and it is recorded like one"
-([Leash](/cyber-truss/model/workflow/#leash)). Under the bare default the conflict decision
-and the leash stop are two asks of one person for one call. Any system whose positioning
-set is unowned or decided at a conflict would need the same declaration.
+The run asks the brand lead once because the brand lead pre-approves at the decision. Without
+that, the conflict decision and the leash stop are two asks of one person for one call. Two
+things rest on judgement. The first is that a conflict handed to a person counts as a stop
+at which an approver may pre-approve. The run waits on the brand lead there, so it reads as
+one. The second is width. The pre-approval covers every later write to the three sets, not
+only what the decision removed. A framework write that removed more than the paid social
+exception would still proceed if its criteria pass and its controller is sure of it. A
+declared rule that passed only writes removing what the decision removed would be narrower.
+Pre-approval trades that for needing no rule per set.
 
 The relaunch approval reaches the performance marketer, who also made the change. The
 [Leash](/cyber-truss/model/workflow/#leash) section accepts that for a solo developer or
@@ -281,12 +284,11 @@ touches `{landing page}`.
 8. **Leash.** If savings replaces the proposition, every write below the brief reverses
    something that stood before the run: the framework's clarity headlines, the ads' clarity
    promise, and the page's clarity headline. Each stops for approval by default, here from
-   the brand lead. The brand lead's decision removed the clarity proposition and lands
-   in each set it affects, so the declared leash lets each write proceed if it removes
-   nothing more. The rewritten ads leave every live launch running copy that no longer
-   exists, so each needs a superseding launch, and those are outputs that wait for the
-   performance marketer. If the change is refused, the restored page matches its standing
-   specification, and the write proceeds without a stop.
+   the brand lead. The brand lead pre-approved them when deciding to replace the
+   proposition, so each write proceeds when its criteria pass. The rewritten ads leave every
+   live launch running copy that no longer exists, so each needs a superseding launch, and
+   those are outputs that wait for the performance marketer. If the change is refused, the
+   restored page matches its standing specification, and the write proceeds without a stop.
 
 ### Settled state
 
@@ -333,10 +335,10 @@ The brand lead's decision can hide the divergence. A brand lead facing variant B
 conflict can choose variant A's narrower exception, and then the two runs agree. They agree
 because a person chose, and a run with no person in it would not.
 
-The new leash does not change this. It adds a stop in both variants, at the framework, and
-in both the stop reaches the brand lead who already decided. It checks each write against
-what the set stood under before the run, and both variants start from the same framework.
-What differs is the intent each run hands the brand lead, and the leash never reads that.
+The leash does not change this, and neither does pre-approval. The leash checks each write
+against what the set stood under before the run, and both variants start from the same
+framework. Pre-approval only spares the brand lead a second ask in each. What differs is the
+intent each run hands the brand lead, and neither reads that.
 
 ## What it tests
 
@@ -347,9 +349,10 @@ What differs is the intent each run hands the brand lead, and the leash never re
   that only add proceed on the criteria. A write that reverses what the framework allowed
   stops for the brand lead, and every launch waits for the performance marketer. The
   campaign has two [approvers](/cyber-truss/model/workflow/#leash).
-- A loosened leash that avoids asking one person twice. A write that removes only what a
-  recorded decision in the run removed proceeds, because the model does not say whether
-  that decision is already the approval.
+- [Pre-approval](/cyber-truss/model/workflow/#leash) that avoids asking one person twice.
+  The brand lead decides the conflict and pre-approves the direction writes that follow,
+  and leaves launches to the performance marketer. It is wider than a rule tied to what the
+  decision removed.
 - [Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) that routes an
   affected input to its owner. `{messaging}` is affected and is creative production's input,
   so the job is routed to campaign planning even though the change never touched a set it
