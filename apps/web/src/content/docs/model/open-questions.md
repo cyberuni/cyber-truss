@@ -59,6 +59,10 @@ instead of in the connections — the same failure, relocated. The upside is tha
 failure is *measurable*: feed one workflow several expressions of one intent and compare
 the intents it states.
 
+Only a change is distilled. A routed job carries the root intent unchanged, so a controller
+far above the source abstracts it once, itself. Workflows are short chains, so the distance
+is expected to be small, but the examples do not yet carry enough detail to test it.
+
 Two narrower risks sit beside it. A workflow that wrongly abstains goes unnoticed, since no
 other workflow's reading covers its vocabulary. And a reading wider than the change, such as
 treating a new prop as part of the intent, is caught only where criteria meet a controller

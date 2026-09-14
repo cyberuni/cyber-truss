@@ -269,12 +269,13 @@ The model has no step for evidence that no workflow reads.
 
 One obstacle of the earlier reading is gone. Its walks stopped at the first set that
 contradicted the change, before any evidence further up. Asking now continues past an
-affected set, and a job is routed to the owners of an affected input. Suppose the team
-declared a workflow that reads `{campaign results}` and owns `{messaging}`. If the tie-break
-routes the framework's job to it, its question to the results' controller would find that the
-evidence covers paid social only, which does not hold variant B's every-channel intent. The
-results have no workflow that writes them, so that answer is raised to a person as an
-obligation. It still does not narrow variant B's intent. Whether it should is the question
+affected set, and an affected input is routed as an intent to every one of its owners.
+Suppose the team declared a workflow that reads `{campaign results}` and owns `{messaging}`.
+It would receive the routed job, with the root intent and the framework's criteria, and read
+them within a span that holds the results. The evidence covers paid social only, so the
+criteria its controllers derive for the framework are scoped to paid social. The ledger hands the framework's controller that intent together with campaign
+planning's every-channel one, and the two conflict there, which puts the scope in front of a
+person. It still does not narrow variant B's intent at the page, where the change landed. Whether it should is the question
 [Can distillation be made stable?](/cyber-truss/model/open-questions/#can-distillation-be-made-stable)
 leaves open. This pair gives it a case where the instability comes from the structure of the
 field, not from the distiller.

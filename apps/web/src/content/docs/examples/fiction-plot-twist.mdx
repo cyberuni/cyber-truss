@@ -117,11 +117,12 @@ family. The diff touches chapter 14 only.
        reading, damning on a second.
      - The climax still turns on Ilse's choice about revenge.
 
-     The outline is drafting's input, so drafting routes it to the outline's owners:
-     plotting, reverse outlining, and worldbuilding. The intent keeps chapter 14, so the
-     outline must follow the manuscript. Reverse outlining reads the manuscript. Plotting
-     reads a premise that names no betrayer, and worldbuilding reads a bible that is itself
-     about to change. Reverse outlining is chosen.
+     The outline is drafting's input, so drafting routes the job to every owner of the
+     outline: plotting, reverse outlining, and worldbuilding. Each reads the root intent and
+     the outline's criteria within its own span. Reverse outlining reads the manuscript as
+     well, so its intent carries the chapter's expression. Plotting asks the premise's
+     controller, which holds: the premise names no betrayer, and the climax still turns on
+     revenge. Worldbuilding reads a bible that is itself about to change.
    - Continuity pass asks the bible's controller. The bible puts Maren at sea, so it is
      affected, with the criterion *Maren's backstory places her where she could have sealed
      the letter.* The bible is continuity pass's input, and canon update alone owns it, so
@@ -134,23 +135,21 @@ family. The diff touches chapter 14 only.
    and the bible state. They are not joined with it.
 5. **Schedule.** The
    [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
-   holds four jobs. Reverse outlining and canon update read the source, which is settled by
-   definition, so they start. Drafting's reconciliation reads the outline and continuity
-   pass's reads the bible, so both wait. Neither running job waits on the reconciliations
+   holds the jobs. Reverse outlining and canon update read the source, which is settled by
+   definition, so they start. Plotting's job has nothing pending and runs. Worldbuilding's
+   job reads the bible, which canon update is about to write, so it waits. The outline's
+   controller writes once all three have contributed. Drafting's reconciliation reads the
+   outline and continuity pass's reads the bible, so both wait. Neither running job waits on the reconciliations
    at the manuscript, so the two edges with opposite roles never wait in both directions.
-6. **Replay.** Reverse outlining rebuilds the outline to name Maren, plant her in chapters
-   3 and 9, and end on Ilse's choice about her. Canon update puts Maren ashore in the year
-   the house fell.
-
-   The amended bible is a change of its own, and worldbuilding picks it up under the run's
-   intent. Chapter 2 of the old outline had Maren's ship coming into port. If reverse
-   outlining rebuilt chapter 2, the outline already holds. If not, worldbuilding amends it,
-   and the two writes [join](/cyber-truss/model/join/) at the outline's
-   [controller](/cyber-truss/model/controller/#the-join-happens-at-the-controller). The
-   ledger now has two pending writers of the outline, and it holds drafting until both
-   finish, so drafting runs once. Plotting spans the amended outline, and the premise's
-   controller answers that the premise holds, because it names no betrayer and the reworked
-   climax still turns on revenge. Nothing replays there.
+6. **Replay.** Canon update puts Maren ashore in the year the house fell. Worldbuilding's
+   job is then ready. Chapter 2 of the old outline had Maren's ship coming into port, so
+   its contribution to the outline moves that beat. The ledger hands the outline's controller
+   all three contributions together, each with its provenance, and they
+   [join](/cyber-truss/model/join/) at the
+   [controller](/cyber-truss/model/controller/#the-join-happens-at-the-controller). It
+   writes once: Maren named, planted in chapters 3 and 9, the ending on Ilse's choice about
+   her, and chapter 2 consistent with the bible. Plotting's contribution adds nothing the
+   others do not, and does not conflict. Drafting runs once, after that write.
 7. **Reconcile at the source.** Drafting and continuity pass both reconcile at the
    manuscript, and the criteria from the outline and the bible join at its controller. It
    keeps the author's chapter 14, which meets the reveal criterion. It adds setup scenes in
@@ -279,9 +278,9 @@ strain is recorded. Two things remain open.
   amends canon. Without the reverse workflows, selection raises the affected sets as
   obligations and names the missing declarations.
 - [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
-  An affected input is routed to its owners, and the intent breaks the tie toward reverse
-  outlining. The ledger holds drafting until both writers of the outline finish, and treats
-  the source as settled, so edges with opposite roles never wait on each other.
+  An affected input is routed as an intent to all three of the outline's owners, and the
+  ledger collects their contributions so the outline is written once. It treats the source
+  as settled, so edges with opposite roles never wait on each other.
 - [Distillation](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow)
   stating what a change is for, not whether it is right. Asked for rightness, the workflows
   that treat the outline and the bible as canon read the chapter as an error. It also keeps

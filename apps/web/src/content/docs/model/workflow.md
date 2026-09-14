@@ -117,9 +117,14 @@ no workflow at all.
 
 ## What a workflow reads
 
-Every candidate reads the change within its own span and
+A workflow is triggered by a change or by a routed job. A change it
 [distills](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow)
-what it is for. What it does next depends on the role the changed set holds in it.
+within its own span. A routed job carries the root intent and the affected set's criteria,
+and the workflow reads them within its span without distilling a new intent, because
+[only a change is distilled](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets).
+A routed job carries no expression, so it always asks the controllers above.
+
+For a change, what the workflow does next depends on the role the changed set holds in it.
 
 - **The changed set is an input.** The workflow reads the change, including the diff. It
   describes that set or depends on it, so the expression is what it needs. It runs from the
@@ -153,10 +158,12 @@ starting point, and a change rarely needs only one.
    upstream candidate for which every set asked holds, and whose changed set meets its
    criteria at reconciliation, has nothing to replay.
 4. **Route what the workflow cannot write.** An affected set that is the workflow's input is
-   routed to the workflows that own or output it. Each routed job asks upward from that set
-   in its own shape. Where several workflows could take it, the intent decides. Judgement.
+   routed to every workflow that owns or outputs it, carrying the root intent unchanged and
+   the affected set's criteria. Each reads them within its span, then asks upward in its own
+   shape or abstains. Nothing picks one owner.
 5. **Schedule.** Every job goes to the
-   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide).
+   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide),
+   which collects the intents addressed to each set and hands them to its controller together.
    A job whose input has a pending writer may wait, as the workflow's strain policy says.
    The changed set counts as settled, so a job that reads it never waits on the
    reconciliation at it.

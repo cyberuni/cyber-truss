@@ -75,8 +75,9 @@ a discharge point. One of the parameters a [workflow](#workflow) declares.
 ### Distillation
 
 Reducing an arriving change to its [intent](#intent), separated from the particular
-expression of it. Each candidate workflow distills within its own span, and states what the
-change is for, not whether it is right. A workflow that finds nothing abstains. Writes
+expression of it. Only a change is distilled, never an intent. Each workflow the change
+reaches distills it within its own span, and states what it is for, not whether it is
+right. A workflow that finds nothing abstains. Writes
 nothing, and produces no criteria: those come from each set's [controller](#controller).
 Irreducibly agentic, and the step that carries the confluence guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
@@ -173,7 +174,8 @@ write. A Request to a controller above the source carries no expression of the c
 ### Run ledger
 
 The append-only record of a run: pending jobs, what each waits on, criteria versions,
-resolutions, and decisions. Its ready frontier is the jobs whose inputs have no pending
+resolutions, and decisions. It collects the contributions addressed to each set, with their
+provenance, and never merges them. Its ready frontier is the jobs whose inputs have no pending
 writer. It schedules to reduce rework and never makes a run correct. See
 [The run ledger schedules](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide).
 
@@ -181,8 +183,8 @@ writer. It schedules to reduce rework and never makes a run correct. See
 
 Finding the workflows a change needs: its [upstream](#upstream-candidate) and
 [downstream](#downstream-candidate) candidates, filtered by what the controllers above the
-[source](#source) answer, and the owners of any affected input they route to. Intent breaks
-ties. An affected set no declared workflow can write is raised as an obligation. Extended as replays produce changes of their
+[source](#source) answer, and every owner of an affected input, each triggered by a
+routed job carrying the root intent. An affected set no declared workflow can write is raised as an obligation. Extended as replays produce changes of their
 own. See
 [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
 

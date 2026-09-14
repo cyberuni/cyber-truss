@@ -215,7 +215,7 @@ was made. Reading later state lets hindsight into the intent, which the
 [trading example](/cyber-truss/examples/stock-trade-without-thesis/) shows backfilling a
 thesis the trader never held.
 
-**Status: Thesis.** **Open:** what form the time bound takes, whether it also binds what the
+**Status: Thesis.** **Open:** whether a controller far from the source abstracts the root intent well, what form the time bound takes, whether it also binds what the
 controllers above read when they derive criteria, and how a wrong abstention is noticed,
 since no other workflow's reading covers the abstaining workflow's vocabulary.
 
@@ -238,10 +238,28 @@ The level judgement belongs to the controller because the controller knows its s
 distiller outside the set has to guess whether a PRD can hold a page-count rule, and a
 guess that it holds ends the search too early.
 
-An affected set the workflow cannot write, one of its inputs, is routed to the workflows
-that own or output it. Their job begins the same way, by asking the controllers above that
-set. An affected set that no declared workflow writes is raised as an
-[obligation](/cyber-truss/model/connections/#obligation).
+An affected set the workflow cannot write, one of its inputs, is routed to **every**
+workflow that owns or outputs it. The routed job carries the root intent unchanged, the one
+distilled from the change, and the affected set's criteria as context, labelled with where
+they came from. Each owner reads both within its own span, and contributes or abstains. It
+does not rewrite the intent. A routed job always asks the controllers above; only a change
+carries expression a workflow could read directly. An affected set that no declared workflow writes is raised
+as an [obligation](/cyber-truss/model/connections/#obligation).
+
+Nothing chooses one owner. A choice made for everyone could skip the owner whose span holds
+the evidence that matters, and each owner's own reading is where that evidence is.
+
+**Only a change is distilled.** An intent is never distilled into a new intent, because each
+re-derivation is a translation of a translation, and meaning lost at one hop cannot be
+recovered at the next. Every controller derives its set's criteria directly from the root
+intent, so loss is bounded to one translation per set and each set's criteria can be checked
+against a single reference.
+
+The cost is that a controller far above the source receives an intent written at the
+source's level of detail, a named character or a prop name, and has to abstract it itself.
+In practice the distance is short. Workflows are short chains, and an agent doing a
+controller's work can read the source's intent without trouble. Whether that holds for a
+long chain is untested, and the examples do not carry enough detail to say.
 
 Asking stops at the first set that holds, so a local fix asks few questions. A refactor's
 intent says behaviour is unchanged, the spec already holds that, and nothing replays.
@@ -337,17 +355,27 @@ criteria asked for, carries the original intent or is distilled as a new one.
 
 ### The run ledger schedules, it does not decide
 
-A run has pending work: a workflow and the set its replay starts from, a controller's
-reconciliation at a source, a job routed to an input's owners. Some of it waits, because
-its input has a pending writer. Held as a graph, the jobs whose inputs have no pending
-writer are the ready frontier. SDD's mission graph has the same shape.
+A run has pending work: a workflow triggered by a change or by a routed job, the set its
+replay starts from, a controller's reconciliation at a source. Some of it waits, because its
+input has a pending writer. Held as a graph, the jobs whose inputs have no pending writer
+are the ready frontier. SDD's mission graph has the same shape.
 
-The ledger chooses from the frontier to reduce rework. In the
-[fiction example](/cyber-truss/examples/fiction-plot-twist/) two workflows are about to
-write the outline, and drafting reads it, so drafting is held until both finish and runs
-once.
+The ledger chooses from the frontier to reduce rework, and it **collects**. Every intent
+addressed to one set, with the context each sender attached, is gathered and handed to that set's controller together, so the
+controller joins them once instead of writing once per arrival. A write is ready when no
+pending job can still contribute to the set. In the
+[fiction example](/cyber-truss/examples/fiction-plot-twist/) three workflows own the
+outline, and the outline's controller writes once, after all three have contributed or
+abstained, and drafting runs once after that.
 
-Two rules keep the ledger honest.
+Collecting is not merging. The ledger never combines contributions into one, because combining is
+a judgement, and a ledger that judged would decide outcomes. The join is the controller's.
+Each collected contribution keeps its **provenance**: which workflow sent it, which change it was
+distilled from, and whether the workflow read the source's expression. A workflow
+that reads the source directly carries that expression into the sets it writes, and the
+reconciliation report must be able to name the criteria it shaped.
+
+Three rules keep the ledger honest.
 
 - **The source is settled by definition.** A job that reads the source does not wait on
   the reconciliation at it. Without this, a workflow that reads the source and a workflow
@@ -356,6 +384,8 @@ Two rules keep the ledger honest.
 - **The ledger never makes a run correct.** Confluence is claimed over criteria whatever
   the order, so the ledger can only change what a run costs. If a run reaches the right
   state only because the ledger picked a good order, the claim is false.
+- **The ledger collects and never merges.** It stays a lookup, at the deterministic end of
+  the [controller spectrum](/cyber-truss/model/controller/).
 
 A job runs against the criteria version current when it starts. A job that waited picks up
 any version created while it waited.
@@ -440,24 +470,25 @@ record. See
 ## Replay output must not re-trigger replay
 
 Canonical execution produces deltas that land in the repository. Without provenance,
-those deltas are themselves lifted and distilled into new intents, and the loop does not
-terminate.
+those deltas are themselves lifted as new changes, each starting a new run, and the loop
+does not terminate.
 
 Deltas therefore need a marker for *produced by canonical execution*. A small mechanism,
 easy to miss until it bites.
 
 The marker does not stop propagation, and must not. Replay output that strains a
 connection further out is how [selection](/cyber-truss/model/workflow/#how-workflows-are-selected) discovers reach. The
-distinction is what happens to the output: it is never distilled into a new intent. A
-workflow that spans the written set picks it up under the run's intent, which the run's
-record holds.
+distinction is what the output carries: it never starts a new run, and it is never
+distilled into a new intent. A workflow that spans the written set picks it up under the
+root intent, which the run's record holds. Distilling it again would start the translation
+loss that [routing the root intent](#controllers-answer-for-their-own-sets) avoids.
 
 The marker names the run that produced the output. Rules 2 and 3 pair resolutions with
 that run's criteria version, and the ledger places the new job in that run.
 
 **Status: Settled** that provenance is required, and that marked output propagates under
-the run's intent rather than as a new one. **Thesis** that the marker names its run and the
-run records each workflow's intent. **Open:** the marker's form.
+the root intent rather than as a new one. **Thesis** that the marker names its run and the
+run records each workflow's intent with the change it was distilled from. **Open:** the marker's form.
 
 ## The failure mode to design against
 
