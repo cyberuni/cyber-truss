@@ -109,8 +109,9 @@ programme's path, `{CAMP}` names the manual and holds no limits, so the card is 
 airline document to state a new manual limit. Its approval is the evaluation GMM section 5.4
 asks for.
 
-Approval comes from the Council, the people who hold the system's positions. This system
-has three organisations, and each approves only its own documents. An FAA engineer cannot
+Approval comes from the Council. The model lets any Council member approve a stop in any
+workflow. This system has three organisations, and in practice each approves only its own
+documents. An FAA engineer cannot
 approve a manufacturer's bulletin, and a manufacturer's engineer cannot approve an AD. The
 airline's positions are the director of maintenance, powerplant engineering, programmes
 engineering, and the reliability board.
@@ -276,7 +277,7 @@ Steps 1 to 4 are the same as variant A.
 
 The same as variant A.
 
-### Status: Unresolved
+### Status: Holds
 
 The stops are in the right places. Each is at the write to the set that changes, in the
 workflow that writes it, and the approval is recorded in that set. The bulletin's controller
@@ -285,20 +286,11 @@ can read its own decision, which it needs to
 No authority is asked about the other's document at the ask, because an ask brings in no
 person.
 
-Who answers each stop is not settled. The people who should are plain: the manufacturer's
-engineering approves bulletin revision 3, and the FAA approves the superseding AD. The model
-sends a stop to the Council position its lens names. The lens here is the same at both
-stops, a stated limit reversed, so the lens cannot tell the bulletin from the AD. What tells
-them apart is the organisation whose workflow makes the write.
-
-A single Council spanning a regulator and a manufacturer is not realistic. No such body
-exists, and neither side may approve the other's documents. The model reaches the right
-people only if a Council is seated per organisation, and a stop goes to the Council of the
-organisation that writes the set. That is the open question
-[How is a Council seated for a field?](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field)
-This example gives it a sharper case than the hospital one. There the committee that holds
-the rule and the council that keeps the protocol are in one hospital. Here they are in
-separate legal entities, and a wrong seat is an approval with no authority behind it.
+Who answers each stop is permission management, which the model defers. The people who
+should are plain: the manufacturer's engineering approves bulletin revision 3, and the FAA
+approves the superseding AD. Neither may approve the other's document, so a real deployment
+needs approvers per workflow. That is the sharpest case for it among the examples, since a
+wrong approver here is an approval with no legal authority behind it.
 
 ## Variant C: the third finding this quarter
 
@@ -342,10 +334,9 @@ gives that reading: the old criterion leaves the set.
   card in variant A, the bulletin in variant B, and a downstream write that asked nothing in
   variant C. A stricter limit and a shorter interval both count, because each replaces a
   stated value. See [Leash](/cyber-truss/model/workflow/#leash).
-- **A Council across organisations.** Variant B needs the manufacturer to approve the
-  bulletin and the FAA to approve the AD. The lens is the same at both stops, so the lens
-  does not choose. See
-  [How is a Council seated for a field?](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field)
+- **Approvers across organisations.** Variant B needs the manufacturer to approve the
+  bulletin and the FAA to approve the AD. The model defers approvers per workflow, and this
+  is the case that will need them.
 - **Abstraction at distance.** Variant A asks `{GMM}` three sets above the source, and routes
   to `{regulations}` at the top of a five-set chain. `{regulations}` answers *too coarse*,
   which is easy. The `{GMM}` answer decides whether manual control runs at all, and depends

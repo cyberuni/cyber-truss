@@ -31,8 +31,9 @@ aviation blade limit (long chain, three organisations). Statuses live in `exampl
 one decision and work around it by loosening a whole set's leash. See the section of that
 name on `open-questions.md`.
 
-Also open from this round: erosion across sets; how a Council is seated, including across
-organisations; whether an implementation set has use cases of its own (component library).
+Also open from this round: erosion across sets; whether an implementation set has use cases
+of its own (component library). Deferred past MVP (user-directed): approvers per workflow.
+Any Council member approves any stop for now; see `docs/backlog.md` §D.
 
 ## Positioning (settled)
 

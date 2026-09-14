@@ -188,24 +188,6 @@ controller answers correctly for its own set, and nobody is asked.
 **What breaks if it resolves badly:** a rule is hollowed out one permitted step at a time,
 and the run reports every step as additive.
 
-## How is a Council seated for a field?
-
-The [leash](/cyber-truss/model/workflow/#leash) sends a stop to the Council position its lens
-names. In software the positions are clear. Elsewhere the body closest to a change may not
-hold the authority the change affects. An intensive care practice committee keeps its unit's
-protocol, but the hospital's medication safety committee holds the rule the protocol
-implements.
-
-A system can also span organisations. An engine manufacturer and an aviation regulator each
-hold documents the other may not approve, so a stop that reverses a stated limit carries the
-same lens in both and the lens cannot pick between them. Such a system needs a Council per
-organisation, and the leash does not yet say how a stop finds the right one.
-
-A solo author or developer is the Council and the requester at once, and that is accepted.
-
-**What breaks if it resolves badly:** the stop reaches people who can accept the change but
-do not own what it costs, and a team loosens the leash rather than seat the right position.
-
 ## Can one approval cover the writes that carry it out?
 
 The [leash](/cyber-truss/model/workflow/#leash) checks every write against the set's standing

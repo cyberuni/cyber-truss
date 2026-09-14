@@ -308,6 +308,13 @@ Depends on the open question of
 
 ## D. Parked design notes
 
+- **Approvers per workflow** (deferred 2026-09-14, not MVP). Each workflow can have its own
+  approver, which is permission management. For now any Council member approves a stop in any
+  workflow. Cases to design against when it is picked up: an intensive care practice committee
+  that keeps a protocol while the hospital's medication safety committee owns the rule it
+  implements (insulin example); a manufacturer and a regulator, neither of which may approve
+  the other's documents (aviation example, variant B).
+
 **D1. Rungs.** A check is bounded by what it needs to exist: *declared* (source text),
 *derived* (a build), *observed* (a running instance), *compared* (a stored baseline).
 Not a quality ladder — each rung is blind to specific things, and cheaper is not

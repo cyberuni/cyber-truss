@@ -51,8 +51,8 @@ works within a set, where a [workflow](#workflow) works between sets. A controll
 
 ### Council
 
-The people who hold a system's positions and approve what the [leash](#leash) stops. A stop
-reaches the position its lens names. The term is SDD's. See
+The people who approve what the [leash](#leash) stops. Any member may approve a stop in any
+workflow; approvers per workflow are deferred. The term is SDD's. See
 [Leash](/cyber-truss/model/workflow/#leash).
 
 ### Downstream candidate

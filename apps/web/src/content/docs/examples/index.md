@@ -57,7 +57,7 @@ An example can have variants, and each variant gets its own status.
 | [Trade placed before its thesis](/cyber-truss/examples/stock-trade-without-thesis/) | trading | A: Holds. B: Unresolved. C: Holds |
 | [Ad rewritten mid-campaign](/cyber-truss/examples/marketing-campaign-headline/) | marketing | A: Holds. B: Unresolved |
 | [Insulin double check narrowed](/cyber-truss/examples/insulin-double-check/) | hospital medication safety | A: Unresolved. B: Gap. C: Holds |
-| [Blade limit found on the night shift](/cyber-truss/examples/aviation-blade-limit/) | aviation maintenance | A: Unresolved. B: Unresolved. C: Holds |
+| [Blade limit found on the night shift](/cyber-truss/examples/aviation-blade-limit/) | aviation maintenance | A: Unresolved. B: Holds. C: Holds |
 
 ## Adding an example
 

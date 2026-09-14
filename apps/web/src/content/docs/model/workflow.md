@@ -240,11 +240,11 @@ set the defaults.
   proceed. An agent sure of a write never passes a leash that requires approval.
   Self-reported confidence is the signal easiest to get wrong, so it never grants autonomy.
 
-Approval comes from the **Council**, the people who hold the system's positions, the term
-SDD uses. A stop reaches the position its lens names, so a change of course reaches whoever
-holds the shape of the system. The Council is not declared per set. Ownership stays a
-workflow role, and nothing picks one person per artifact-set. For a solo developer or a solo
-author the Council is also the person who made the change, and that is accepted.
+Approval comes from the **Council**, the people who approve for the system, the term SDD
+uses. Any member of the Council may approve a stop in any workflow. Which people may approve
+which workflow is permission management, and it is left out of the first version. The Council
+is not declared per set, and nothing picks one person per artifact-set. For a solo developer
+or a solo author the Council is also the person who made the change, and that is accepted.
 
 A team may loosen a default per set, for example letting an agent emit to a staging
 channel, or letting a fix that reverses a stated rule proceed where a stop would be
@@ -253,8 +253,8 @@ ceremony. An approval is a decision, and it is recorded like one, so
 
 **Status: Thesis** on the defaults, and the contradiction default is expensive to change: it
 is the line between autonomy and ceremony for every set. **Settled** that confidence only
-tightens. **Open:** how a Council is seated for a field, and erosion that no single set's
-standing specification shows. See
+tightens. **Deferred:** a different approver per workflow. **Open:** erosion that no single
+set's standing specification shows. See
 [Open questions](/cyber-truss/model/open-questions/#who-is-asked-when-a-change-erodes-a-rule-across-sets).
 
 ## Workflow and controller
