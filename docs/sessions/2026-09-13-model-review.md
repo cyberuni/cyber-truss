@@ -94,6 +94,18 @@ New open questions: a workflow that wrongly abstains goes unnoticed; a wide read
 is caught only by a controller convention or an output; how levels are identified is now
 load-bearing for direction.
 
+Written into the pages in `c806598`. All five examples re-graded with unchanged statuses.
+Gaps the re-grade found, and how each landed:
+
+- Every set above the source too coarse (fiction B): the source's controller derives those
+  criteria at reconciliation, so they are not independent of the change. Stated as a limit
+  of "expression stays with the source"; reconcile handoff now carries the intent.
+- Reconciling an output source (trading): kept as landed, plus a superseding emission.
+- The time bound covers distillation; whether it binds what controllers above read is open.
+- A waiting job runs against the criteria version current when it starts.
+- Routing an affected input picks one owner by intent, which can skip the owner that reads
+  evidence (marketing B). Not addressed.
+
 ## Examples (test cases)
 
 Five examples in `apps/web/src/content/docs/examples/`, re-graded against the three roles
