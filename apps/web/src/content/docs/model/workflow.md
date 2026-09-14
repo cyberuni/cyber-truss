@@ -119,7 +119,7 @@ no workflow at all.
 
 A workflow is triggered by a change or by a routed job. A change it
 [distills](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow)
-within its own span. A routed job carries the root intent and the affected set's criteria,
+within its own span. A routed job carries the root intent and references to the affected set's criteria,
 and the workflow reads them within its span without distilling a new intent, because
 [only a change is distilled](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets).
 A routed job carries no expression, so it always asks the controllers above.
@@ -159,7 +159,7 @@ starting point, and a change rarely needs only one.
    criteria at reconciliation, has nothing to replay.
 4. **Route what the workflow cannot write.** An affected set that is the workflow's input is
    routed to every workflow that owns or outputs it, carrying the root intent unchanged and
-   the affected set's criteria. Each reads them within its span, then asks upward in its own
+   references to the affected set's criteria. Each reads them within its span, then asks upward in its own
    shape or abstains. Nothing picks one owner.
 5. **Schedule.** Every job goes to the
    [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide),

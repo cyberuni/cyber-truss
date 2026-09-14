@@ -192,14 +192,38 @@ and the run reports every step as additive.
 
 The [leash](/cyber-truss/model/workflow/#leash) sends a stop to the Council position its lens
 names. In software the positions are clear. Elsewhere the body closest to a change may not
-hold the authority the change affects. An intensive care practice council keeps its unit's
+hold the authority the change affects. An intensive care practice committee keeps its unit's
 protocol, but the hospital's medication safety committee holds the rule the protocol
 implements.
+
+A system can also span organisations. An engine manufacturer and an aviation regulator each
+hold documents the other may not approve, so a stop that reverses a stated limit carries the
+same lens in both and the lens cannot pick between them. Such a system needs a Council per
+organisation, and the leash does not yet say how a stop finds the right one.
 
 A solo author or developer is the Council and the requester at once, and that is accepted.
 
 **What breaks if it resolves badly:** the stop reaches people who can accept the change but
 do not own what it costs, and a team loosens the leash rather than seat the right position.
+
+## Can one approval cover the writes that carry it out?
+
+The [leash](/cyber-truss/model/workflow/#leash) checks every write against the set's standing
+specification, and an approval at one set changes nothing another set held before the run. So
+a change the Council accepted once stops again at each set that has to follow it. A spec rule
+approved at `{spec}` stops again when the mockups redraw the page count. A brand lead who
+settles a conflict at the brief is asked again when the messaging framework is amended to
+match. A thesis closed because its own invalidation criterion requires it stops as though
+someone chose to close it.
+
+Every example that met this worked around it by loosening one set's leash, which is too wide.
+The narrow rule would be that a write needs no second approval when it only carries out a
+decision recorded in the same run. The difficulty is *only carries out*: a stop downstream is
+sometimes the only check a write gets, as when the mockups hold a case the spec never stated.
+
+**What breaks if it resolves badly:** too wide, and a single approval launders every write
+downstream of it. Too narrow, and one change asks the same person the same question at every
+set, and teams loosen leashes wholesale to escape it.
 
 ## Smaller, but unresolved
 

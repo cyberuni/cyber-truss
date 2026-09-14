@@ -246,7 +246,7 @@ guess that it holds ends the search too early.
 
 An affected set the workflow cannot write, one of its inputs, is routed to **every**
 workflow that owns or outputs it. The routed job carries the root intent unchanged, the one
-distilled from the change, and the affected set's criteria as context, labelled with where
+distilled from the change, and references to the affected set's criteria as context, labelled with where
 they came from. Each owner reads both within its own span, and contributes or abstains. It
 does not rewrite the intent. A routed job always asks the controllers above; only a change
 carries expression a workflow could read directly. An affected set that no declared workflow writes is raised
