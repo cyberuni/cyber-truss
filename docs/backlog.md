@@ -121,6 +121,11 @@ is not re-litigated.
   No example needed them: the contradiction check reads the controller's own set, and other
   sets are referenced by criteria. SDD's implementation producer reads the suite, not the
   spec. Cheap to add if an example shows the need.
+- **A guard inside a delegating set as the fix for erosion across sets** (superseded
+  2026-09-14). The insulin policy's delegation would carry a guard against units dropping
+  routine steps. The requirement comes from the accreditation standard, which has no connection
+  to the unit protocol, so the guard patches a relation nobody declared. What is missing is the
+  connection; a run cannot detect it, and an audit loop outside the run finds it.
 
 ## A. Docs site
 

@@ -138,6 +138,38 @@ on missing, found by the
 [bug-fix example](/cyber-truss/examples/software-bug-fix/). **Open:** the precise boundary
 conditions on each, and how missing strain blocks.
 
+## A missing connection is found outside the run
+
+A run settles against the connections that are declared. A controller answers for its own set
+from the criteria it is referred to, and a criterion reaches a set only through a connection.
+Where a connection should exist and does not, no criterion arrives, every controller answers
+correctly for what it was given, and the relation the connection would have held quietly fails.
+
+The [insulin example](/cyber-truss/examples/insulin-double-check/) shows the shape. The
+accreditation standard is connected to the hospital policy, which lets each unit name the
+steps that need a second nurse. The standard is not connected to the unit's protocol. A unit
+drops the check from routine rate changes, the policy still holds, the protocol only adds, and
+no leash fires. Declare the missing connection and the standard's requirement reaches the
+protocol, the protocol write contradicts it, and the leash stops it.
+
+A run cannot detect what the topology does not declare. That is not a defect of the run. It
+is the limit of settling against a declared topology, and a guard written inside one set
+would only patch a relation nobody declared. Missing connections are found by an **audit
+loop** that runs outside normal operation and reads across sets, comparing practice with the
+standards above it. An audit is a scheduled [controller](/cyber-truss/model/controller/)
+whose run is a change, the shape of the
+[compliance audit](/cyber-truss/model/workflows/#compliance-audit--soc-2-iso-27001) in the
+catalog. Its finding is a connection to declare, or an
+[obligation](#obligation) against a set when nothing can restore it yet. SDD runs its outer
+loops the same way, beside the mission loop rather than inside it.
+
+Finding the topology is iterative. Each audit that finds a missing connection makes the next
+run catch what this one could not.
+
+**Status: Thesis.** **Open:** what an audit loop reads, how often it runs, and how its finding
+becomes a declared connection. See
+[Open questions](/cyber-truss/model/open-questions/#what-does-an-audit-loop-read).
+
 ## A coupling that resists encoding
 
 The clearest evidence that controllers cannot all migrate to deterministic code comes

@@ -262,9 +262,9 @@ set whose stop is sometimes the only check keeps it by default. An approval is a
 
 **Status: Thesis** on the defaults, and the contradiction default is expensive to change: it
 is the line between autonomy and ceremony for every set. **Settled** that confidence only
-tightens. **Deferred:** a different approver per workflow. **Open:** erosion that no single
-set's standing specification shows. See
-[Open questions](/cyber-truss/model/open-questions/#who-is-asked-when-a-change-erodes-a-rule-across-sets).
+tightens. **Deferred:** a different approver per workflow. The leash sees only what the declared connections
+bring to a set; a missing connection is found
+[outside the run](/cyber-truss/model/connections/#a-missing-connection-is-found-outside-the-run).
 
 ## Workflow and controller
 

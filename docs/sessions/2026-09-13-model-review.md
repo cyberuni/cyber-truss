@@ -31,7 +31,9 @@ pre-approval.** At run start or at any stop an approver may widen the leash for 
 run, up to every workflow gate, as SDD's run-level leash does. It never passes a failed
 criterion or overrides confidence. Per-set loosening stays, as the wider tool.
 
-Also open from this round: erosion across sets; whether an implementation set has use cases
+Erosion across sets is a missing connection (user-directed): a run cannot detect it, and an
+audit loop outside normal operation finds it (connections page). Open: the audit loop's shape.
+Also open from this round: whether an implementation set has use cases
 of its own (component library). Deferred past MVP (user-directed): approvers per workflow.
 Any approver approves any stop for now; the term Council was dropped; see `docs/backlog.md` §D.
 

@@ -172,21 +172,17 @@ This is the contract every controller ever written will encode, so it is expensi
 change later. It is also the thing plugin ecosystems most reliably die on, which argues
 for settling it before there is more than one controller rather than after.
 
-## Who is asked when a change erodes a rule across sets?
+## What does an audit loop read?
 
-A write that removes or reverses part of a set's
-[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-needs approval by default. That catches erosion inside one set: an exception
-that narrows a rule is a criterion that stops covering cases it covered.
+A run settles against the declared topology and cannot see a connection nobody declared. The
+model hands that to an
+[audit loop](/cyber-truss/model/connections/#a-missing-connection-is-found-outside-the-run)
+running outside normal operation. Its shape is not defined: which sets it reads together, how
+often it runs, what counts as evidence that a connection is missing, and how a finding becomes a
+declared connection rather than a report nobody acts on.
 
-It does not catch erosion that lives in how two sets combine. In the
-[insulin example](/cyber-truss/examples/insulin-double-check/), a hospital policy lets each
-unit name the steps that need a second nurse, and a unit names fewer. The policy's criteria
-still hold, because the delegation allows it. The unit's protocol only adds. Every
-controller answers correctly for its own set, and nobody is asked.
-
-**What breaks if it resolves badly:** a rule is hollowed out one permitted step at a time,
-and the run reports every step as additive.
+**What breaks if it resolves badly:** a rule is hollowed out one permitted step at a time, every
+run reports each step as additive, and nothing ever looks across the sets where the loss shows.
 
 ## Smaller, but unresolved
 
