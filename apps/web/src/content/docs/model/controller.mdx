@@ -116,14 +116,18 @@ A workflow meets a controller in three ways, and each has its own handoff.
 | Call | The workflow hands over | The controller returns |
 | --- | --- | --- |
 | **Ask** | The run's intent, and the set's current state | The criteria the intent implies for the set, and whether the set holds them, is affected, or is too coarse to hold them |
-| **Write** | Every contribution collected for the set, each with its provenance, the joined criteria arriving from above, and any changed input the workflow reads | The write, and whether the criteria are met |
-| **Reconcile** | The change that landed in the set, the intent, and the joined criteria arriving from above | What it kept of the change, what it changed, and what it added, and any criteria it had to derive itself |
+| **Write** | Every contribution collected for the set, each with its provenance and intent, references to the criteria of the sets above, and any changed input the workflow reads | The write, whether the criteria are met, and whether the write contradicts the set's standing specification |
+| **Reconcile** | The change that landed in the set, the intent, and references to the criteria of the sets above | What it kept of the change, what it changed, and what it added, any criteria it had to derive itself, and whether the result contradicts the set's standing specification |
 
 Two limits hold across all three.
 
 - **A controller above the source never receives the change.** It receives the intent, so
   the criteria it derives are not written from the change they will check. See
   [Expression stays with the source](/cyber-truss/model/canonical-execution/#expression-stays-with-the-source).
+- **A workflow sends intent and references, never criteria.** The controller joins the
+  criteria it is referred to and derives its own set's criteria. It is not handed another
+  set's use cases or graph; those stay where they were authored. See
+  [Criteria are authored through use cases](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
 - **The workflow passes the inputs; the controller does not find them.** A controller sees
   only the inside of its set, and which inputs bear on the set is the workflow's
   declaration.

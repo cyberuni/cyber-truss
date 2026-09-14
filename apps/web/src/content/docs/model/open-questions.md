@@ -172,6 +172,35 @@ This is the contract every controller ever written will encode, so it is expensi
 change later. It is also the thing plugin ecosystems most reliably die on, which argues
 for settling it before there is more than one controller rather than after.
 
+## Who is asked when a change erodes a rule across sets?
+
+A write that removes or reverses part of a set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+needs the Council's approval by default. That catches erosion inside one set: an exception
+that narrows a rule is a criterion that stops covering cases it covered.
+
+It does not catch erosion that lives in how two sets combine. Suppose a
+hospital policy lets each
+unit name the steps that need a second nurse, and a unit names fewer. The policy's criteria
+still hold, because the delegation allows it. The unit's protocol only adds. Every
+controller answers correctly for its own set, and nobody is asked.
+
+**What breaks if it resolves badly:** a rule is hollowed out one permitted step at a time,
+and the run reports every step as additive.
+
+## How is a Council seated for a field?
+
+The [leash](/cyber-truss/model/workflow/#leash) sends a stop to the Council position its lens
+names. In software the positions are clear. Elsewhere the body closest to a change may not
+hold the authority the change affects. An intensive care practice council keeps its unit's
+protocol, but the hospital's medication safety committee holds the rule the protocol
+implements.
+
+A solo author or developer is the Council and the requester at once, and that is accepted.
+
+**What breaks if it resolves badly:** the stop reaches people who can accept the change but
+do not own what it costs, and a team loosens the leash rather than seat the right position.
+
 ## Smaller, but unresolved
 
 - **Is the controller spectrum a total order?** It reads as one from judgement to

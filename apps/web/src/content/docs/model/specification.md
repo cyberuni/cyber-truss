@@ -84,6 +84,43 @@ that is in
 **Status: Settled** that intent and criteria are distinct and that a specification is
 both.
 
+## Criteria are authored through use cases
+
+Criteria written straight from prose match the prose one for one, so they cannot show what
+the prose left out. A set's criteria are authored through a chain instead, the one SDD uses
+to write its suites: intent, then use cases, then a decision graph, then criteria.
+
+- **Use cases.** Each names an actor and the goal the actor arrives with, and lists its
+  **extensions**: every path from the trigger that does not reach the goal. The actors
+  include people affected by the outcome who never act on the set, such as a reviewer or an
+  auditor. Listing actors rather than entry points is what finds the use case nobody built.
+- **Decision graph.** Where the set describes behaviour, its decisions form a graph. Every
+  extension is a path in it, and every forbidden combination is a guard.
+- **Criteria.** Each criterion is bound to a use case, and to a path in the graph where the
+  set has one.
+
+A set that does not describe behaviour has no graph. An outline is one path through a story,
+a story bible is facts under a few guards, and a messaging framework is a table of what may
+appear where. Their criteria are bound to use cases alone. Anything such a set states that a
+workflow reading it is checked against is a criterion, whether or not a graph holds it. The
+name of the betrayer in an outline is one.
+
+The use cases, graph, and criteria as they stood before a run are the set's **standing
+specification**. A chain built during the run is not standing, because it is built from the
+intent it would be used to check. The standing specification is what the
+[leash](/cyber-truss/model/workflow/#leash) compares a write against when it asks whether
+the write contradicts the set.
+
+Use cases and the graph stay inside the set. What another set references is criteria. SDD
+works the same way: its implementation producer reads the suite, not the use cases and
+graph in `spec.md` that the suite was derived from. A controller handed another set's use
+cases would be invited to re-derive that set's reasoning instead of reading the intent.
+
+**Status: Thesis.** **Open:** grain. Whether a criterion covers a case can turn on one
+undefined term, such as whether *administration* includes a rate change. The chain is meant
+to catch that when the criterion is written, and a controller that meets it at run time has
+found strain in its own set.
+
 ## Specifications exist at every level
 
 The relation chains. A function has expectations, so does the module containing it, so do

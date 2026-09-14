@@ -105,6 +105,12 @@ Criteria reach a set from every workflow that writes it, and they meet in a
 [join](/cyber-truss/model/join/) at that set's controller. Two workflows that read one
 change differently bring criteria that do not join, and the conflict surfaces there.
 
+Deriving criteria from the intent has a limit of its own. Criteria derived from an intent
+always pass that intent, so they cannot be what accepts it. A change of direction is
+accepted at the [leash](/cyber-truss/model/workflow/#leash): a write that contradicts the
+set's standing specification, the use cases and criteria it held before the run, needs the
+Council's approval unless the team has loosened that set's leash.
+
 It does not close the question below — criteria derived from a misread intent are wrong in
 the same direction as everything downstream of them. It replaces *hope that the comparison
 is honest* with a mechanism that can be inspected.

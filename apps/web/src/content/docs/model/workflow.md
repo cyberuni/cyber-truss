@@ -218,8 +218,18 @@ answers it for its own set, which is the same judgement a pass-through visit mad
 A workflow's leash says which writes an agent may make without asking a person. The roles
 set the defaults.
 
-- **Owned writes proceed when the criteria pass.** The criteria were frozen before the
-  replay, and they are the check.
+- **Owned writes proceed when the criteria pass**, provided they do not contradict the set's
+  standing specification. The criteria were frozen before the replay, and they are the
+  check.
+- **A write that contradicts the set's standing specification needs approval.** Criteria
+  derived from an intent always pass that intent, so passing them cannot be what lets a
+  change of direction through. The set's controller compares the write with the
+  [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases),
+  its use cases, graph, and criteria as they stood before the run, and says whether the write
+  removes or reverses any of them. A write that only adds proceeds. This covers a
+  [replacement](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join), and it is
+  checked at every write to the set, whichever workflow contributed, so a downstream writer
+  that asked nothing is checked too.
 - **Output writes need approval.** An emission cannot be revised, so a mistake there is
   permanent.
 - **The comparison sets a floor.** A builder outcome, a match or a filled hole, may proceed.
@@ -230,11 +240,22 @@ set the defaults.
   proceed. An agent sure of a write never passes a leash that requires approval.
   Self-reported confidence is the signal easiest to get wrong, so it never grants autonomy.
 
+Approval comes from the **Council**, the people who hold the system's positions, the term
+SDD uses. A stop reaches the position its lens names, so a change of course reaches whoever
+holds the shape of the system. The Council is not declared per set. Ownership stays a
+workflow role, and nothing picks one person per artifact-set. For a solo developer or a solo
+author the Council is also the person who made the change, and that is accepted.
+
 A team may loosen a default per set, for example letting an agent emit to a staging
-channel. An approval is a decision, and it is recorded like one, so
+channel, or letting a fix that reverses a stated rule proceed where a stop would be
+ceremony. An approval is a decision, and it is recorded like one, so
 [rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) applies to it.
 
-**Status: Thesis** on the defaults. **Settled** that confidence only tightens.
+**Status: Thesis** on the defaults, and the contradiction default is expensive to change: it
+is the line between autonomy and ceremony for every set. **Settled** that confidence only
+tightens. **Open:** how a Council is seated for a field, and erosion that no single set's
+standing specification shows. See
+[Open questions](/cyber-truss/model/open-questions/#who-is-asked-when-a-change-erodes-a-rule-across-sets).
 
 ## Workflow and controller
 

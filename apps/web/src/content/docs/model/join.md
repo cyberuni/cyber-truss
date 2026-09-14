@@ -64,17 +64,26 @@ replaces the old, and the old one leaves the set. That is not a join, and it is 
 conflict.
 
 In the bug-fix example the spec states *round down, plus one*, and the fix's criteria say
-*round up*. Joined, the two would contradict each other and every fix would stop for a
-decision. They are not joined. Feature delivery amends the spec, the old rule is gone, and
-only the new one takes part in the join at `{code, test}`.
+*round up*. Joined, the two would contradict each other, and every fix would become a
+conflict no replay can restore. They are not joined. Feature delivery amends the spec, the
+old rule is gone, and only the new one takes part in the join at `{code, test}`.
 
 The join combines criteria that stand together. Telling a replacement apart from a
 contradiction is judgement. It is the same judgement that separates a new criterion from
 a reversal under a new name, and the same controller makes it: the
 [specification set's controller](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion).
 
-**Status: Settled** that replacement is distinct from join. **Open:** how a controller
-tells the two apart.
+A replacement removes a criterion from the set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases),
+so the write that makes it contradicts that specification, and the
+[leash](/cyber-truss/model/workflow/#leash) decides whether it needs approval. By default it
+does. A fix to a stated rule and a deliberate change of direction look the same from inside
+the set, and nothing in the run can tell them apart without judging the intent, so the
+default treats both as a change the Council accepts. A team that finds the stop is ceremony
+for a set loosens that set's leash.
+
+**Status: Settled** that replacement is distinct from join. **Thesis** that the leash
+governs it. **Open:** how a controller tells a replacement from a contradiction.
 
 ## Conflict
 
@@ -103,7 +112,8 @@ contradicting criteria is decided once.
 
 The join holds within a run. There the run's criteria are frozen as a version, and a new
 version comes only from a person adding criteria or from a recorded decision. Criteria the
-specifications held before the run take part only where the intent does not replace them.
+specifications held before the run take part only where a replacement the leash let through
+does not remove them.
 
 Between runs a specification changes freely. Criteria are rewritten and removed, and the
 next run starts from whatever the specification then says. Holding criteria to

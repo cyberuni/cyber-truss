@@ -100,6 +100,27 @@ is not re-litigated.
 - **An API contract on an edge between two revisable sets as the guard against a breaking
   change** (rejected 2026-09-13). The owner of the docs could document new props, so the
   guard never held. Contracts live at outputs.
+- **Returning a lens from the ask call** (rejected 2026-09-14). Controllers above the source
+  split *affected* into *lacks* and *contradicts*, and *contradicts* went to a person before
+  the replay wrote. The line was a judgement of an intent against prose, erosion never read
+  as a contradiction, downstream writers bypassed the ask, and the person reached was usually
+  the one who made the change. Replaced by the leash comparing each write with the set's
+  standing specification.
+- **Clearance as a mechanism separate from the leash** (rejected 2026-09-14). Borrowed from
+  SDD's freeze: additive self-clears, narrowing or rewriting escalates. The classification
+  held; the separate mechanism did not. Contradicting the standing specification is a leash
+  default, decided with confidence like any other write.
+- **The mis-bound rule** (rejected 2026-09-14). A rewrite passed without a person when the old
+  criterion failed its use case's outcome. The verdict flipped on how the outcome was worded,
+  a change's own evidence could declare the old criterion mis-bound, and a narrowing could be
+  relabelled as a rewrite to qualify. Every example gamed it.
+- **Use-case actors, or a person declared per set, as who approves** (rejected 2026-09-14).
+  Actors picked people who do not own the rule; per-set owners added a declaration the
+  workflows already make. Approval comes from the Council, by lens.
+- **Sending upstream use cases and decision graphs with the intent** (rejected 2026-09-14).
+  No example needed them: the contradiction check reads the controller's own set, and other
+  sets are referenced by criteria. SDD's implementation producer reads the suite, not the
+  spec. Cheap to add if an example shows the need.
 
 ## A. Docs site
 

@@ -49,6 +49,12 @@ skill, instruction, and governance to deterministic code. A compiler is a contro
 works within a set, where a [workflow](#workflow) works between sets. A controller
 **holds** a set; a workflow **owns** one. See [Controller](/cyber-truss/model/controller/).
 
+### Council
+
+The people who hold a system's positions and approve what the [leash](#leash) stops. A stop
+reaches the position its lens names. The term is SDD's. See
+[Leash](/cyber-truss/model/workflow/#leash).
+
 ### Downstream candidate
 
 A workflow that reads a changed set as an [input](#input-owned-output). Found by a lookup
@@ -132,9 +138,11 @@ Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/latti
 
 ### Leash
 
-Which writes an agent may make in a [workflow](#workflow) without a person's approval.
-Owned writes proceed when criteria pass, output writes need approval, and architect or
-oracle outcomes always go to a person. Confidence only tightens it. See
+Which writes an agent may make in a [workflow](#workflow) without the [Council](#council)'s
+approval. Owned writes proceed when criteria pass and nothing in the set's
+[standing specification](#standing-specification) is removed or reversed. Output writes,
+writes that contradict the standing specification, and architect or oracle outcomes need
+approval by default. Confidence only tightens it. See
 [Leash](/cyber-truss/model/workflow/#leash).
 
 ### Lifting
@@ -200,6 +208,12 @@ above it derive criteria without seeing the change, and its own controller
 edge where it constrains something else — per-edge, so one artifact is a specification on
 one edge and an implementation on another. See
 [Specification](/cyber-truss/model/specification/).
+
+### Standing specification
+
+A set's use cases, decision graph where it has one, and criteria as they stood before a run.
+The leash compares a write against it. See
+[Criteria are authored through use cases](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
 
 ### Staleness
 
