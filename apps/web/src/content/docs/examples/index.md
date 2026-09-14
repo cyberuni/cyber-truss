@@ -32,8 +32,8 @@ Every example uses the same sections, so that examples can be compared and check
 - **The system.** The field, the artifact-sets, and the connections between them.
 - **Workflows.** Each declared workflow, with its span and shape.
 - **The change.** Where it lands and what it does.
-- **Expected run.** The distilled intent, criteria, strain, selection, replay, and
-  comparison.
+- **Expected run.** The intent each workflow distills, what the controllers above the
+  source answer, the replay, the reconciliation, and what propagates.
 - **Settled state.** What each artifact-set looks like afterwards.
 - **What it tests.** The model claims the example exercises, linked to where each is
   defined.

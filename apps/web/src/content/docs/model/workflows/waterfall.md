@@ -152,10 +152,11 @@ change request, and route it back through the gate.
 
 Under [canonical execution](/cyber-truss/model/canonical-execution/) that restriction
 becomes unnecessary — while every gate it was protecting stays intact. The developer
-changes what they can see. The change is lifted and distilled to its intent, which the
-waterfall workflow translates into a Request and **replays from its own starting point**. Requirements are amended
-first, design follows, implementation follows — in order, through every gate, with every
-sign-off performed.
+changes what they can see. The waterfall workflow distills the change to its intent and asks
+the design and requirements above it what the intent requires. It **replays from the highest
+affected set**: when the change reaches requirements, requirements are amended first,
+design follows, and the developer's change is reconciled last — in order, through every
+gate, with every sign-off performed.
 
 The order is preserved. The gates are preserved. What is dropped is the demand that a
 *human* traverse the order in person.
@@ -208,8 +209,8 @@ badly wrong for a typo in a docstring. Routing every change through the full cha
 exactly the ceremony the model exists to remove, and it is how waterfall earned its
 reputation in the first place.
 
-Distillation therefore has to select it, which is the same open problem the model already
-carries. Nothing about this exercise makes that problem easier — but nothing about it
+Selection therefore has to reach it only when the controllers above the change answer that
+requirements are affected, which is the same open problem the model already carries. Nothing about this exercise makes that problem easier — but nothing about it
 makes it worse, which is the outcome that mattered.
 
 **Status: Open**, inherited.

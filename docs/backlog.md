@@ -89,6 +89,17 @@ is not re-litigated.
 - **Rungs and topology-vs-coordinates as drivers of the plugin architecture.** Both are
   `truss check` semantics, not setup concerns. Kept in §D for later, deliberately out of
   the setup design.
+- **Central distillation along upstream candidates** (rejected 2026-09-13). One distiller
+  walked back along every workflow owning the changed set and judged each set from outside
+  that workflow's context. A set too coarse to hold a criterion ended the walk as though it
+  held it, and a set below the change inside the same workflow was never checked. Replaced
+  by distillation per workflow and criteria derived by each set's controller.
+- **Replaying every workflow from its declared start** (rejected 2026-09-13). Its reason,
+  that reach cannot be predicted, applies across the whole system, not within one workflow,
+  where each controller answers for its own set.
+- **An API contract on an edge between two revisable sets as the guard against a breaking
+  change** (rejected 2026-09-13). The owner of the docs could document new props, so the
+  guard never held. Contracts live at outputs.
 
 ## A. Docs site
 
@@ -249,6 +260,10 @@ controls, and when their results disagree further cycles run
   whose changed input is not a specification (release reading `{code, test}` to write a
   changelog entry) reads the intent from the run's record rather than distilling again.
   Added 2026-09-13.
+- **MVP: pending jobs and their waits.** The ledger is also the scheduler: jobs (workflow
+  and start set, reconciliations, routed jobs), what each waits on, and the ready frontier.
+  Same shape as SDD's mission graph. It reduces rework and must never be what makes a run
+  correct. Added 2026-09-13.
 - **Later: the chain of custody.** Each cycle's Requests and deltas, the comparison
   outcomes, and which parts a person authored rather than a replay produced. From that, a
   change spanning several cycles is summarized for a person to review as one thing, not as

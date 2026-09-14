@@ -60,10 +60,10 @@ and that variation is a property of the workflow.
 
 The judging mechanism carries over. SDD's implementation judge re-derives each scenario's
 oracle independently rather than reading the producer's; this model applies the same
-independent re-derivation to any change, from any entry point, in any artifact-set. It
-becomes the replay step in
+independence to any change, from any entry point, in any artifact-set. It becomes the
+criteria the controllers above a change derive without seeing it, in
 [canonical execution](/cyber-truss/model/canonical-execution/#reading-the-comparison), and
-the `{oracle, architect, builder}` lens set becomes how the comparison is read.
+the `{oracle, architect, builder}` lens set becomes how the reconciliation is read.
 
 ## What is added
 

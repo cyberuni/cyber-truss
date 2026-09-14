@@ -91,6 +91,12 @@ Creative production keeps the default [leash](/cyber-truss/model/workflow/#leash
 edits to ad copy proceed when the criteria pass. A launch commits spend, so it needs the
 performance marketer's approval.
 
+Writes to `{ads}` and `{landing page}` wait while `{messaging}` has a pending writer, as the
+workflows' [strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) declares.
+The default lets owned writes proceed, and here that would reconcile a live ad's copy against
+a framework about to change. A change to the framework waits on a person, and that can take
+days.
+
 ## The change
 
 Three weeks in, the team learns that the savings figure sells the app better than clarity
@@ -108,57 +114,56 @@ touches `{ads}` and `{launches}`.
 1. **Lift.** The change touches `{ads}` and `{launches}`.
 2. **Find candidates.** Creative production owns `{ads}` and outputs `{launches}`, so it is
    an [upstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-   Message match reads `{ads}` as an input, so it is a downstream candidate.
-3. **Distill.** The walk back along creative production reaches `{messaging}`, which keeps
-   savings in body copy. That contradicts what the headline implies, so the walk stops
-   there. Intent: *lead paid social with the savings figure.* The results are why the
-   marketer kept the headline. They are not what the headline is for.
-4. **Criteria.**
-   - Paid social headlines, and the page they send traffic to, may lead with the savings
-     figure.
-   - Every figure states its basis where it appears.
-   - A visitor from a savings ad finds the figure above the fold.
-5. **Select.**
-   - Creative production is strained, because `{messaging}` contradicts the first
-     criterion.
-   - `{messaging}` is a set the walk read and found contradicting, so campaign planning,
-     which owns it, is selected.
-   - Message match is strained. The page it owns opens on clarity and never states the
-     figure, so it no longer meets what the changed ads promise.
-   - The live launch is strained. It runs a figure with no basis, and a launch is an
-     output, so the strain clears only by a superseding launch. Until then it is held as
-     [obligation](/cyber-truss/model/connections/#obligation).
-   - Creative production waits, because its input `{messaging}` is strained. Message match
-     waits, because its input `{ads}` is strained until creative production runs.
-6. **Replay.** Campaign planning starts at `{brief}`, its input. At `{messaging}` two
-   criteria reach the join: the brief's *one proposition in every channel*, carried by the
-   framework as *savings stays in body copy*, and the run's *paid social may lead with
-   savings*. The intent is about paid social and says nothing about the other channels, so
-   it does not [replace](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) the
-   proposition. The two stand together and contradict each other. That is a
-   [conflict](/cyber-truss/model/join/#conflict), and the run stops.
-7. **Decide.** The criterion the run would override comes from the brief, and no workflow
-   owns `{brief}`, so the conflict goes to the brand lead. The brand lead decides that paid
-   social may lead with savings until the campaign ends, as a test, and that the
-   proposition holds everywhere else. The decision is recorded, lands in `{messaging}` and
-   `{brief}`, the sets it affects, and creates the next version of the criteria.
-8. **Replay, continued.** Campaign planning amends the framework under the new version.
-   `{messaging}` is no longer strained, so creative production runs. It does not read the
-   arriving headline, because the headline landed in a set it owns. From the amended
-   framework it derives savings-led paid social ads that state the basis. Then message
-   match derives a landing page variant for paid social traffic that opens on the figure.
-9. **Compare.**
-   - The arriving headline has a hole: it states the figure with no basis.
-   - The brief's target cost per sign-up is a criterion over the outcome. The arriving
-     launch has results in `{campaign results}` and meets it. The replayed ads have never
-     run.
-   - The team keeps the marketer's headline, the only version with results, and adds a
-     basis line. The replayed ads also meet the criteria, so the choice between them is
-     recorded.
+   Message match reads `{ads}` as an input, so it is a downstream candidate. Campaign
+   planning and page build span neither set.
+3. **Distill.** Creative production reads the change
+   [within its span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow),
+   `{messaging}` to `{ads}` to `{launches}`. Intent: *lead paid social with the savings
+   figure.* The results are why the marketer kept the headline. They are not what the
+   headline is for. Message match reads the headline itself, because `{ads}` is its input:
+   a visitor from a savings ad expects the figure at the top of the page.
+4. **Ask upward.** Creative production asks the controller of `{messaging}`, the set above
+   `{ads}`. The intent implies two criteria there: paid social headlines may lead with the
+   savings figure, and every figure states its basis where it appears. The framework keeps
+   savings in body copy, so `{messaging}` is affected. It is creative production's input, so
+   the job is routed to campaign planning, which alone owns it.
+5. **Route.** Campaign planning's job asks the controller of `{brief}`. The brief carries
+   *one proposition in every channel*. The intent is about paid social and says nothing
+   about the other channels, so it does not
+   [replace](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) the proposition.
+   The two stand together and contradict each other, which is a
+   [conflict](/cyber-truss/model/join/#conflict). No workflow owns `{brief}`, so no run can
+   clear it. It is raised as an obligation against the brief, as
+   [selection step 6](/cyber-truss/model/workflow/#how-workflows-are-selected) requires, and
+   the conflict goes to the brand lead.
+6. **Schedule.** The live launch runs a figure with no basis. A launch is an output, so the
+   strain clears only by a superseding launch, and until then it is held as
+   [obligation](/cyber-truss/model/connections/#obligation). In the
+   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide),
+   campaign planning's job waits on the decision, and creative production's reconciliation
+   at `{ads}` waits on `{messaging}`. Message match does not wait on that reconciliation,
+   because the source counts as settled. Its write to the page meets the page's standing
+   criteria from `{messaging}`, which keep savings out of headlines, so it waits on the same
+   set.
+7. **Decide.** The brand lead decides that paid social may lead with savings until the
+   campaign ends, as a test, and that the proposition holds everywhere else. The decision is
+   recorded, lands in `{messaging}` and `{brief}`, the sets it affects, and creates the next
+   version of the criteria.
+8. **Replay from `{messaging}`.** The framework's controller amends it under the new
+   version: savings-led headlines in paid social and on its landing page variant, with the
+   basis stated. The amended framework is marked output of the run, and creative production
+   and page build, which read it, pick it up under the run's intent.
+9. **Reconcile at the source.** The controller of `{ads}` reconciles the marketer's headline
+   against the criteria arriving from the framework. It keeps the headline and adds a basis
+   line. A live launch cannot be revised, so the controller of `{launches}` reports the
+   change as a superseding relaunch with the basis line. Below `{ads}`, the page's
+   controller joins message match's and page build's criteria and writes a paid social
+   variant that opens on the figure.
 10. **Leash.** The amended framework, the ad copy, and the page variant are owned writes,
-    and the criteria pass, so they proceed. Relaunching the headline with its basis line is
-    an output, so it goes to the performance marketer for approval. Once live, it
-    supersedes the arriving launch and the obligation clears.
+    and the criteria pass, so they proceed. The reconciliation report is a builder outcome:
+    a kept headline and a filled hole. The relaunch is an output, so it goes to the
+    performance marketer for approval. Once live, it supersedes the arriving launch and the
+    obligation clears.
 
 ### Settled state
 
@@ -168,9 +173,9 @@ touches `{ads}` and `{launches}`.
 - `{ads}` holds the marketer's headline with a basis line.
 - `{launches}` records the original launch, superseded by the relaunch with the basis line.
 - `{landing page}` has a paid social variant that opens on the figure.
-- `{campaign results}` is unchanged by the run. Had the team launched a replayed ad
-  instead, its cost per sign-up would be held as obligation strain on `{launches}` to
-  `{campaign results}` until the reporting caught up.
+- `{campaign results}` is unchanged by the run. The relaunch differs from the tested launch
+  by a basis line, and its own cost per sign-up is held as obligation strain on `{launches}`
+  to `{campaign results}` until the reporting catches up.
 
 ### Status: Holds
 
@@ -178,14 +183,20 @@ The run carries the result from one ad up to the brief, where positioning is dec
 stops there for a person. That is the behaviour the team would want. An ad test informs the
 positioning and does not rewrite it.
 
-The route up is now a workflow, not a side effect. The walk finds `{messaging}`
-contradicting the change, selection routes that strain to campaign planning, and its replay
-from the brief is where the conflict surfaces. The declared roles make that the only route.
+The route up is now a workflow, not a side effect. The controller of `{messaging}` answers
+that the framework is affected, the job is routed to campaign planning because the framework
+is creative production's input, and campaign planning's own question to the brief is where
+the conflict surfaces. The declared roles make that the only route.
 No workflow owns `{messaging}` except one that reads the brief, and no workflow owns
 `{brief}` at all, so a result reaches positioning only through a recorded decision.
 
 The roles also separate two things the earlier run treated as one. Rewriting copy is
 revisable and proceeds on the criteria. Relaunching spends money and waits for a person.
+
+Reconciliation keeps the headline that has results. An earlier reading replayed savings-led
+ads from the framework, which had never run, and recorded a choice between them and the
+marketer's headline. The marketer's headline is now kept wherever it meets the criteria, and
+only its missing basis is added.
 
 ## Variant B: the change lands on the landing page
 
@@ -199,36 +210,34 @@ touches `{landing page}`.
 2. **Find candidates.** Page build and message match both own `{landing page}`, so both are
    upstream candidates. No workflow reads `{landing page}` as an input, so there are no
    downstream candidates.
-3. **Distill.** The walk back along page build reaches `{messaging}`, which contradicts the
-   new headline, and stops. The walk along message match reaches `{ads}`, which hold the
-   paid social and search ads that send traffic to the page, all promising clarity, and
-   stops there. Email sends traffic too. A change to the page names no channel, and the
-   walks confirm the page serves all of them. Intent: *lead with the savings figure wherever
-   visitors land.*
-4. **Criteria.**
-   - The landing page, and every ad that sends traffic to it, may lead with the savings
-     figure.
-   - Every figure states its basis where it appears.
-   - Every ad makes a promise the page keeps.
-5. **Select.**
-   - Page build is strained, because `{messaging}` contradicts the first criterion.
-   - Message match is strained, because `{ads}` contradicts it.
-   - Both contradicting sets were read by the walks, so campaign planning, which owns
-     `{messaging}`, and creative production, which owns `{ads}`, are selected too.
-   - No output changed, so nothing is held as obligation yet.
-   - Page build and creative production wait on `{messaging}`. Message match waits on
-     `{ads}`.
-6. **Replay.** Campaign planning starts at `{brief}`. At `{messaging}` the run's criterion
-   meets the brief's proposition, and this time the run's criterion covers every channel,
-   which is the proposition itself. The two contradict each other, and the run stops.
-7. **Decide.** No workflow owns `{brief}`, so no run can clear the strain on it. It is raised
-   as an obligation against the brief, as
+3. **Distill.** Page build reads the change within `{messaging}` to `{landing page}`. The page
+   serves every visitor, and the change names no channel. Intent: *lead with the savings
+   figure wherever visitors land.* Message match reads it within `{ads}` to
+   `{landing page}`, where the paid social and search ads that send traffic to the page all
+   promise clarity. It states the same intent. Email sends traffic too, and neither span
+   narrows the change to one channel.
+4. **Ask upward.** Page build asks the controller of `{messaging}`: the page may lead with
+   the figure, with its basis stated. The framework keeps savings in body copy, so it is
+   affected, and the job is routed to campaign planning. Message match asks the controller
+   of `{ads}`: every ad that sends traffic to the page may lead with the figure and makes a
+   promise the page keeps. The ads promise clarity, so they are affected, and the job is
+   routed to creative production. Creative production's job asks the controller of
+   `{messaging}`, which is affected, and routes to campaign planning, whose job the ledger
+   already holds.
+5. **Route.** Campaign planning's job asks the controller of `{brief}`. This time the intent
+   covers every channel, which is the proposition itself. The two contradict each other. No
+   workflow owns `{brief}`, so no run can clear the strain on it. It is raised as an
+   obligation against the brief, as
    [selection step 6](/cyber-truss/model/workflow/#how-workflows-are-selected) requires,
    and the conflict goes to the brand lead. The brand lead either replaces the proposition
    with savings or refuses the change.
-8. **Compare.** Whatever the decision, the editor's headline has the same hole as variant
-   A's: it gives no basis. The page variant has no results yet, so its cost per sign-up is
-   held as obligation strain on `{landing page}` to `{campaign results}`.
+6. **Schedule.** No output changed, so nothing is held as obligation yet. Creative
+   production's job and the reconciliation at `{landing page}` wait on `{messaging}`.
+7. **Reconcile at the source.** Whatever the decision, the editor's headline has the same
+   hole as variant A's: it gives no basis. If savings replaces the proposition, the page's
+   controller keeps the headline and adds the basis. If the change is refused, it restores
+   the clarity headline. A savings page variant has no results yet, so its cost per sign-up
+   is held as obligation strain on `{landing page}` to `{campaign results}`.
 
 ### Settled state
 
@@ -243,25 +252,29 @@ audience, and they settle in states that meet different criteria.
 not a harmless difference between settled states. If the two changes carry one intent,
 confluence is lost.
 
-The candidates and the walks do not fix it. They make it exact. From an ad, the only
-upstream candidate is creative production, and its walk reads one channel's framework. From
-the page, the upstream candidates are page build and message match, and message match's walk
-reads every channel's ads. There are no downstream candidates to widen or narrow either
-change. Distillation reads what its walks reach, so each keeps the scope of the artifact the
-change landed in, now with the model's own structure behind it rather than the distiller's
-taste.
+Distilling within each workflow does not fix it. It moves where the scope comes from, from
+the walks to the spans. From an ad, the only upstream candidate is creative production, and
+the change sits on one paid social ad. From the page, page build and message match both read
+a page that serves every channel, and nothing in either span narrows it. The controllers
+above do not narrow it either. They derive criteria from the intent they are handed, and
+nothing in the model revises an intent from a controller's answer. Each variant keeps the
+scope of the artifact the change landed in, with the model's own structure behind it rather
+than the distiller's taste.
 
 The finding came from paid social results, and those live in `{campaign results}`. No
-workflow reads that set, so neither walk reaches the evidence. Selection step 6 does not
-catch this. It raises strain that no declared workflow can clear, and `{campaign results}`
-is not strained. It is only unread. The model has no step for evidence that no workflow
-reads.
+workflow spans that set, so no workflow distills with it and no controller is asked about
+it. Selection step 6 does not catch this. It raises an affected set that no declared workflow
+writes, and `{campaign results}` is never asked, so it is never affected. It is only unread.
+The model has no step for evidence that no workflow reads.
 
-Declaring a workflow that reads `{campaign results}` and owns `{messaging}` would not put the
-evidence on the walks either. Each walk stops at the first set that contradicts the change,
-and in both variants that set is `{messaging}` or `{ads}`, before the walk could reach the
-results. Whether distillation should read further, and whether it would then narrow
-variant B to paid social, is the question
+One obstacle of the earlier reading is gone. Its walks stopped at the first set that
+contradicted the change, before any evidence further up. Asking now continues past an
+affected set, and a job is routed to the owners of an affected input. Suppose the team
+declared a workflow that reads `{campaign results}` and owns `{messaging}`. If the tie-break
+routes the framework's job to it, its question to the results' controller would find that the
+evidence covers paid social only, which does not hold variant B's every-channel intent. The
+results have no workflow that writes them, so that answer is raised to a person as an
+obligation. It still does not narrow variant B's intent. Whether it should is the question
 [Can distillation be made stable?](/cyber-truss/model/open-questions/#can-distillation-be-made-stable)
 leaves open. This pair gives it a case where the instability comes from the structure of the
 field, not from the distiller.
@@ -277,9 +290,10 @@ because a person chose, and a run with no person in it would not.
   superseding launch.
 - The [leash](/cyber-truss/model/workflow/#leash) on spend. Copy and pages proceed on the
   criteria. Every launch waits for the performance marketer.
-- [Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) that routes strain the
-  walk found. `{messaging}` contradicts the change, so campaign planning is selected even
-  though the change never touched a set it spans.
+- [Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) that routes an
+  affected input to its owner. `{messaging}` is affected and is creative production's input,
+  so the job is routed to campaign planning even though the change never touched a set it
+  spans.
 - A sibling connection outside software. Message match relates two implementations of
   `{messaging}` that the framework does not reach, as the component library's API docs
   relate to its code.
@@ -289,17 +303,23 @@ because a person chose, and a run with no person in it would not.
   and conflict.
 - Criteria that can only be evaluated in the world. Target cost per sign-up is a criterion
   over the outcome, and the outcome needs spend. [The inversion](/cyber-truss/model/canonical-execution/#the-inversion)
-  treats the arriving change as a prediction and the replay as the check. For this
-  criterion the arriving change is the only evidence, so a replayed launch is held as
-  obligation strain until `{campaign results}` reports on it.
+  treats the arriving change as a prediction and the criteria derived above it as the check.
+  For this criterion the arriving change is the only evidence, so
+  [reconciliation](/cyber-truss/model/canonical-execution/#reconciling-at-the-source) keeps
+  it, and a new launch is held as obligation strain until `{campaign results}` reports on
+  it.
 - Scope inherited from the entry artifact. Variant B distils a wider intent because the
-  page it landed on serves more channels, and the backward walk follows that structure
+  page it landed on serves more channels, and each workflow's span follows that structure
   rather than correcting it.
-- Evidence no workflow reads. `{campaign results}` holds the finding, and neither the walks
-  nor selection step 6 reach an unread set.
+- Evidence no workflow reads. `{campaign results}` holds the finding, and no workflow's
+  distillation, no controller asked, and no application of selection step 6 reach an unread
+  set.
 - A set no workflow owns. Positioning is decided in `{brief}`, which no workflow writes, so
-  both variants reach it as a conflict for a person, and variant B raises it as an
-  obligation under step 6. The
+  both variants reach it through a routed job, raise it as an obligation under step 6, and
+  hand the conflict to a person.
+- The [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+  and strain policy. Writes below `{messaging}` wait while a person decides, because the
+  team declared it, not because the ledger requires it. The
   [recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) is
   where the strategy call is made, and it lands in the sets it affects.
 - Legal review is left out. Most campaigns clear claims through a review gate. This example

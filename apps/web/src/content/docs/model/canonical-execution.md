@@ -1,6 +1,6 @@
 ---
 title: Canonical execution
-description: How confluence is bought. Identify the workflows a change bypassed, distill its intent, derive criteria, select and replay, compare
+description: How confluence is bought. Each workflow a change touches distills its intent, asks the controllers above for criteria, replays from the highest affected set, and reconciles at the source
 ---
 
 :::caution[Design, not implementation]
@@ -22,26 +22,30 @@ than merely fast.
 ## The loop
 
 A change arriving in the middle of a workflow is not applied outward from where it
-landed. It is lifted, distilled, and replayed:
+landed. The set it landed in is the **source**. Each workflow that spans the source works
+out what the change is for, finds the highest set that must move, and replays from there
+back to the source, where the change is reconciled.
 
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
-2. **Find candidates**: the workflows that own or output a changed set, and the workflows
-   that read one. See
+2. **Find candidates**: the workflows that own or output the source, and the workflows that
+   read it. A lookup. See
    [A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-3. **Distill** the change to its **intent** by
-   [reading back](#distillation-reads-backward) along the first group: what the change is
-   for, separated from the particular expression of it.
-4. **Derive the criteria** the settled state must satisfy, from the intent.
-5. **Select** the workflows that apply. See
-   [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
-6. **Replay.** Each workflow the run's criteria strain translates the intent into its own
-   **Request** and replays it from its own starting point. A workflow reached only through a
-   changed input works from that input instead. See
-   [What a workflow reads](/cyber-truss/model/workflow/#what-a-workflow-reads).
-7. **Compare** the replayed deltas against the change that arrived.
+3. **Distill, per workflow.** Each candidate reads the change
+   [within its own span](#distillation-reads-within-one-workflow) and states its **intent**:
+   what the change is for, separated from the particular expression of it.
+4. **Ask the controllers above.** A workflow that owns or outputs the source hands the intent
+   to the [controller](/cyber-truss/model/controller/) of each set above the source in its
+   shape. Each controller derives the **criteria** the intent implies for its set, and
+   answers whether the set holds them.
+5. **Replay from the highest affected set.** Each controller on the way down writes to meet
+   the criteria arriving from above.
+6. **Reconcile at the source.** The source's controller joins the change that landed with
+   the criteria arriving from above, and reports what it kept, changed, and added.
+7. **Continue and propagate.** The workflow carries on below the source. Every write is a
+   change of its own, and the workflows spanning that set pick it up under the run's intent.
 
-The replay is an *independent derivation*. It does not read the incoming change as an
-answer; it derives its own and then looks.
+The criteria are an *independent derivation*. No controller above the source sees how the
+change was expressed, so the bar the change is reconciled against was not written from it.
 
 **Status: Thesis.** Flagged by its author as needing further design and analysis. The
 loop's shape is agreed; several of its parts are not.
@@ -85,15 +89,21 @@ stated as a criterion a controller tests. **Open:** the bound on retries across 
 Step 4 is ordered deliberately, and the order is the whole of its value.
 
 A [specification](/cyber-truss/model/specification/) is intent plus criteria, and the
-comparison in step 7 is a comparison of criteria. If those criteria were read off the
-replay's output, the comparison would be checking the workflow against itself and could
-only ever conclude *"the incoming change is wrong."*
+reconciliation in step 6 is a check against criteria. If those criteria were read off the
+change, reconciliation would check the change against itself and always pass. If they were
+read off the replay's output, it would check the workflow against itself and could only
+ever conclude *"the incoming change is wrong."*
 
-Derived from the intent instead, the criteria are authored by neither party to the
-comparison. They are also shared: every selected workflow is judged against the same
-criteria, not against criteria read off its own Request. A workflow that produces something conforming-but-wrong now fails criteria it
-did not write. This is the same move SDD makes by freezing the `.feature` suite before the
-implementation exists, generalized from one gate to every crossing.
+The criteria come from the controllers above the source, derived from the intent before
+anything is written, and those controllers never see the change's expression. So the
+criteria are authored by neither the change nor the reconciliation. A change that is
+conforming but wrong fails criteria it did not write. This is the same move SDD makes by
+freezing the `.feature` suite before the implementation exists, generalized from one gate
+to every crossing.
+
+Criteria reach a set from every workflow that writes it, and they meet in a
+[join](/cyber-truss/model/join/) at that set's controller. Two workflows that read one
+change differently bring criteria that do not join, and the conflict surfaces there.
 
 It does not close the question below — criteria derived from a misread intent are wrong in
 the same direction as everything downstream of them. It replaces *hope that the comparison
@@ -102,13 +112,41 @@ is honest* with a mechanism that can be inspected.
 **Status: Thesis.** The ordering is agreed; what "derive the criteria" consumes beyond the
 intent is not.
 
+## Reconciling at the source
+
+The source's controller receives the change that landed, the criteria arriving from above
+joined with the criteria its set already stands under, and the set's state. It keeps what
+meets the criteria, changes what does not, and adds what the criteria require and the
+change never considered. It reports all three.
+
+An earlier design replayed the source from scratch without reading the change, and compared
+afterwards. Reconciling keeps what that protected: the criteria were derived without the
+change, so the check is not the change agreeing with itself. It gives up a second,
+independent expression at the source, which could show a better shape than the one the
+change chose. It gains that an ad-hoc change survives wherever it meets the criteria, which
+is the evidence [the failure mode](#the-failure-mode-to-design-against) says must not be
+normalized away.
+
+A workflow that reads the source as an input does not reconcile it. For that workflow the
+change is an input change, and it runs from the source downward.
+
+When the source is an output, nothing in it can be changed. The arriving emission is kept
+as it stands, and whatever the criteria require is a superseding emission added after it,
+such as a new order that offsets a trade. Until that emission exists, the strain is held as
+[obligation](/cyber-truss/model/connections/#obligation), and the emission needs approval
+like any output write.
+
+**Status: Thesis.** It is the handoff every source controller encodes, so it is expensive to
+change later.
+
 ## The inversion
 
-Step 7 changes what the incoming change *is*.
+Step 6 changes what the incoming change *is*.
 
 The designer's mockup is not the deliverable. It is a **prediction of the settled state**,
-and the replay is the independent derivation that checks it. The comparison is where the
-prediction earns its place or is discarded.
+and the criteria derived above it are the independent check. Reconciliation is where the
+prediction earns its place or is replaced. What survives is kept as it was written, so an
+ad-hoc change that meets the criteria is not normalized away.
 
 This is what makes ad-hoc entry safe. Ad-hoc output is never trusted — it is evidence.
 And it explains why the three approaches currently differ in quality: today, whichever
@@ -116,7 +154,9 @@ artifact you touched first is simply *believed*.
 
 ## Reading the comparison
 
-The comparison is classified through the three backward lenses SDD already uses:
+The comparison is the source controller's reconciliation report: what it kept of the
+change, what it changed, and what it added. The report is classified through the three
+backward lenses SDD already uses:
 
 | Outcome | Lens | Question |
 | --- | --- | --- |
@@ -126,8 +166,8 @@ The comparison is classified through the three backward lenses SDD already uses:
 
 The mechanism is not new either. SDD's implementation judge already re-derives each
 scenario's oracle independently rather than reading the producer's. This model
-generalizes independent re-derivation from *judging an implementation* to *normalizing
-any change*. Same mechanism, wider scope — which is the concrete content of the claim
+generalizes independent derivation of the bar from *judging an implementation* to
+*normalizing any change*. Same mechanism, wider scope — which is the concrete content of the claim
 that this is SDD's next revision rather than a new system wearing its vocabulary.
 
 **Status: Settled** that the lens set is the right vocabulary for the comparison.
@@ -138,80 +178,131 @@ Confluence by canonicalization does not eliminate the confluence requirement. It
 concentrates it here.
 
 Two different mid-workflow changes expressing the same intent **must distill to the same
-intent**. If distillation is lossy or unstable, path-independence dies at this step
-instead of in the connections.
+intent** in every workflow that reads them. If distillation is lossy or unstable,
+path-independence dies at this step instead of in the connections.
 
-That concentration is the point. One hard place that can be evaluated beats many places
-that cannot, and the evaluation writes itself: feed several different expressions of one
-intent — a mockup, a prose description, a failing test — and check that the distilled
-intents match. On current reading this is the single highest-value thing to evaluate in
-the whole system.
+That concentration is the point. A few hard places that can be evaluated beat many places
+that cannot, and the evaluation writes itself: feed one workflow several different
+expressions of one intent — a mockup, a prose description, a failing test — and check that
+the intents it states match. On current reading this is the single highest-value thing to
+evaluate in the whole system.
 
-### Distillation reads backward
+### Distillation reads within one workflow
 
 A diff alone cannot say what a change is for. Whether the rule it introduces is already
-stated, stated differently, or stated nowhere depends on the specifications the change
-bypassed.
+stated, stated differently, or stated nowhere depends on the sets around it.
 
-So distillation walks each
-[upstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates) in
-reverse, along its shape from the changed set toward its declared start, and reads the
-intent and criteria of each set it passes. Where the walk reaches a set another workflow
-owns or outputs, it can continue along that one. It stops at the first set that holds or
-contradicts what the change implies, or at a declared start with nothing above it.
+Each candidate reads the change within its own span and shape, and answers one question:
+what is the change for. It does not judge whether the change is right. A workflow whose
+input is authoritative would otherwise read every change to the set it writes as a
+mistake, and two workflows holding opposite roles on one edge would always disagree.
+Whether the change is right is settled at
+[reconciliation](#reconciling-at-the-source) and by the
+[leash](/cyber-truss/model/workflow/#leash).
 
-This is the inverse of a workflow, and it is not a workflow. A workflow reads its inputs
-and writes the sets it owns or outputs. Distillation follows the same path the other way
-and writes nothing. Reading on the way up and writing on the way down keeps a change to one
-ascent and one descent. If every step up wrote, each set reached would start its own pass
-back down.
+A workflow that finds nothing the change is for within its span **abstains**. In the
+[component library](/cyber-truss/examples/component-library-bug-fix/), design
+implementation reads a change to how the page count is computed and finds nothing visual
+in it. Abstaining is not disagreement.
 
-It also removes an ambiguity. Two workflows can span one connection with opposite roles.
-Distillation follows only the workflows that own or output the set the change landed in, so
-for one change it never reads a connection in both directions.
+This replaced an earlier design in which one distiller walked back along every workflow
+that owns the source. The walk judged each workflow's sets from outside its context, and
+two defects followed. A set too coarse to hold a criterion ended the walk as though it held
+it, and a set below the change inside the same workflow was never checked.
 
-What distillation reads is bounded in time. It reads the specifications as they stood when
-the change was made. Reading later state lets hindsight into the intent, which the
+What distillation reads is bounded in time. It reads the sets as they stood when the change
+was made. Reading later state lets hindsight into the intent, which the
 [trading example](/cyber-truss/examples/stock-trade-without-thesis/) shows backfilling a
 thesis the trader never held.
 
-**Status: Thesis.** **Open:** how far up a walk should go before it stops, and what form
-the time bound takes.
+**Status: Thesis.** **Open:** what form the time bound takes, whether it also binds what the
+controllers above read when they derive criteria, and how a wrong abstention is noticed,
+since no other workflow's reading covers the abstaining workflow's vocabulary.
+
+### Controllers answer for their own sets
+
+A workflow that owns or outputs the source asks the controllers of the sets above it in its
+shape, nearest first. Each controller derives the criteria the intent implies for its own
+set and gives one of three answers.
+
+- **Holds.** The set already states them. Nothing further up needs asking.
+- **Affected.** The set lacks a criterion or contradicts one. The workflow keeps asking,
+  and replays from the highest affected set.
+- **Too coarse.** The set has no place for the criteria. A PRD states what a feature must
+  do and has no place for a page-count rule. The question passes to the next set up, and
+  on the way down the replay passes through. When nothing is above, no set above the source
+  is affected, and the criteria have no home but the source, whose controller derives them
+  at reconciliation. See [Expression stays with the source](#expression-stays-with-the-source).
+
+The level judgement belongs to the controller because the controller knows its set. A
+distiller outside the set has to guess whether a PRD can hold a page-count rule, and a
+guess that it holds ends the search too early.
+
+An affected set the workflow cannot write, one of its inputs, is routed to the workflows
+that own or output it. Their job begins the same way, by asking the controllers above that
+set. An affected set that no declared workflow writes is raised as an
+[obligation](/cyber-truss/model/connections/#obligation).
+
+Asking stops at the first set that holds, so a local fix asks few questions. A refactor's
+intent says behaviour is unchanged, the spec already holds that, and nothing replays.
+
+**Status: Thesis.**
+
+### Expression stays with the source
+
+The controllers above the source receive the intent and never the change itself. Only a
+workflow that reads the source as an input sees how the change was expressed.
+
+Without this rule a change can write the criteria it is checked against. Suppose a
+developer replaces a component's `totalPages` prop, and the docs' controller above the
+code receives the new props. It documents them, and the code is then reconciled against
+docs that already agree with it.
+
+The rule also fixes direction between sets. A set that describes another at the same level
+reads its expression: an API reference states the exact props, so it reads the code as an
+input. A set above another is reached through intent, because a spec should not copy an
+implementation. See
+[Direction lives in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
+
+The rule has a limit. When every set above the source is too coarse to hold a criterion, the
+criterion has no home above the source, and only the source's controller can derive it from
+the intent. That controller has seen the change, so those criteria are not independent of
+it. The [fiction example](/cyber-truss/examples/fiction-plot-twist/) meets this with no
+outline: a setup beat can live only in the manuscript. The reconciliation report names such
+criteria, so a person reading it can tell which parts of the bar the change could have
+shaped.
+
+**Status: Thesis**, and expensive to change. **Open:** it depends on
+[how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level)
+across artifact types, and criteria with no home above the source are checked less
+independently than the rest.
 
 ### Distillation stops at intent
 
-Distillation produces intent and nothing workflow-shaped. Each workflow the run's criteria
-strain owns the translation of that intent into its own Request. Three reasons fix the boundary here.
+Distillation produces intent and nothing more. The criteria for each set come from that
+set's controller. Three reasons fix the boundary here.
 
-- **It keeps distillation testable.** Distillation reads along the workflows a change
-  identified, and identification is a lookup over declared outputs. Hold the lookup fixed
-  and distillation can be evaluated alone. If distillation also produced workflow-shaped
-  output, it would depend on selection, which involves judgement, and a selection mistake
-  would read as a stability failure.
-- **Ownership follows knowledge.** A workflow knows what a Request at its starting point
-  looks like. A central distiller would need every workflow's input shape, and that
-  coupling grows with each workflow added.
-- **Criteria stay neutral.** Criteria derive from the shared intent, so no workflow
-  authors the bar it is judged against.
+- **It keeps distillation testable.** A workflow's intent can be evaluated without any
+  controller: the same change, expressed several ways, must yield the same intent.
+- **Ownership follows knowledge.** A workflow knows its span and shape, and a controller
+  knows its set. A workflow that also derived criteria would need every set's level and
+  vocabulary.
+- **Criteria stay neutral.** The controllers above the source never see the change, and the
+  source's controller reconciles against criteria it did not derive.
 
-The cost is that translation is a second agentic step, run once per workflow the criteria
-strain, which spreads back out some of the risk canonicalization concentrated. A workflow
-reached only through a changed input does not translate. Its input already states what it
-must meet, and restating that as a Request would add a step that can drift from the
-artifact it came from. Translation is
-narrower than distillation, one intent into one vocabulary, and each workflow can be
-evaluated in isolation: the same intent must yield the same Request. That is several
-places that can be checked, which is still unlike per-relation confluence, where the
-places cannot be.
+The cost is that stability has to hold in two kinds of place: each workflow's distillation,
+and each controller's derivation of criteria from an intent. Each is narrower than one
+distiller for the whole system, and each can be evaluated in isolation. That is still
+unlike per-relation confluence, where the places cannot be.
 
 Distillation is also **irreducibly agentic**. It cannot be a script, which is what finally
 settles the plugin question: the core operation of the model needs judgement and context,
 not a shell command.
 
-**Status: Settled** that distillation is load-bearing and agentic, and that it produces
-intent while each workflow owns its Request. **Open:** whether distillation can be made
-stable enough to carry the guarantee, which is the thesis's main risk, and whether
-per-workflow translation is stable too.
+**Status: Settled** that distillation is load-bearing and agentic. **Thesis** that each
+workflow distills within its own span and each controller derives its own set's criteria.
+**Open:** whether both can be made stable enough to carry the guarantee, which is the
+thesis's main risk.
 
 ## Order is not controlled
 
@@ -242,7 +333,41 @@ was touched first, decided by timing instead.
 **Status: Settled** that order is not controlled, that disagreement runs further cycles,
 and that a run may settle in any state that meets its criteria provided choices between
 states are recorded. **Open:** whether work a human adds during a replay, beyond what the
-Request asked for, carries the original intent or is distilled as a new one.
+criteria asked for, carries the original intent or is distilled as a new one.
+
+### The run ledger schedules, it does not decide
+
+A run has pending work: a workflow and the set its replay starts from, a controller's
+reconciliation at a source, a job routed to an input's owners. Some of it waits, because
+its input has a pending writer. Held as a graph, the jobs whose inputs have no pending
+writer are the ready frontier. SDD's mission graph has the same shape.
+
+The ledger chooses from the frontier to reduce rework. In the
+[fiction example](/cyber-truss/examples/fiction-plot-twist/) two workflows are about to
+write the outline, and drafting reads it, so drafting is held until both finish and runs
+once.
+
+Two rules keep the ledger honest.
+
+- **The source is settled by definition.** A job that reads the source does not wait on
+  the reconciliation at it. Without this, a workflow that reads the source and a workflow
+  that reconciles it after reading the first one's output wait on each other. The
+  reconciliation's output reaches the reader as a change of its own, under the run's intent.
+- **The ledger never makes a run correct.** Confluence is claimed over criteria whatever
+  the order, so the ledger can only change what a run costs. If a run reaches the right
+  state only because the ledger picked a good order, the claim is false.
+
+A job runs against the criteria version current when it starts. A job that waited picks up
+any version created while it waited.
+
+Whether a job waits for an upstream set to settle is not a rule of the ledger. It is
+[strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares): owned writes
+proceed by default, because a superseded write costs a cycle, and output writes wait,
+because an emission cannot be revised. An upstream that needs a person can take days.
+
+**Status: Thesis.** The same append-only record holds the
+[termination rules](#cycles-must-come-to-rest), so the ledger is the answer proposed for
+[What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
 
 ## Cycles must come to rest
 
@@ -324,17 +449,15 @@ easy to miss until it bites.
 The marker does not stop propagation, and must not. Replay output that strains a
 connection further out is how [selection](/cyber-truss/model/workflow/#how-workflows-are-selected) discovers reach. The
 distinction is what happens to the output: it is never distilled into a new intent. A
-workflow that reads it treats it as a changed input, and a settled input already states
-what that workflow must meet, so there is nothing to distil. Strain does not carry the
-intent onward, and it does not need to.
+workflow that spans the written set picks it up under the run's intent, which the run's
+record holds.
 
 The marker names the run that produced the output. Rules 2 and 3 pair resolutions with
-that run's criteria version, and a workflow whose input states no intent, such as release
-reading `{code, test}`, reads the intent from that run's record.
+that run's criteria version, and the ledger places the new job in that run.
 
-**Status: Settled** that provenance is required, and that marked output propagates as a
-changed input rather than as a new intent. **Thesis** that the marker names its run and the
-run records its distilled intent. **Open:** the marker's form.
+**Status: Settled** that provenance is required, and that marked output propagates under
+the run's intent rather than as a new one. **Thesis** that the marker names its run and the
+run records each workflow's intent. **Open:** the marker's form.
 
 ## The failure mode to design against
 
@@ -345,13 +468,13 @@ If the defined workflow is wrong, every entry point now converges reliably on th
 wrong place — and the ad-hoc changes that used to reveal the problem are being normalized
 away before they can.
 
-The comparison step is the only protection, and it works only if disagreement is treated
+The reconciliation report is the only protection, and it works only if disagreement is treated
 as evidence about **the workflow** as often as about the change. A comparison that can
 only conclude *"this change is wrong"* will launder a defective workflow indefinitely.
 
 Deriving criteria [ahead of the replay](#criteria-are-derived-before-the-replay-not-after)
 is the mechanism proposed against this. It is not yet a full answer, because it moves the
-exposure up to the distilled intent rather than removing it.
+exposure up to the intent each workflow distills rather than removing it.
 
 **Status: Settled** as a requirement on the comparison. **Open:** whether independently
 derived criteria are enough to enforce it.

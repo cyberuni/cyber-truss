@@ -71,26 +71,38 @@ workflow can have no inputs at all.
 This settles which end of a connection is the specification, per workflow. The
 [per-edge roles](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer)
 allow either reading on an edge such as `{API docs}` to `{code, test}`, and the choice
-decides the settled state. A workflow that reads the API docs and owns the code treats the
-published API as a contract. A workflow that reads the code and owns the docs documents
-whatever shipped. Both are legitimate. A team declares the one it means.
+decides the settled state. A workflow that reads the code and owns the docs documents what
+the code does. A workflow that reads the docs and owns the code uses the docs to plan the
+API before it is built. Both are legitimate. A team declares the one it means.
+
+Level suggests the default. The API reference describes the code's exported props, at the
+same level as the code, and a set that describes another at its level reads that set's
+expression. A set above another, such as a spec above the code, is reached through intent
+instead, because
+[expression stays with the source](/cyber-truss/model/canonical-execution/#expression-stays-with-the-source).
+
+A team may declare both directions on an edge between revisable sets, as fiction does with
+drafting and reverse outlining. Then neither side guards the other, and that is correct: the
+declaration says both may lead. **A contract lives at an output.** A published package cannot
+be revised, only superseded, so that is where a breaking change is irreversible and where
+approval and a breaking-change convention guard it. An edge between two sets that can both be
+revised is not a contract, whichever way it is declared.
 
 So direction has two sources, and the connection is neither: where the change landed, and
 the workflow that restores the relation.
 
-**Status: Settled.**
+**Status: Settled** that direction lives in the workflow. **Thesis** that level suggests the
+default and that contracts live at outputs.
 
 ## A change finds its candidates
 
 Two lookups over declared roles find every workflow a change might need. Neither is a
 judgement.
 
-- **Upstream candidates** own or output a changed set. The change skipped their
-  derivation, so they are where
-  [distillation](/cyber-truss/model/canonical-execution/#distillation-reads-backward) reads
-  back.
+- **Upstream candidates** own or output a changed set. The change skipped their derivation,
+  so they ask the controllers above it what must now move.
 - **Downstream candidates** read a changed set as an input. The change moved something
-  they depend on.
+  they depend on, and they run from it.
 
 When feature delivery amends `{spec}`, docs update is a downstream candidate because it
 reads `{spec}`. Nothing has to notice the docs going stale first.
@@ -105,35 +117,27 @@ no workflow at all.
 
 ## What a workflow reads
 
-A workflow always reads its inputs as they now stand. What else it reads depends on why it
-was selected.
+Every candidate reads the change within its own span and
+[distills](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow)
+what it is for. What it does next depends on the role the changed set holds in it.
 
-- **The run's criteria strain it.** It is an upstream candidate, or it owns or outputs a
-  set the backward read found lacking or contradicting the criteria. The change skipped
-  its derivation, so nothing it reads states the intent. It reads the distilled intent and
-  translates it into a Request.
-- **Only a changed input strains it.** It is a downstream candidate and nothing else
-  selected it. Its input already states what it must meet, because a specification is
-  intent plus criteria, and the [wait](#how-workflows-are-selected) means the input has
-  settled before the workflow starts. The workflow reads the changed input, including the
-  diff, and passes it to its controllers as a reference. It writes no Request, and nothing
-  distills the input again. The diff narrows the work without biasing the answer.
+- **The changed set is an input.** The workflow reads the change, including the diff. It
+  describes that set or depends on it, so the expression is what it needs. It runs from the
+  changed set downward, and nothing above the changed set is asked.
+- **The changed set is owned or an output.** The workflow hands its intent to the
+  controllers above the set, and they never see the change. The change reaches a controller
+  once, at [reconciliation](/cyber-truss/model/canonical-execution/#reconciling-at-the-source),
+  where it is checked against criteria derived without it.
 
 An input that is not a specification states no intent. Release reads `{code, test}` and
 owns `{changelog}`, and a changelog entry has to say why the code changed. The change's
 [provenance marker](/cyber-truss/model/canonical-execution/#replay-output-must-not-re-trigger-replay)
-names its run, and the run records its distilled intent, so release looks the intent up.
-That is a lookup, not a second distillation.
+names its run, and the run records its intent, so release looks the intent up. That is a
+lookup, not a second distillation.
 
-**A workflow never reads a change that landed in a set it owns or outputs.** That change is
-the prediction the replay exists to check, and a replay that reads it first agrees with it
-instead of checking it. Only the
-[comparison](/cyber-truss/model/canonical-execution/#reading-the-comparison) reads it,
-afterwards.
-
-**Status: Settled** that a workflow never reads a change in a set it owns or outputs, as a
-consequence of the replay being an independent derivation. **Thesis** that a workflow
-reached only through a changed input works from that input, with no Request.
+**Status: Thesis.** It replaced a rule that a workflow never reads a change in a set it owns.
+That rule protected the independence of the check, and the controllers above the source now
+protect it by deriving the criteria without the change.
 
 ## How workflows are selected
 
@@ -142,38 +146,30 @@ starting point, and a change rarely needs only one.
 
 1. **Find candidates.** The upstream and downstream candidates of every changed set. A
    lookup.
-2. **Read back.** Distillation walks back along each upstream candidate's shape, from the
-   changed set toward the workflow's declared start. It stops at the first set that holds
-   or contradicts what the change implies, or at the start.
-3. **Check strain.** Judgement, because evaluating criteria needs evaluation.
-   - An upstream candidate is strained if the sets the walk read do not hold the change's
-     criteria, because a criterion is [missing](/cyber-truss/model/connections/#missing)
-     or contradicted.
-   - A downstream candidate is strained if the sets it owns or outputs no longer meet what
-     its changed inputs state.
-   - A set the walk read that contradicts or lacks the change's criteria is strained even
-     when no candidate spans it. The workflows that own or output that set are selected.
-4. **Wait on inputs.** A selected workflow whose inputs are still strained waits until the
-   workflow that writes those inputs has run, then checks its strain again, because the
-   wait may have cleared it. Which side counts as strained follows the backward read. The
-   set the change landed in, and any set the read found holding the change's criteria, are
-   settled. Only a set the read found lacking or contradicting them is strained. So where
-   two workflows span one edge with opposite roles, one of them waits and the other runs,
-   and they never wait on each other. This does not control order. It fixes when a
-   workflow can start, so a workflow does not run against an input about to change.
-5. **Break ties.** Where several workflows remain for one strained set, the intent decides:
-   the run's, or for a workflow reached only through a changed input, the intent that input
-   states. Judgement.
-6. **Raise what nothing can restore.** Strain on a set that no declared workflow owns or
-   outputs cannot be cleared by any run. It is raised as an obligation against that set.
-   It also means the declarations have a gap: the team needs a workflow it has not
-   declared.
+2. **Distill.** Each candidate states what the change is for within its span, or abstains.
+3. **Ask upward.** Each upstream candidate asks the controllers above the changed set,
+   nearest first, whether their sets hold the criteria the intent implies. A set too coarse
+   to hold them passes the question up. Asking stops at the first set that holds. An
+   upstream candidate for which every set asked holds, and whose changed set meets its
+   criteria at reconciliation, has nothing to replay.
+4. **Route what the workflow cannot write.** An affected set that is the workflow's input is
+   routed to the workflows that own or output it. Each routed job asks upward from that set
+   in its own shape. Where several workflows could take it, the intent decides. Judgement.
+5. **Schedule.** Every job goes to the
+   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide).
+   A job whose input has a pending writer may wait, as the workflow's strain policy says.
+   The changed set counts as settled, so a job that reads it never waits on the
+   reconciliation at it.
+6. **Raise what nothing can restore.** An affected set that no declared workflow owns or
+   outputs cannot be cleared by any run. It is raised as an obligation against that set. It
+   also means the declarations have a gap: the team needs a workflow it has not declared.
 
 Candidates are cheap to find and costly to run, which is why step 3 filters them. A
 refactor inside `{code, test, stories}` finds the mission loop as an upstream candidate,
-because the loop owns the code. The refactor's criteria say behaviour is unchanged, the
-spec already holds that, and the loop does not run. Routing every change through the
-longest path would reintroduce exactly the ceremony the model removes.
+because the loop owns the code. The refactor's intent says behaviour is unchanged, the
+spec's controller answers that the spec holds it, and the loop replays nothing. Routing
+every change through the longest path would reintroduce exactly the ceremony the model
+removes.
 
 Selection is not decided once, up front. A replay changes artifacts, those changes have
 their own candidates, and further workflows are selected. Reach is discovered by
@@ -193,22 +189,22 @@ propagation. **Thesis** on the six steps. **Open**, and load-bearing: whether th
 unique. See
 [Open questions](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows).
 
-## A replay starts at the workflow's start
+## A replay starts at the highest affected set
 
-A workflow replays from its declared starting point, wherever the change landed. At each
-node the Request either changes that node's criteria or passes to the next node unchanged.
+A workflow replays from the highest set in its shape that the intent affects, not from its
+declared start. At each set on the way down, the set's controller writes to meet the
+criteria arriving from above, and a set too coarse to hold them passes through.
 
-A node passes the Request on when it is too coarse to hold the criteria the intent implies.
-A PRD states what a feature must do and has no place for a page-count rule, so a pagination
-fix passes through it to the feature spec, which is where the rule belongs.
+Feature delivery spans `{PRD}`, `{spec}`, and `{code, test}`. A pagination fix lands in the
+code. The spec's controller answers that the spec lacks the round-up rule, and the PRD's
+controller answers that the PRD is too coarse to hold it. The replay starts at `{spec}`.
 
-Starting at the highest node the intent changes would give the same result when the guess
-is right. It needs that node predicted up front, and predicting reach is the step selection
-already declines to make. The visit also checks something. Passing through is a judgement
-that the intent does not change that node, and it is the same judgement that catches a
-change that does.
+An earlier rule started every replay at the declared start, so that no node had to be
+predicted. That reasoning was about predicting reach across the whole system. Finding the
+highest affected set within one workflow is a local question, and the controller of each set
+answers it for its own set, which is the same judgement a pass-through visit made.
 
-**Status: Settled.**
+**Status: Thesis.**
 
 ## Leash
 
@@ -235,10 +231,10 @@ channel. An approval is a decision, and it is recorded like one, so
 
 ## Workflow and controller
 
-A workflow works between sets. It decides what must become true of each set it writes: a
-Request, or a reference to the changed input that already states it, and the criteria that
-reach that set. The set's
-[controller](/cyber-truss/model/controller/) works within the set, and decides how the set
-meets them.
+A workflow works between sets. It decides what the change is for and which sets must move,
+and hands each set's controller the intent. The controller turns the intent into criteria
+for its set. The set's
+[controller](/cyber-truss/model/controller/) works within the set, and decides whether
+the set holds those criteria and how it comes to meet them.
 
 **Status: Thesis.** The handoff is on the Controller page.

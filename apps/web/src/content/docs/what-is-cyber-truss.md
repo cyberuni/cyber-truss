@@ -37,20 +37,18 @@ the connections it crosses, because a connection states a relation between two
 does.
 
 Clearing the strain does not push your change outward from where it landed. The change is
-lifted out of line diffs into artifact-set vocabulary, then distilled into the **intent**
-behind it, separated from the particular expression you used. From that intent the system
-derives the criteria the settled state has to meet. Those criteria exist before anything
-is replayed. The strain then picks out every workflow it touches: often several, and never
-the whole process by default. Each workflow your change bypassed turns the intent into its
-own request, replays it from its own starting point, and derives its own answer without
-reading yours. A workflow that only reads what changed works from it directly. The
-results are compared against the change you made.
+lifted out of line diffs into artifact-set vocabulary, and every workflow that spans the set
+you changed reads it: often several, and never the whole process by default. Each one works
+out the **intent** behind your change, separated from the particular expression you used,
+and asks the sets above yours what that intent now requires of them. They answer without
+seeing your change. The workflow replays from the highest set that has to move, back down
+to yours, and your change is reconciled against the criteria that arrive. A workflow that
+reads what you changed works from it directly.
 
-So the criteria that come back to your change were authored by neither party to the
-comparison. Sometimes they confirm what you wrote. More often they add to it: a case the
-quick fix didn't cover, or a better shape that only became visible once the intent was
-written down and worked forward. The round trip improves the change instead of only
-recording it.
+So the criteria that come back to your change were not written from it. Sometimes they
+confirm what you wrote, and it stands as you wrote it. More often they add to it: a case the
+quick fix didn't cover, or a rule the specification never stated until your change made it
+necessary. The round trip improves the change instead of only recording it.
 
 The guarantee this buys is [confluence](/cyber-truss/model/confluence/). Whichever
 artifact you started from, the system settles into a state that meets the same criteria.

@@ -77,7 +77,7 @@ documentation are raised and discharged out-of-band.
 | [Workflow](/cyber-truss/model/workflow/) | What a workflow declares, the three roles a set can hold in it, and how a change finds the workflows it needs |
 | [Controller](/cyber-truss/model/controller/) | What holds one set consistent, how it differs from a workflow, and what a workflow hands it |
 | [Confluence](/cyber-truss/model/confluence/) | What path-independence means precisely, and what it is claimed over |
-| [Canonical execution](/cyber-truss/model/canonical-execution/) | How confluence is bought: distill, replay, compare |
+| [Canonical execution](/cyber-truss/model/canonical-execution/) | How confluence is bought: distill, ask the controllers above, replay, reconcile |
 | [Relationship to SDD](/cyber-truss/model/relationship-to-sdd/) | SDD as the two-set instance of this model |
 | [Formal workflows](/cyber-truss/model/workflows/) | Staged processes across eight fields, and the four parameters they all reduce to |
 | [Waterfall in the model](/cyber-truss/model/workflows/waterfall/) | One of them worked in full — and the half of it that turns out to be unnecessary |

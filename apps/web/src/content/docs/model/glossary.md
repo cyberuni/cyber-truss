@@ -52,8 +52,8 @@ works within a set, where a [workflow](#workflow) works between sets. A controll
 ### Downstream candidate
 
 A workflow that reads a changed set as an [input](#input-owned-output). Found by a lookup
-over declared roles. When nothing else selects it, it works from the changed input and
-writes no [Request](#request). See
+over declared roles. It reads the change itself and runs from the changed set downward,
+asking nothing above it. See
 [A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 
 ### Coordinates
@@ -75,10 +75,10 @@ a discharge point. One of the parameters a [workflow](#workflow) declares.
 ### Distillation
 
 Reducing an arriving change to its [intent](#intent), separated from the particular
-expression of it, by reading back along the change's
-[upstream candidates](#upstream-candidate). Writes nothing, and produces nothing workflow-shaped:
-each workflow owns its own [Request](#request). Irreducibly agentic, and the step that
-carries the confluence guarantee. See
+expression of it. Each candidate workflow distills within its own span, and states what the
+change is for, not whether it is right. A workflow that finds nothing abstains. Writes
+nothing, and produces no criteria: those come from each set's [controller](#controller).
+Irreducibly agentic, and the step that carries the confluence guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
 
 ### Formal workflow
@@ -143,8 +143,8 @@ downstream, because an unlifted diff and a connection are written in different l
 
 ### Missing strain
 
-A change's criteria are not held by the sets the backward read reached in a workflow the
-change bypassed: the implementation meets something its specification does not state. Relative to a change,
+A controller above a change's [source](#source) answers that its set lacks a criterion the
+change's intent implies: the implementation meets something its specification does not state. Relative to a change,
 unlike the other kinds. See [kinds of strain](/cyber-truss/model/connections/#missing).
 
 ### Nonconformance strain
@@ -157,23 +157,40 @@ evaluable on a cold repository, with no diff. The axis-2 strain.
 A specification whose implementation lives elsewhere — an accepted ADR constrains modules
 it does not contain. Does not block, must be tracked, and can be **declined**.
 
+### Reconciliation
+
+The source's [controller](#controller) joining the change that landed with the criteria
+arriving from above. It reports what it kept of the change, what it changed, and what it
+added, and that report is the comparison the leash reads. See
+[Reconciling at the source](/cyber-truss/model/canonical-execution/#reconciling-at-the-source).
+
 ### Request
 
-A distilled [intent](#intent) translated into one workflow's vocabulary, at that
-workflow's starting point. Owned by the workflow, not by distillation. Only a workflow the
-run's criteria strain writes one; a workflow reached only through a changed input works
-from that input. One workflow given
-the same intent must produce the same Request. See
-[Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent).
+The [intent](#intent) a workflow hands a controller when it asks for criteria or asks for a
+write. A Request to a controller above the source carries no expression of the change. See
+[The handoff](/cyber-truss/model/controller/#the-handoff).
+
+### Run ledger
+
+The append-only record of a run: pending jobs, what each waits on, criteria versions,
+resolutions, and decisions. Its ready frontier is the jobs whose inputs have no pending
+writer. It schedules to reduce rework and never makes a run correct. See
+[The run ledger schedules](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide).
 
 ### Selection
 
 Finding the workflows a change needs: its [upstream](#upstream-candidate) and
-[downstream](#downstream-candidate) candidates that are strained, and the workflows that own
-or output any set the backward read found strained. Intent breaks ties. Strain no declared
-workflow can clear is raised as an obligation. Extended as replays produce changes of their
+[downstream](#downstream-candidate) candidates, filtered by what the controllers above the
+[source](#source) answer, and the owners of any affected input they route to. Intent breaks
+ties. An affected set no declared workflow can write is raised as an obligation. Extended as replays produce changes of their
 own. See
 [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
+
+### Source
+
+The artifact-set a change landed in. Settled by definition for the run: the controllers
+above it derive criteria without seeing the change, and its own controller
+[reconciles](#reconciliation) the change against them.
 
 ### Specification
 
@@ -210,7 +227,8 @@ Delta-driven.
 ### Upstream candidate
 
 A workflow that owns or outputs a set a change landed in. The change skipped that
-workflow's derivation, so distillation reads back along it. Found by a lookup over declared
+workflow's derivation, so it asks the controllers above the set what must move, and
+replays from the highest affected set. Found by a lookup over declared
 roles. See
 [A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 

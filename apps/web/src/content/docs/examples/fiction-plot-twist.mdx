@@ -94,71 +94,73 @@ family. The diff touches chapter 14 only.
 
 ### Expected run
 
-1. **Lift.** The change touches `{manuscript}`.
+1. **Lift.** The change touches `{manuscript}`, the source.
 2. **Find candidates.** Drafting and continuity pass own `{manuscript}`, so both are
    [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
    Reverse outlining and canon update read the manuscript, so both are downstream
    candidates.
-3. **Distill.** Distillation
-   [reads back](/cyber-truss/model/canonical-execution/#distillation-reads-backward) along
-   drafting to `{outline}`, which names Aubrec, and along continuity pass to
-   `{story bible}`, which puts Maren at sea. Both contradict the chapter, so the walk stops
-   at each. Intent: *the person who betrayed Ilse's family is the person she trusts most,
-   Maren.* The name stays in the intent. A reading that kept only *someone Ilse trusts*
-   would let a replay choose a different character, and what the author found was who, not
-   a category.
-4. **Derive criteria.**
-   - Maren betrayed the house, and Aubrec did not.
-   - The reveal comes in chapter 14.
-   - At least two earlier scenes admit both readings of Maren: innocent on a first
-     reading, damning on a second.
-   - Maren's backstory places her where she could have sealed the letter.
-   - The climax still turns on Ilse's choice about revenge.
+3. **Distill, per workflow.** Each candidate reads chapter 14
+   [within its own span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow)
+   and states what the change is for, not whether it is right. Drafting treats the outline
+   as canon and continuity pass treats the bible as canon, so a judgement of rightness would
+   have them call the chapter an error while reverse outlining and canon update call it new
+   canon. All four state one intent: *the person who betrayed Ilse's family is the person
+   she trusts most, Maren.* The name stays in the intent. A reading that kept only *someone
+   Ilse trusts* would let a replay choose a different character, and what the author found
+   was who, not a category.
+4. **Ask the controllers above.**
+   - Drafting asks the outline's controller. The outline names Aubrec, so it is affected.
+     Its criteria:
+     - Maren betrayed the house, and Aubrec did not.
+     - The reveal comes in chapter 14.
+     - At least two earlier scenes admit both readings of Maren: innocent on a first
+       reading, damning on a second.
+     - The climax still turns on Ilse's choice about revenge.
 
-   The first and fourth criteria
-   [replace](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) what the outline
-   and the bible state. They are not joined with it.
-5. **Select**, by the [six steps](/cyber-truss/model/workflow/#how-workflows-are-selected).
-   - *Check strain.* Drafting and continuity pass are strained, because the sets the walk
-     read contradict the criteria. Reverse outlining and canon update are strained, because
-     the outline and the bible no longer meet what the changed chapter states.
-   - The walk found `{outline}` and `{story bible}` strained. Three workflows own the
-     outline: plotting, reverse outlining, and worldbuilding. Canon update alone owns the
-     bible.
-   - *Break ties.* Of the three that own the outline, the intent keeps chapter 14, so the
+     The outline is drafting's input, so drafting routes it to the outline's owners:
+     plotting, reverse outlining, and worldbuilding. The intent keeps chapter 14, so the
      outline must follow the manuscript. Reverse outlining reads the manuscript. Plotting
      reads a premise that names no betrayer, and worldbuilding reads a bible that is itself
-     stale. Reverse outlining is chosen.
-   - *Wait on inputs.* Drafting waits for the outline, and continuity pass waits for the
-     bible. Reverse outlining and canon update read the manuscript, which is also strained,
-     and the workflows that write the manuscript are waiting on them. Read literally, the
-     rule deadlocks here. The run proceeds by treating the manuscript as settled, because
-     the intent says chapter 14 stands, so reverse outlining and canon update start.
+     about to change. Reverse outlining is chosen.
+   - Continuity pass asks the bible's controller. The bible puts Maren at sea, so it is
+     affected, with the criterion *Maren's backstory places her where she could have sealed
+     the letter.* The bible is continuity pass's input, and canon update alone owns it, so
+     the job is routed there.
+   - Reverse outlining and canon update ask nothing above. The manuscript is their input,
+     so they read chapter 14 itself and run from it.
+
+   The first criterion and the bible's criterion
+   [replace](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) what the outline
+   and the bible state. They are not joined with it.
+5. **Schedule.** The
+   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+   holds four jobs. Reverse outlining and canon update read the source, which is settled by
+   definition, so they start. Drafting's reconciliation reads the outline and continuity
+   pass's reads the bible, so both wait. Neither running job waits on the reconciliations
+   at the manuscript, so the two edges with opposite roles never wait in both directions.
 6. **Replay.** Reverse outlining rebuilds the outline to name Maren, plant her in chapters
    3 and 9, and end on Ilse's choice about her. Canon update puts Maren ashore in the year
-   the house fell. With both inputs settled, drafting derives setup scenes for chapters 3
-   and 9 and a new ending in chapters 18 to 20, which had Ilse executing Aubrec and now has
-   her facing someone she loves. Continuity pass derives the chapters' facts against the
-   run's criteria. Neither reads the author's chapter 14, because it landed in a set they
-   own.
+   the house fell.
 
-   The amended bible is a change of its own, and worldbuilding reads it. Chapter 2 of the
-   old outline had Maren's ship coming into port. Reverse outlining rebuilt the outline
-   against the same criteria, so if it rebuilt chapter 2 the strain is already gone. If
-   not, worldbuilding amends chapter 2 the way reverse outlining would have, in one extra
-   cycle, and the two writes [join](/cyber-truss/model/join/) at the outline's
-   [controller](/cyber-truss/model/controller/#the-join-happens-at-the-controller).
-   `{premise}` to `{outline}` holds, because the premise names no betrayer and the reworked
-   climax still turns on revenge.
-7. **Compare.** The author's chapter 14 meets the reveal criterion. The setup criterion
-   has holes: nothing before chapter 14 supports the reveal, which is why the scene read as
-   a twist rather than a turn. Drafting derived its own chapter 14, and both versions meet
-   the criteria. Prose is a
-   [coordinate](/cyber-truss/model/confluence/#what-confluence-is-claimed-over), so the
-   choice between the two chapters is a choice between settled states. The author keeps
-   their own scene, and the choice is recorded. If drafting and reverse outlining place the
-   setup in different chapters, both placements meet *at least two earlier scenes*, and
-   that choice is recorded too.
+   The amended bible is a change of its own, and worldbuilding picks it up under the run's
+   intent. Chapter 2 of the old outline had Maren's ship coming into port. If reverse
+   outlining rebuilt chapter 2, the outline already holds. If not, worldbuilding amends it,
+   and the two writes [join](/cyber-truss/model/join/) at the outline's
+   [controller](/cyber-truss/model/controller/#the-join-happens-at-the-controller). The
+   ledger now has two pending writers of the outline, and it holds drafting until both
+   finish, so drafting runs once. Plotting spans the amended outline, and the premise's
+   controller answers that the premise holds, because it names no betrayer and the reworked
+   climax still turns on revenge. Nothing replays there.
+7. **Reconcile at the source.** Drafting and continuity pass both reconcile at the
+   manuscript, and the criteria from the outline and the bible join at its controller. It
+   keeps the author's chapter 14, which meets the reveal criterion. It adds setup scenes in
+   chapters 3 and 9, which the setup criterion requires and the change never considered:
+   nothing before chapter 14 supported the reveal, which is why the scene read as a twist
+   rather than a turn. It changes the ending in chapters 18 to 20, which had Ilse executing
+   Aubrec and now has her facing someone she loves. Its report lists all three. The
+   reconciled manuscript reaches reverse outlining and canon update as a change of its own,
+   and the outline already plants the setup and ends on Ilse's choice, so nothing further
+   runs.
 
 ### Settled state
 
@@ -172,17 +174,18 @@ family. The diff touches chapter 14 only.
 ### Status: Holds
 
 The run carries the twist back through the outline and out to the chapters that need it.
-The wait in step 5 is where it could stall: on an edge with opposite roles, each side's
-input is the other side's owned set. The
-[wait rule](/cyber-truss/model/workflow/#how-workflows-are-selected) settles it by the
-backward read. The manuscript, where the change landed, counts as settled, so reverse
-outlining runs and drafting waits.
+The schedule in step 5 is where it could stall: on an edge with opposite roles, each side's
+input is the other side's owned set. The ledger settles it. The manuscript is the source and
+counts as settled by definition, so reverse outlining runs and drafting waits.
+
+No second chapter 14 is derived. The author's scene is reconciled against criteria derived
+above it without its prose, and it stands as written, so there is no choice between two
+versions to record.
 
 The reverse workflows matter. With only plotting, drafting, worldbuilding, and continuity
 pass, nothing owns `{outline}` or `{story bible}` from the manuscript's side. Step 6 of
 selection then
-[raises the strain as an obligation](/cyber-truss/model/workflow/#how-workflows-are-selected)
-against both sets, and the gap in the declarations is visible: the author needs reverse
+[raises the affected sets as obligations](/cyber-truss/model/workflow/#how-workflows-are-selected), and the gap in the declarations is visible: the author needs reverse
 outlining and canon update, and has not declared them. The run no longer ends silently with
 the outline still naming Aubrec.
 
@@ -218,28 +221,26 @@ Continuity pass and canon update are unchanged.
 
 ### Expected run
 
-1. **Lift.** The change touches `{manuscript}`.
+1. **Lift.** The change touches `{manuscript}`, the source.
 2. **Find candidates.** Drafting and continuity pass own `{manuscript}`, so they are
    upstream candidates. Canon update reads it, so it is a downstream candidate.
-3. **Distill.** Along drafting, distillation reads `{premise}`, the workflow's declared
-   start, which names no betrayer, so the walk stops there. Along continuity pass it reads
-   `{story bible}`, which puts Maren at sea. The intent is the same as variant A.
-4. **Derive criteria.** The same criteria as variant A.
-5. **Select.**
-   - *Check strain.* The premise states none of the run's criteria, so drafting has
-     [missing strain](/cyber-truss/model/connections/#missing). The bible contradicts the
-     criteria, so continuity pass is strained, and canon update is strained because the
-     bible no longer meets the changed chapter. Canon update alone owns the bible.
-   - *Wait on inputs.* Continuity pass waits for the bible. Canon update reads the
-     manuscript, which continuity pass writes, and the same deadlock as variant A follows
-     unless the manuscript is treated as settled. Drafting reads the premise, which nothing
-     changes, so it starts.
-6. **Replay.** Drafting starts at `{premise}`, which is too coarse to hold a setup beat, so
-   the Request passes through it. Drafting derives setup scenes in chapters 3 and 9 and a
-   new ending. Canon update puts Maren ashore. Continuity pass then derives the chapters'
+3. **Distill, per workflow.** The intent is the same as variant A.
+4. **Ask the controllers above.**
+   - Drafting asks the premise's controller. The premise holds that the climax turns on
+     Ilse's choice about revenge. It has no place for a betrayer's name or a setup beat, so
+     for those criteria it answers too coarse, and nothing lies above it. No set above the
+     manuscript is affected, and no strain is recorded on `{premise}` to `{manuscript}`.
+     Drafting's only job is its reconciliation at the manuscript.
+   - Continuity pass asks the bible's controller, which is affected as in variant A, and
+     the job is routed to canon update.
+   - Canon update reads the manuscript and asks nothing above.
+5. **Schedule.** Canon update reads the source and starts. Continuity pass's
+   reconciliation waits for the bible. Drafting's has no pending input, and the ledger may
+   hold it so the manuscript is reconciled once.
+6. **Replay.** Canon update puts Maren ashore.
+7. **Reconcile at the source.** The manuscript's controller keeps the author's chapter 14,
+   adds setup scenes in chapters 3 and 9, changes the ending, and applies the bible's
    facts.
-7. **Compare.** The same holes as variant A. Nothing before chapter 14 supported the reveal,
-   and drafting's scenes fill them.
 
 ### Settled state
 
@@ -250,19 +251,18 @@ Continuity pass and canon update are unchanged.
 
 ### Status: Unresolved
 
-The run finishes the book. The setup criterion survives, because the change landed in a set
-drafting owns, and drafting's vocabulary holds scenes where continuity pass's vocabulary of
-facts could not. The hole the comparison reports reaches the manuscript through drafting.
+The run finishes the book, and the earlier question of whether strain on a too-coarse input
+clears or stays open no longer arises: the premise's controller answers too coarse, and no
+strain is recorded. Two things remain open.
 
-Two things remain open. The wait between continuity pass and canon update settles by the
-same rule as variant A.
-
-- **Missing strain against an input too coarse to hold it.** The premise is the only input
-  drafting has, and a premise has no place for a setup beat. In the pagination example a PRD
-  passed the rule through to a spec below it. Here nothing lies between the premise and the
-  chapters, so the criterion's only home is the manuscript itself. The model does not say
-  whether the strain on `{premise}` to `{manuscript}` clears once the replay judges the
-  premise too coarse, or stays open. That depends on
+- **Criteria with no home above the source.** The reveal and setup criteria pass through
+  the premise and land on the manuscript, the only set that can hold them. There they are
+  derived by the controller that also reconciles the author's chapter, so they are not
+  independent of the change they check, which is what
+  [expression stays with the source](/cyber-truss/model/canonical-execution/#expression-stays-with-the-source)
+  exists to prevent. The model now says so, and the reconciliation report names criteria
+  the source's controller derived itself, but naming them does not make them independent.
+  Where the setup criterion should live depends on
   [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level),
   which is still open.
 - **Coupling inside one artifact-set.** Once the run closes, the setup in chapter 3 is held
@@ -276,28 +276,28 @@ same rule as variant A.
 
 - [Direction in the workflow](/cyber-truss/model/workflow/#direction-lives-in-the-workflow).
   Fiction uses both directions on the same edges: canon constrains the draft, and the draft
-  amends canon. Without the reverse workflows, selection raises the strain as an obligation
-  and names the missing declarations.
+  amends canon. Without the reverse workflows, selection raises the affected sets as
+  obligations and names the missing declarations.
 - [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
-  Three workflows own the outline, and the intent breaks the tie toward reverse outlining.
-  Waiting on inputs deadlocks on an edge with opposite roles unless the set the intent keeps
-  counts as settled.
-- [Candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates) choosing the
-  workflow with the right vocabulary. In variant B the setup criterion survives because the
-  change landed in a set drafting owns.
-- [Missing strain](/cyber-truss/model/connections/#missing) where the only input is too
-  coarse to state the missing criterion, and no finer set exists.
+  An affected input is routed to its owners, and the intent breaks the tie toward reverse
+  outlining. The ledger holds drafting until both writers of the outline finish, and treats
+  the source as settled, so edges with opposite roles never wait on each other.
+- [Distillation](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow)
+  stating what a change is for, not whether it is right. Asked for rightness, the workflows
+  that treat the outline and the bible as canon read the chapter as an error. It also keeps
+  a proper name: an intent abstract enough to drop the name lets a replay swap the author's
+  discovery for a different one that meets the same criteria.
+- [Controllers answering for their own sets](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets)
+  where the only set above is too coarse. In variant B no strain is recorded on the premise,
+  and the setup criterion's only home is the source.
 - [Intent and criteria](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)
   in a field where quality is argued. Whether a twist is earned is a craft judgement, but
   *two earlier scenes admit both readings* can be checked by a reader who has not reached
   chapter 14.
-- [Distillation](/cyber-truss/model/canonical-execution/#distillation-reads-backward)
-  keeping a proper name. An intent abstract enough to drop the name lets a replay swap the
-  author's discovery for a different one that meets the same criteria.
-- [The inversion](/cyber-truss/model/canonical-execution/#the-inversion) in creative work.
-  The author's scene is treated as a prediction, and it survives the comparison only
-  because prose is a coordinate. If a style guide constrained the prose, the prose would be
-  topology, and the comparison could reject the author's own sentences.
+- [Reconciling at the source](/cyber-truss/model/canonical-execution/#reconciling-at-the-source)
+  in creative work. The author's scene is a prediction, and it stands as written because it
+  meets the criteria and prose is a coordinate. If a style guide constrained the prose, the
+  prose would be topology, and reconciliation could change the author's own sentences.
 - The [leash](/cyber-truss/model/workflow/#leash) default on owned writes. It lets an agent
   rewrite an ending that meets the criteria, which an author may not accept.
 - Change reaching backwards in reading order. The setup lands in chapters the author

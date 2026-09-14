@@ -27,7 +27,7 @@ same two artifact-sets. A refactor firing from `{code, test, stories}` to
 sets that the mission loop also connects. Whether the set is unique at the level of the
 *set of artifact-sets* is a conjecture, not a result.
 
-**The results converge.** Workflows in the set start from different Requests and can reach
+**The results converge.** Workflows in the set distill the change separately and can reach
 overlapping artifacts. The order they run in is
 [not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled), and when
 their results disagree another cycle runs. Order may change how many cycles pass and which
@@ -47,7 +47,8 @@ that implies.
 ## Can distillation be made stable?
 
 Canonicalization concentrates the confluence requirement into
-[distillation](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
+[distillation](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight),
+which each candidate workflow runs within its own span.
 Two different expressions of one intent must distill to the same intent.
 
 Distillation is irreducibly agentic, so stability here is an empirical question about
@@ -55,30 +56,38 @@ agent behaviour rather than a property that can be proven.
 
 **What breaks if it resolves badly:** the guarantee fails at the normalization step
 instead of in the connections — the same failure, relocated. The upside is that this
-failure is *measurable*: feed several expressions of one intent and compare the distilled
-intents.
+failure is *measurable*: feed one workflow several expressions of one intent and compare
+the intents it states.
 
-## Is per-workflow translation stable?
+Two narrower risks sit beside it. A workflow that wrongly abstains goes unnoticed, since no
+other workflow's reading covers its vocabulary. And a reading wider than the change, such as
+treating a new prop as part of the intent, is caught only where criteria meet a controller
+convention or an output that needs approval.
+
+## Do controllers derive the same criteria from one intent?
 
 [Distillation stops at intent](/cyber-truss/model/canonical-execution/#distillation-stops-at-intent),
-and each workflow the run's criteria strain translates that intent into its own Request.
-Translation is a second agentic step, and it runs once per such workflow. A workflow
-reached only through a changed input does not translate.
+and each set's controller derives the criteria that intent implies for its set, and judges
+whether the set is too coarse to hold them. That is a second agentic step, run once per set
+asked.
 
-It is narrower than distillation, one intent into one vocabulary, and it can be evaluated
-per workflow: hand one workflow the same intent several times and compare the Requests.
+It is narrower than distillation, one intent into one set's vocabulary, and it can be
+evaluated per controller: hand one controller the same intent several times and compare the
+criteria and the answer.
 
-**What breaks if it resolves badly:** workflows given the same intent start from different
-Requests, and the set's results stop composing even when selection is unique. The failure
-is spread across workflows rather than concentrated, but each instance is checkable in
-isolation.
+**What breaks if it resolves badly:** the replay starts at different sets for the same
+intent, and the criteria reaching a source differ between runs even when selection is
+unique. The failure is spread across controllers rather than concentrated, but each
+instance is checkable in isolation.
 
 ## What vehicle holds pending Requests?
 
-Out-of-band discharge needs somewhere to hold Requests awaiting replay and comparison.
-Something is clearly required; its form is not settled. A git-tracked ledger is the
-obvious candidate — it survives sessions and is a team artifact rather than a session
-artifact — but it is not the only option.
+Out-of-band discharge needs somewhere to hold jobs awaiting replay and reconciliation.
+Something is clearly required; its form is not settled. The proposal is the
+[run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide):
+a git-tracked, append-only graph of pending jobs and what each waits on, which also holds
+the termination record. It survives sessions and is a team artifact rather than a session
+artifact, but it is not the only option.
 
 **Related risk, and it is the documented failure mode of every system in this shape:**
 deferred non-blocking obligations rot. This repository's own `docs/backlog.md` has
@@ -152,9 +161,8 @@ should proceed or letting one through that should wait.
 Controllers span a spectrum from agent definition to deterministic code. What they have
 in common — what a controller is *handed* and what it *returns* — is undefined. A first
 draft is on [the Controller page](/cyber-truss/model/controller/#the-handoff): a workflow
-hands over a Request or a reference to the changed input, the joined criteria, and the
-set's current state, and the controller returns the write, whether the criteria are met,
-and anything it changed beyond what it was asked.
+asks a controller for criteria, asks it to write, or asks it to reconcile a change that
+landed in its set, and each call returns something different.
 
 This is the contract every controller ever written will encode, so it is expensive to
 change later. It is also the thing plugin ecosystems most reliably die on, which argues

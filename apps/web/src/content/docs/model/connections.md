@@ -114,15 +114,17 @@ State-driven, evaluable on a cold repository, and requires no delta.
 Implementation ahead of its specification. *A bug fix introduces a rule the spec never
 stated.*
 
-A change's criteria are not held by the sets the backward read reaches in a workflow the
-change [bypassed](/cyber-truss/model/workflow/#a-change-finds-its-candidates). The
+A controller above the change, asked in a workflow the change
+[bypassed](/cyber-truss/model/workflow/#a-change-finds-its-candidates), answers that its set
+lacks a criterion the change's intent implies. The
 implementation now meets something its specification does not state, and the
 specification is the side left behind.
 
 Missing strain is relative to a change, which the other three are not. Every implementation
 shows behaviour nobody wrote down, and most of it is coordinates. Missing strain fires only
-for criteria a change's intent introduced, and it is found after distillation has derived
-them. A refactor introduces no criteria and strains nothing.
+for criteria a change's intent introduced, and it is found when a controller derives them
+from that intent. A set too coarse to hold the criterion is not missing it; the question
+passes to the set above. A refactor introduces no criteria and strains nothing.
 
 The first three are not an arbitrary list. Read through the specification relation they are
 the three ways a specification and its implementation can fail to meet from the
