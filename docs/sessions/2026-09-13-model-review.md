@@ -8,6 +8,32 @@ execution around per-workflow distillation. Read this, then
 Last commits of the session: `c806598` (the rewrite), `72ca998` (routing to every owner under
 the root intent).
 
+## Update 2026-09-14: accepting the intent
+
+The gap: criteria derived from an intent always pass it, so nothing in the run accepted a
+change of direction. Resolved at the leash (`2755596`, `28fa2d9`):
+
+- A set's criteria are authored through use cases (and a decision graph where the set
+  describes behaviour). As they stood before the run they are the **standing specification**.
+- A write that removes or reverses part of it needs the **Council**'s approval by default,
+  checked at every write to the set. Confidence only tightens; a team may loosen per set.
+  Replacement falls under the same default.
+- Workflows send intent and references to upstream criteria, never criteria or use cases.
+
+Rejected on the way, recorded in `docs/backlog.md`: lens returned on ask, a separate
+Clearance, the mis-bound rule, per-set owners, sending upstream use cases.
+
+Examples re-graded (`b98cbc0`); two added: insulin double check (erosion across sets) and
+aviation blade limit (long chain, three organisations). Statuses live in `examples/index.md`.
+
+**Next question:** can one approval cover the writes that carry it out? Four examples
+(software A, component library, marketing A, trading C) meet the same person asked twice for
+one decision and work around it by loosening a whole set's leash. See the section of that
+name on `open-questions.md`.
+
+Also open from this round: erosion across sets; how a Council is seated, including across
+organisations; whether an implementation set has use cases of its own (component library).
+
 ## Positioning (settled)
 
 - cyber-truss **makes a system self-converging**. Not a "layer", not scoped to
