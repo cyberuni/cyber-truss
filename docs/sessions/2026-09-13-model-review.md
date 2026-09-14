@@ -103,8 +103,13 @@ Gaps the re-grade found, and how each landed:
 - Reconciling an output source (trading): kept as landed, plus a superseding emission.
 - The time bound covers distillation; whether it binds what controllers above read is open.
 - A waiting job runs against the criteria version current when it starts.
-- Routing an affected input picks one owner by intent, which can skip the owner that reads
-  evidence (marketing B). Not addressed.
+- Routing an affected input picked one owner by intent, which could skip the owner that
+  reads evidence (marketing B). Now routed to every owner; the ledger collects contributions
+  per set with provenance and never merges; the controller joins.
+- Routed jobs carry the root intent unchanged plus the affected set's criteria. Only a change
+  is distilled, never an intent, to avoid compounding translation loss (user: the "never
+  distilled into a new intent" rule exists for this). Cost: a controller far above the
+  source abstracts the root intent itself; expected fine because workflows are short.
 
 ## Examples (test cases)
 
