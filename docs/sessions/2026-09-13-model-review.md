@@ -1,8 +1,12 @@
 # Model review handoff: 2026-09-11 to 2026-09-13
 
 Where the lattice model stands after the session that added the what-is page, the
-examples section, and the Workflow and Controller pages. Read this, then
+examples section, and the Workflow and Controller pages, and then rebuilt canonical
+execution around per-workflow distillation. Read this, then
 `apps/web/src/content/docs/model/open-questions.md`, before resuming design work.
+
+Last commits of the session: `c806598` (the rewrite), `72ca998` (routing to every owner under
+the root intent).
 
 ## Positioning (settled)
 
@@ -17,112 +21,92 @@ examples section, and the Workflow and Controller pages. Read this, then
   landscape, not the mechanism); "enlightened/elevated state" (a join is the *least* upper
   bound; a bad change converges consistently); totality ("the whole system answers").
 
-## Model decisions made this session (all committed)
+## The run as it now stands
 
-| Decision | Home |
-| --- | --- |
-| Distillation produces intent; each workflow owns its Request | canonical-execution |
-| Distillation reads backward along upstream candidates, writes nothing; bounded in time | canonical-execution |
-| Loop has one entry: a change. Anything else is a criterion (including time) a controller tests | canonical-execution |
-| Cycles terminate by four rules; criteria versioned and frozen per run (user-authored) | canonical-execution |
-| Confluence claimed over criteria; join is union of criteria (user-authored) | confluence, join |
-| Replay starts at the declared start; coarse nodes pass the Request through (user-authored) | workflow |
-| Six workflow parameters: span, roles, shape, discharge, strain policy, leash | workflow |
-| Three roles: input (read), owned (read + revise), output (emitted, supersede only) | workflow |
-| Candidates by lookup: upstream (own/output a changed set), downstream (read one) | workflow |
-| A workflow reads a change in its inputs, never one in sets it owns or outputs | workflow |
-| Six selection steps, incl. routing strain the read found, waiting on strained inputs (settled by the backward read, so opposite roles cannot deadlock), raising unrestorable strain as obligation | workflow |
-| Leash: owned writes proceed when criteria pass; output writes need approval; architect/oracle go to a person; confidence only tightens | workflow |
-| Controller page: workflow owns sets and works between them; controller holds one set, carries out the join, receives the handoff | controller |
-| Fourth strain kind: missing (change's criteria not held upstream; relative to a change) | connections |
-| Run ledger MVP includes pruning of closed runs | docs/backlog.md C11 |
-| Only workflows the run's criteria strain get intent and a Request. A workflow reached only through a changed input hands its controller a reference to that input, with no re-distillation. Strain does not carry intent; the provenance marker names the run, whose record holds the intent for non-spec inputs (user-directed) | workflow, canonical-execution, controller |
+For workflow X spanning A, B, C, D, with the change landing in C (the **source**):
 
-## Model revision: distillation moves into each workflow (2026-09-13, later)
+1. **Lift and look up.** Every workflow whose span includes the source. Upstream candidates
+   own or output it; downstream candidates read it.
+2. **Distill, per workflow.** Each candidate reads the change within its own span and states
+   what it is for, not whether it is right. A workflow that finds nothing abstains. **Only a
+   change is distilled, never an intent** (translation loss compounds otherwise).
+3. **Ask the controllers above**, nearest first (B, then A). Each controller derives the
+   criteria the root intent implies for its own set and answers holds, affected, or too
+   coarse. Controllers above the source never see the change.
+4. **Route what X cannot write.** An affected input is routed to **every** workflow that owns
+   or outputs it, carrying the root intent unchanged and the affected set's criteria. Each
+   reads them within its span, then asks upward or abstains.
+5. **Replay from the highest affected set.** Each controller on the way down writes to meet
+   the criteria arriving from above.
+6. **Reconcile at the source.** C's controller joins the change with the criteria arriving
+   from above (and the intent), and reports kept, changed, added, and any criteria it had to
+   derive itself. The report is the comparison; the leash floor applies. At an output source,
+   the emission stays and a superseding emission is added.
+7. **Continue and propagate.** X continues to D. Every write is a change picked up within
+   the same run under the root intent; it never starts a new run.
+8. **Run ledger.** Pending jobs and their waits form a graph with a ready frontier (SDD
+   mission-graph shape). The ledger **collects** contributions per set, each with provenance,
+   and hands them to the controller together; it never merges. A write is ready when no
+   pending job can still contribute. The source is settled by definition. A job runs against
+   the criteria version current when it starts. Waiting on upstream is strain policy (owned
+   writes proceed, output writes wait). The ledger never makes a run correct.
 
-Agreed after the row above, and supersedes parts of it. Central distillation judged each
-workflow's shape from outside that workflow's context. Two defects came from that: a set
-too coarse to hold a criterion ended the walk as though it held it, and a set below the
-change inside the same workflow was never checked.
+Downstream candidates read the change itself and run from the source downward; they do not
+reconcile it.
 
-The run, for workflow X spanning A, B, C, D with the change landing in C (the source):
+## Decisions (all committed)
 
-1. **Lookup.** Every workflow whose span includes a changed set. Upstream candidates own
-   or output it; downstream candidates read it.
-2. **Distil, per workflow.** Each candidate reads the change within its own span and
-   states what it is for, not whether it is right (rightness stays with reconciliation and
-   the leash). A workflow that finds nothing in its context abstains.
-3. **Ask the controllers above.** X hands the intent to the controllers of B, then A,
-   nearest first. Each derives the criteria the intent implies for its own set and answers
-   holds, affected, or too coarse (pass through). The controller judges level, since it
-   knows its set.
-4. **Replay from the highest affected set.** If B is affected and A holds, X replays from
-   B. An affected set X cannot write (an input) is routed to its owners, whose job begins
-   by asking its own sets above.
-5. **Reconcile at the source.** C's controller joins the change that landed with the
-   criteria arriving from B, and reports what it kept, changed, and added. That report is
-   the comparison; the leash floor applies to it. Then X continues to D.
-6. **Propagate.** B's write is a change; workflow Y spanning B picks it up under the run's
-   intent through the provenance marker, never as a new intent.
-7. **Run ledger.** Pending jobs (workflow, start set) and waits (a job whose input has a
-   pending writer) form a graph with a ready frontier, like SDD's mission graph. It
-   schedules to reduce rework and must never be what makes a run correct: confluence is
-   claimed over criteria regardless of order. Waiting on upstream is strain policy (owned
-   writes proceed, output writes wait), not a selection rule.
-
-Rules found by running the component-library and fiction examples:
-
-| Rule | Found by | Cost to undo |
+| Decision | Home | Cost to undo |
 | --- | --- | --- |
-| Expression stays with the source: controllers above the source get intent only; only a workflow that reads the source set as an input sees the change itself | Component library A: otherwise the props circle code to docs to code | High |
-| The source set is settled by definition in the ledger: a job reading it does not wait on reconciliation jobs at it | Fiction A: reverse outlining and drafting deadlock otherwise | High |
-| Direction between revisable sets follows level: a set describing another at the same level reads its expression; a set above it is reached through intent | API docs versus spec | High; rests on the open levels question |
-| Contracts live at outputs, not on edges between revisable sets. Both directions may be declared on a revisable edge, and then neither side guards the other | Component library: the API contract guard never worked | High |
+| Loop has one entry: a change. Anything else is a criterion (including time) a controller tests | canonical-execution | |
+| Cycles terminate by four rules; criteria versioned and frozen per run (user-authored) | canonical-execution | |
+| Confluence claimed over criteria; join is union of criteria (user-authored) | confluence, join | |
+| Six workflow parameters: span, roles, shape, discharge, strain policy, leash | workflow | |
+| Three roles: input (read), owned (read + revise), output (emitted, supersede only) | workflow | |
+| Candidates by lookup: upstream (own/output the source), downstream (read it) | workflow | |
+| Leash: owned writes proceed when criteria pass; output writes need approval; architect/oracle go to a person; confidence only tightens | workflow | |
+| Controller holds one set and does the join; workflow owns sets and works between them | controller | |
+| Handoff is three calls: ask, write, reconcile | controller | High |
+| Fourth strain kind: missing, found when a controller above the source derives a criterion its set lacks | connections | |
+| Distillation per workflow, within its span; what the change is for, not whether it is right; abstention allowed | canonical-execution | High |
+| Only a change is distilled; routed jobs carry the root intent unchanged (user-directed) | canonical-execution | High |
+| Controllers judge level for their own set (holds / affected / too coarse) | canonical-execution | |
+| Expression stays with the source: controllers above it get intent only | canonical-execution | High |
+| Replay from the highest affected set | workflow | Low |
+| Reconciliation at the source replaces independent replay plus comparison | canonical-execution | High |
+| Affected inputs routed to every owner; no tie-break | workflow | Low |
+| Run ledger collects, never merges; provenance on each contribution; source settled by definition; never decides correctness | canonical-execution | High |
+| Waiting on upstream is strain policy, not a selection rule | canonical-execution, workflow | Low |
+| Direction between revisable sets follows level (same level reads expression; higher is reached through intent) | workflow | High; rests on the levels question |
+| Contracts live at outputs, not on edges between revisable sets | workflow | High |
+| Run ledger MVP: termination record, pruning of closed runs, each run's intents, pending jobs and waits | docs/backlog.md C11 | |
 
-Consequences recorded: the component-library example's claim that a wider reading becomes a
-conflict was false under the old model too (docs update owns the page). The example flips
-to an API reference workflow (reads `{code, test}`, owns `{API docs}`) and brings the
-published package in as an output, where a breaking-change convention and output approval
-are the guard. Fiction A no longer derives a second chapter 14.
+Superseded this session, and recorded in `docs/backlog.md` under *Settled — do not
+re-derive*: central distillation reading backward along upstream candidates; replay from the
+declared start; per-workflow translation of intent into a Request; "a workflow never reads a
+change in a set it owns"; an API contract on a revisable edge as the break guard; the
+tie-break that sent a routed job to one owner. "Request" survives only as the name for what a
+workflow hands a controller.
 
-Reversed decisions: central distillation along upstream candidates; replay starts at the
-declared start; a workflow never reads a change in a set it owns (reconciliation at the
-source reads it, against criteria authored above it without the expression); translation of
-intent into a per-workflow Request.
-
-New open questions: a workflow that wrongly abstains goes unnoticed; a wide reading of intent
-is caught only by a controller convention or an output; how levels are identified is now
-load-bearing for direction.
-
-Written into the pages in `c806598`. All five examples re-graded with unchanged statuses.
-Gaps the re-grade found, and how each landed:
-
-- Every set above the source too coarse (fiction B): the source's controller derives those
-  criteria at reconciliation, so they are not independent of the change. Stated as a limit
-  of "expression stays with the source"; reconcile handoff now carries the intent.
-- Reconciling an output source (trading): kept as landed, plus a superseding emission.
-- The time bound covers distillation; whether it binds what controllers above read is open.
-- A waiting job runs against the criteria version current when it starts.
-- Routing an affected input picked one owner by intent, which could skip the owner that
-  reads evidence (marketing B). Now routed to every owner; the ledger collects contributions
-  per set with provenance and never merges; the controller joins.
-- Routed jobs carry the root intent unchanged plus the affected set's criteria. Only a change
-  is distilled, never an intent, to avoid compounding translation loss (user: the "never
-  distilled into a new intent" rule exists for this). Cost: a controller far above the
-  source abstracts the root intent itself; expected fine because workflows are short.
+How the session got there, in order: downstream workflows should not re-distill a settled
+input (user); selection's step 3 missed coarse sets and sets below the change (user); each
+workflow finds intent in its own context (user); controllers answer per set and the workflow
+replays from the highest affected set, with an orchestrator (user); the two rules from
+running the examples; flip the component library to API reference (user); route to every
+owner (user); only a change is distilled (user).
 
 ## Examples (test cases)
 
-Five examples in `apps/web/src/content/docs/examples/`, re-graded against the three roles
-and the wait rule. The status table lives in `examples/index.md`; at handoff it read:
+Five examples in `apps/web/src/content/docs/examples/`, re-graded under the run above. The
+status table lives in `examples/index.md`; statuses did not change:
 
-| Example | Status |
-| --- | --- |
-| Bug fixed directly in code | A Holds, B Holds |
-| Bug fixed in a component library | A Holds, B Holds |
-| Twist written mid-draft | A Holds, B Unresolved (coarse input; coupling inside a set) |
-| Trade placed before its thesis | A Holds, B Unresolved (time bound form; human hindsight), C Holds |
-| Ad rewritten mid-campaign | A Holds, B Unresolved (scope; unread evidence) |
+| Example | Status | Notes from the re-grade |
+| --- | --- | --- |
+| Bug fixed directly in code | A Holds, B Holds | Replay starts at `{spec}`; reconciliation keeps round-up and adds the empty-list case |
+| Bug fixed in a component library | A Holds, B Holds | Now API reference plus a release output; the break reaches the maintainer at release; rejecting it converges with B |
+| Twist written mid-draft | A Holds, B Unresolved | A: no second chapter 14, outline written once. B: criteria with no home above the source; coupling inside a set |
+| Trade placed before its thesis | A Holds, B Unresolved, C Holds | B: time bound form; bound does not cover controllers; human hindsight |
+| Ad rewritten mid-campaign | A Holds, B Unresolved | B: scope; `{campaign results}` unread unless a workflow spans it |
 
 Rule for new examples: write the expected run from what the system's people want before
 reading the model pages, and prefer cases the model should struggle with.
@@ -133,17 +117,18 @@ reading the model pages, and prefer cases the model should struggle with.
   specification, split where one could be declined without the other. Write an example (a
   commit mixing a fix and a refactor) before writing the model.
 - **Workflows as declared linear paths**, branches as separate workflows. No example has a
-  chain long enough to test it; write one first.
+  chain long enough to test it, and a long chain is also what would test root-intent
+  abstraction at distance; write one first.
 - **Explicit vs embedded specifications** (spec.md + suite vs PRD prose or a mockup). Name
   it on the specification page.
-- **The comparison's two seats**: accepting the intent belongs to the source owner, the
-  reconciliation to the controller where the change landed. Step 7 and "Reading the
-  comparison" still name no owner.
+- **Accepting the intent**: reconciliation now belongs to the source's controller, but who
+  accepts the intent itself (the source owner, via the leash) is still unnamed.
 
 ## Corpus drift to fix
 
 - `relationship-to-sdd.md:14` says peers, line 18 says "under SDD";
-  `canonical-execution.md` says "SDD's next revision". The root AGENTS.md says peer.
+  `canonical-execution.md` ("Reading the comparison") says "SDD's next revision". The root
+  AGENTS.md says peer.
 - `lattice.mdx`: truss image and "whole repository settling" (lines 8-10), bold
   downhill/uphill line (25), totality (29).
 - Splash page `index.mdx`: "Why a layer under SDD" section is wrong; the user has not yet
@@ -158,26 +143,33 @@ reading the model pages, and prefer cases the model should struggle with.
 
 ## Open questions not yet on open-questions.md
 
-- Where the backward read ends when the top specification holds nothing (intent above the
-  top has no artifact).
-- Missing strain against an input too coarse to hold the criterion (fiction B; waits on
-  the levels question).
-- How fast strain across units of change must clear (trading).
+Some of these appear in page status lines but have no section of their own.
+
+- Criteria with no home above the source (fiction B): the source's controller derives them
+  and has seen the change. The report names them; nothing makes them independent.
+- Whether the time bound binds what the controllers above read, not only distillation
+  (trading B).
 - Hindsight a person brings into distillation, which no time bound covers (trading B).
+- How fast strain across units of change must clear, and how long obligation on an output
+  may be carried before a superseding emission (trading A and C). Belongs to strain policy.
+- Evidence no workflow spans (marketing `{campaign results}`): routing to every owner helps
+  only if some declared workflow reads it.
 - Stability of splitting a change into several intents; stability cost of embedded
-  specifications along the backward read.
-- How long obligation on an output may be carried before a superseding emission (trading A
-  and C). Belongs to strain policy, and nothing sets it yet.
-- Evidence no workflow reads (marketing `{campaign results}`): selection step 6 only
-  catches strained sets, not unread ones. Also, walks stop at the first contradicting set,
-  so evidence never reaches marketing B's distillation.
+  specifications.
 - The default leash lets an agent make a large owned rewrite (a whole ending) that meets
   the criteria without approval. Whether the architect lens catches it is unstated.
+- A wide reading of intent (the component owns the page count) is caught only by a
+  controller convention or an output.
+- Provenance marker form, and whether a contribution's "read the source's expression" flag
+  is enough for the report to name shaped criteria.
 
 ## Working agreements observed
 
 - Design is argued, not presented. Concede the specific step, defend what holds, mark what
   is costly to undo.
 - User explanations in chat are context, not text to paste into pages.
+- Test a proposal against examples before rewriting pages; record the rules the run forced.
+- When examples are re-graded in parallel, their reports surface model-page gaps; fix the
+  model page, then re-read the example text written against the older wording.
 - Commit each unit as soon as it builds and its anchors resolve. The anchor crawl must
   check `#fragment` targets, not only page paths.
