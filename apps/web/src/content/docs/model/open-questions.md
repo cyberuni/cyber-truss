@@ -179,8 +179,8 @@ A write that removes or reverses part of a set's
 needs the Council's approval by default. That catches erosion inside one set: an exception
 that narrows a rule is a criterion that stops covering cases it covered.
 
-It does not catch erosion that lives in how two sets combine. Suppose a
-hospital policy lets each
+It does not catch erosion that lives in how two sets combine. In the
+[insulin example](/cyber-truss/examples/insulin-double-check/), a hospital policy lets each
 unit name the steps that need a second nurse, and a unit names fewer. The policy's criteria
 still hold, because the delegation allows it. The unit's protocol only adds. Every
 controller answers correctly for its own set, and nobody is asked.

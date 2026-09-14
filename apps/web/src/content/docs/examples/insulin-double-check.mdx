@@ -1,0 +1,341 @@
+---
+title: Insulin double check narrowed
+description: An ICU drops the second-nurse check for most insulin rate changes, without contradicting the hospital policy. Does anyone who owns that policy get asked?
+sidebar:
+  order: 6
+---
+
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+A hospital rule says a dangerous drug needs two nurses to check it. A unit keeps the rule on
+paper and removes most of the moments it applies to. No text is contradicted, and the rule
+now covers a tenth of what it did.
+
+## The system
+
+An adult intensive care unit (ICU) runs IV insulin infusions. Insulin is a high-alert
+medication: an error causes severe harm quickly.
+
+| Artifact-set | Holds |
+| --- | --- |
+| `{accreditation standard}` | The external standard. The hospital must identify high-alert medications and define processes that manage their risk. It does not say which process. |
+| `{hospital policy}` | The medication management policy, kept by the Pharmacy and Therapeutics (P&T) committee |
+| `{ICU protocol}` | The insulin infusion protocol: the titration table and the checks at each step |
+| `{order set}` | The electronic order set and task build. It decides when the bedside nurse sees a second-nurse co-sign prompt. Before the change it prompts at every rate change. |
+
+Connections:
+
+- `{accreditation standard}` to `{hospital policy}`
+- `{hospital policy}` to `{ICU protocol}`
+- `{ICU protocol}` to `{order set}`
+
+<ConnectionGraph
+	label="Four artifact-sets in a chain. {accreditation standard} connects to {hospital policy}, which connects to {ICU protocol}, which connects to {order set}."
+	nodes={[
+		{ id: "std", label: "{accreditation standard}", x: 0, y: 60 },
+		{ id: "policy", label: "{hospital policy}", x: 240, y: 60 },
+		{ id: "protocol", label: "{ICU protocol}", x: 480, y: 60 },
+		{ id: "orders", label: "{order set}", x: 700, y: 60 },
+	]}
+	edges={[["std", "policy"], ["policy", "protocol"], ["protocol", "orders"]]}
+/>
+
+The people behind the sets differ. P&T and its medication safety officer keep the policy. The
+critical care practice committee, chaired by the ICU nurse manager, keeps the protocol. A
+nursing informatics nurse builds the order set. An accreditation coordinator answers to
+surveyors, who compare bedside practice with the hospital's own policy. The chief nursing
+officer holds nursing practice across units.
+
+These are the hospital's [Council](/cyber-truss/model/workflow/#leash): the people who hold
+its positions. A stop reaches the position its lens names. Which of these positions that is
+for a change in one unit is
+[not settled](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field).
+
+## Workflows
+
+| Workflow | Input | Owned | Output | Shape |
+| --- | --- | --- | --- | --- |
+| Policy deployment | `{accreditation standard}` | `{hospital policy}`, `{ICU protocol}`, `{order set}` | none | chain |
+| Unit protocol maintenance | `{hospital policy}` | `{ICU protocol}`, `{order set}` | none | chain |
+
+Policy deployment carries a policy change down to the bedside. Unit protocol maintenance lets
+the committee revise its protocol and build within the policy. Every set is revisable, so
+every write is owned.
+
+Both keep the default [leash](/cyber-truss/model/workflow/#leash) on every set. A write that
+removes or reverses part of a set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+stops for the Council. No set here loosens it. Each set holds a check that prevents harm to a
+patient, so a stop before a check is removed is not ceremony. Removing a check is also the
+change the hospital most wants a person to own.
+
+## The change
+
+Nights are short-staffed. The protocol titrates insulin hourly against a glucose reading, so
+each drip pulls a second nurse away every hour. The ICU nurse manager files a build ticket.
+The informatics nurse removes the co-sign prompt for a rate change that matches the
+titration table while the pump's drug library limits are active. The prompt stays at the
+start of an infusion, at a bag change, and at any rate off the table. The build goes live.
+Neither the protocol nor the policy text is touched.
+
+About nine in ten insulin rate events no longer get a second check.
+
+### What the hospital would want
+
+This was written before the model pages were read.
+
+- The bedside nurses want the relief. Safety bodies argue that blanket double checks are weak
+  and should be targeted, so the change may be right.
+- P&T and the medication safety officer want to be asked. The policy is theirs, and the change
+  removes the check from the most frequent insulin event. They would likely accept it with
+  conditions: pump limits enforced, glucose checks on time, an audit.
+- The accreditation coordinator wants to know, because a surveyor will compare practice with
+  the policy. The standard itself is still met by a documented, targeted process.
+- The informatics nurse does not want to be the one who decided.
+
+The owner of the rule that loses coverage should accept the change, whether or not any sentence
+of that rule is contradicted.
+
+## Variant A: the protocol names every rate change
+
+The policy says: *IV insulin is a high-alert medication. Its administration requires an
+independent double check by two licensed nurses.* It does not say whether a rate change is an
+administration. The protocol says: *double check at the start, at every rate change, and at
+each bag change.*
+
+### Expected run
+
+1. **Lift.** The change touches `{order set}`, which is the source.
+2. **Find candidates.** Both workflows own `{order set}`, so both are
+   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates). No
+   workflow reads it.
+3. **Distill.** Each workflow
+   [reads the change within its span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
+   Both state one intent: *a rate change made exactly per the titration table, with pump
+   limits active, needs no second nurse.*
+4. **Ask the controllers above**, nearest first.
+   - Policy deployment asks the `{ICU protocol}` controller. The intent implies that an
+     on-table rate change has no co-sign, that an off-table one keeps it, and that the
+     exemption needs pump limits active. The protocol states *every rate change*, so it does
+     not hold them. It is **affected**.
+   - Policy deployment asks the `{hospital policy}` controller. The intent implies a
+     criterion about rate changes, and the policy states none. The controller answers
+     **affected**. This turns on one undefined word. A controller that reads *administration*
+     to exclude a rate change finds nothing at stake and answers **holds**. The model lists
+     that grain as
+     [open](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
+   - Policy deployment asks the `{accreditation standard}` controller. A documented,
+     targeted process meets it, so it **holds**. Asking stops. The highest affected set is
+     `{hospital policy}`.
+   - Unit protocol maintenance asks the same controllers and gets the same answers. The
+     `{hospital policy}` set is its input, so the job is
+     [routed](/cyber-truss/model/workflow/#how-workflows-are-selected) to its only owner,
+     policy deployment, carrying the root intent unchanged. Policy deployment already holds
+     that job.
+5. **Replay from the highest affected set.**
+   - The `{hospital policy}` controller writes: *a rate change made per a unit protocol's
+     titration table, with pump limits active, continues a verified administration and needs
+     no second check.* The criteria pass, because they were derived from the intent. The
+     controller then compares the write with the policy's standing specification. The use
+     case of a nurse giving a high-alert drug covers every administration, and the write takes
+     titration out of it. The write **removes** part of the standing specification, so the run
+     stops for the Council.
+   - The `{ICU protocol}` controller writes the exemption. *Every rate change* becomes three
+     steps. That removes a stated criterion, and the run stops for the Council again.
+6. **Reconcile at the source.** The `{order set}` controller keeps the removed prompt. The
+   criteria require pump limits, so it adds a rule that restores the prompt when the pump is
+   not linked to the order. The result removes the prompt at every rate change that the
+   build's standing specification held, so reconciliation reports a contradiction and the
+   run stops for the Council. The comparison is a builder outcome.
+7. **Propagate.** Nothing else reads these sets in this declaration. In the hospital, every
+   unit's protocol reads `{hospital policy}`, and the new definition lets any unit with a
+   titration table drop the check at its next revision.
+
+### Settled state
+
+If the Council approves each stop:
+
+- `{accreditation standard}` is unchanged.
+- `{hospital policy}` defines on-table titration as a continuation of a checked
+  administration.
+- `{ICU protocol}` checks at the start, at a bag change, and at an off-table rate.
+- `{order set}` matches the protocol and restores the prompt when the pump is not linked.
+- Each approval is recorded as a decision.
+
+If the Council declines at the policy, the run stops there and nothing below it is written.
+
+### Status: Unresolved
+
+The leash now stops the run three times, and nothing is written silently. The stop at the
+protocol and the stop at the order set fire under any reading, because each set states a
+check the change removes.
+
+Whether P&T is asked turns on two things the model leaves open.
+
+- **The grain of *administration*.** If the policy controller reads a rate change as an
+  administration, the policy is affected, the write narrows a stated criterion, and the stop
+  at the policy is the one the hospital wants. If it reads a rate change as outside
+  administration, the policy holds, is never written, and the run reduces to variant B. The
+  model names this very word as its open question on
+  [grain](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases). A
+  policy whose use cases had named the titrating nurse would have settled it when written.
+- **Which position a stop reaches.** The stop at the protocol reaches whoever holds the unit's
+  protocol, which is the committee chaired by the manager who filed the ticket. The stop at
+  the policy should reach P&T. The model says a stop reaches the position its lens names, and
+  lists how a Council is seated for a field
+  [as open](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field). If both
+  stops reach the ICU committee, the hospital's want is not met.
+
+## Variant B: the policy lets units name the steps
+
+The policy says: *IV insulin requires an independent double check by two licensed nurses. A
+unit protocol names the steps at which the check applies.* The protocol names no steps. It
+says *double checks as required by hospital policy*, and holds the titration table.
+
+This is the exception clause the hospital wrote so units could target their checks. The
+change uses it to remove most of them.
+
+### Expected run
+
+1. **Lift.** The source is `{order set}`.
+2. **Find candidates.** The same two upstream candidates as variant A.
+3. **Distill.** The same intent as variant A.
+4. **Ask the controllers above.**
+   - Policy deployment asks the `{ICU protocol}` controller. The protocol names no steps, so
+     it does not hold the start, bag-change, and off-table criteria. It is **affected**.
+   - Policy deployment asks the `{hospital policy}` controller. The policy lets a unit name
+     its steps, and the intent names three. The policy **holds**. Asking stops. The highest
+     affected set is `{ICU protocol}`.
+   - Unit protocol maintenance asks the same two controllers and gets the same answers.
+     Nothing is routed, because its input holds.
+5. **Replay from the highest affected set.** The `{ICU protocol}` controller writes the three
+   steps and the pump condition. The criteria pass. The protocol stated no steps before the
+   run, so the write only adds, and it proceeds.
+6. **Reconcile at the source.** As in variant A, the `{order set}` controller keeps the change
+   and adds the pump rule. The build's standing specification prompted at every rate change,
+   and the result does not, so reconciliation reports a contradiction and the run stops for
+   the Council. The comparison is a builder outcome.
+7. **Propagate.** Nothing reads the protocol or the order set.
+
+### Settled state
+
+If the Council approves the stop at the order set:
+
+- `{accreditation standard}` and `{hospital policy}` are unchanged.
+- `{ICU protocol}` names three steps, and on-table titration is not one of them.
+- `{order set}` matches the protocol.
+- The approval is recorded as a decision against the build.
+
+### Status: Gap
+
+The leash catches what one set shows. The order set loses a prompt, and its reconciliation
+stops. That stop is about a build. It reaches whoever holds the unit's build and protocol,
+and they are the people who asked for the change. Nothing in the run reaches P&T.
+
+Every answer is correct by the letter of its set. The policy holds, because it delegates the
+steps. The protocol only adds, because it named none. The policy is never written, so no leash
+on `{hospital policy}` can fire. The rule the medication safety officer owns keeps its text
+and loses nine tenths of its coverage. This is the erosion across sets the model admits it
+does not catch:
+[who is asked when a change erodes a rule across sets](/cyber-truss/model/open-questions/#who-is-asked-when-a-change-erodes-a-rule-across-sets).
+
+The model admits the same shape for decisions. In
+[a reversal renamed as a new criterion](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion)
+an exception broad enough to hollow a decision out "is caught only if the controller judges
+balance as well as consistency." Here a balance judgement does not close it.
+
+- **The policy controller cannot see the coverage.** How much of the check the three steps
+  remove depends on titrating hourly, which lives in the protocol's table, and on how many
+  rate events a drip has, which lives in the order set. A controller
+  [sees only the inside of its set](/cyber-truss/model/controller/#the-handoff), and a
+  workflow sends it intent and references to criteria, never the change.
+- **The protocol controller has the facts and no criterion at stake.** It sees the hourly
+  table, but its own standing specification named no steps. The eroded criterion is not its
+  own.
+- **The standing specification that is eroded is not the one written.** The leash compares a
+  write with the standing specification of the set it writes. The policy's criterion loses
+  ground through a write to the protocol.
+
+## Variant C: just this once
+
+The policy and protocol are as in variant B, and the protocol now names every rate change as
+a step. A respiratory surge begins. The ICU nurse manager asks for a skip button on the
+co-sign prompt, on nights only, for four weeks. A nurse may proceed alone if no second nurse
+is free within ten minutes, and must record *second check unavailable*. The informatics nurse
+builds it with an end date.
+
+### Expected run
+
+1. **Lift.** The source is `{order set}`.
+2. **Find candidates.** The same two upstream candidates.
+3. **Distill.** Both state: *for four weeks, on nights, an insulin step may proceed without a
+   second nurse when none is available within ten minutes, and the gap is recorded.*
+4. **Ask the controllers above.**
+   - The `{ICU protocol}` controller finds a step it names now proceeding without a check. It
+     is **affected**.
+   - The `{hospital policy}` controller finds that the policy lets a unit name steps, not
+     skip a named one. It is **affected**.
+   - The `{accreditation standard}` controller answers **holds** for a documented,
+     time-limited process. The highest affected set is `{hospital policy}`.
+5. **Replay from the highest affected set.**
+   - The `{hospital policy}` controller writes a contingency clause. The clause lets a step
+     proceed without the check the policy requires, so it reverses a stated criterion for a
+     period. The run stops for the Council.
+   - The `{ICU protocol}` controller writes the contingency with the end date. A named step may
+     now proceed unchecked, which removes a stated criterion. The run stops for the Council.
+6. **Reconcile at the source.** The order set keeps the skip button and its record. The
+   build's standing specification required the co-sign at every named step, so
+   reconciliation reports a contradiction and the run stops for the Council.
+7. **Expiry.** The end date is a
+   [criterion that depends on time](/cyber-truss/model/canonical-execution/#the-loop-starts-only-from-a-change).
+   A scheduled controller removes the button when it passes, and that removal is a change
+   like any other. The contingency with its end date is now part of the standing
+   specification, and removing the button meets it, so the write only restores and proceeds.
+
+### Settled state
+
+- `{hospital policy}` gains a contingency clause with an end date if the Council approves it.
+  If the Council declines, the run stops there and nothing below it is written.
+- `{ICU protocol}` names every rate change as a step, with a four-week night contingency.
+- `{order set}` has the skip button until the end date, then does not.
+
+### Status: Holds
+
+The hospital would treat this as a policy variance, approved by the medication safety
+officer or the chief nursing officer and reviewed when it ends. The run stops before any of
+the three sets loses its check. The stops at the protocol and the order set fire under any
+reading of the policy, so no reading lets the variance pass without a person. The policy is
+written in this variant, so the stop the hospital wants is on the path. The expiry holds: the
+model already handles a criterion that goes false with time.
+
+One dependency remains. Whether the stop at the policy reaches the medication safety officer
+or the ICU committee is the open question of
+[how a Council is seated for a field](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field).
+
+## What it tests
+
+- The [leash](/cyber-truss/model/workflow/#leash) default against the
+  [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
+  It stops every write and reconciliation that removes a stated check. Variant C shows it
+  catching a time-boxed reversal under any reading.
+- [Erosion across sets](/cyber-truss/model/open-questions/#who-is-asked-when-a-change-erodes-a-rule-across-sets).
+  In variant B the policy loses coverage through a write to the protocol, and no leash on the
+  policy can fire because the policy is never written.
+- The open question on grain. In variant A whether the policy is affected at all turns on
+  whether *administration* includes a rate change.
+- [How a Council is seated](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field).
+  The body nearest the change holds the protocol and the build. The body that owns the eroded
+  rule is P&T.
+- [Controllers answer for their own sets](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets).
+  In variant B each answer is right for its set, and the run is still wrong for the hospital.
+- [A reversal renamed as a new criterion](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion).
+  The erosion the model admits for decisions also passes the ask. Judging balance needs
+  coverage facts that sit in sets below the asked controller.
+- [Expression stays with the source](/cyber-truss/model/canonical-execution/#expression-stays-with-the-source).
+  The controller that owns the eroded rule gets the intent, not the coverage facts.
+- A chain with three sets above the source, one of them an input that no workflow in the
+  team owns.

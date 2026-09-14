@@ -56,6 +56,7 @@ An example can have variants, and each variant gets its own status.
 | [Twist written mid-draft](/cyber-truss/examples/fiction-plot-twist/) | fiction | A: Holds. B: Unresolved |
 | [Trade placed before its thesis](/cyber-truss/examples/stock-trade-without-thesis/) | trading | A: Holds. B: Unresolved. C: Holds |
 | [Ad rewritten mid-campaign](/cyber-truss/examples/marketing-campaign-headline/) | marketing | A: Holds. B: Unresolved |
+| [Insulin double check narrowed](/cyber-truss/examples/insulin-double-check/) | hospital medication safety | A: Unresolved. B: Gap. C: Holds |
 
 ## Adding an example
 
