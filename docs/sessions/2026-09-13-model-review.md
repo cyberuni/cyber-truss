@@ -15,7 +15,7 @@ change of direction. Resolved at the leash (`2755596`, `28fa2d9`):
 
 - A set's criteria are authored through use cases (and a decision graph where the set
   describes behaviour). As they stood before the run they are the **standing specification**.
-- A write that removes or reverses part of it needs the **Council**'s approval by default,
+- A write that removes or reverses part of it needs an **approver**'s approval by default,
   checked at every write to the set. Confidence only tightens; a team may loosen per set.
   Replacement falls under the same default.
 - Workflows send intent and references to upstream criteria, never criteria or use cases.
@@ -33,7 +33,7 @@ name on `open-questions.md`.
 
 Also open from this round: erosion across sets; whether an implementation set has use cases
 of its own (component library). Deferred past MVP (user-directed): approvers per workflow.
-Any Council member approves any stop for now; see `docs/backlog.md` §D.
+Any approver approves any stop for now; the term Council was dropped; see `docs/backlog.md` §D.
 
 ## Positioning (settled)
 

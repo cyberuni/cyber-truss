@@ -116,7 +116,7 @@ is not re-litigated.
   relabelled as a rewrite to qualify. Every example gamed it.
 - **Use-case actors, or a person declared per set, as who approves** (rejected 2026-09-14).
   Actors picked people who do not own the rule; per-set owners added a declaration the
-  workflows already make. Approval comes from the Council, by lens.
+  workflows already make. Approval comes from an approver, any approver for now.
 - **Sending upstream use cases and decision graphs with the intent** (rejected 2026-09-14).
   No example needed them: the contradiction check reads the controller's own set, and other
   sets are referenced by criteria. SDD's implementation producer reads the suite, not the
@@ -309,7 +309,7 @@ Depends on the open question of
 ## D. Parked design notes
 
 - **Approvers per workflow** (deferred 2026-09-14, not MVP). Each workflow can have its own
-  approver, which is permission management. For now any Council member approves a stop in any
+  approver, which is permission management. For now any approver approves a stop in any
   workflow. Cases to design against when it is picked up: an intensive care practice committee
   that keeps a protocol while the hospital's medication safety committee owns the rule it
   implements (insulin example); a manufacturer and a regulator, neither of which may approve

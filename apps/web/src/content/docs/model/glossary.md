@@ -13,6 +13,12 @@ and points at the definitions.
 
 ## Terms
 
+### Approver
+
+A person allowed to approve what the [leash](#leash) stops. Any approver may approve a stop in
+any workflow; approvers per workflow are deferred. SDD calls this role the Council. See
+[Leash](/cyber-truss/model/workflow/#leash).
+
 ### Artifact
 
 One *type* of thing in a repository, never one file. Four vendor plugin manifests are one
@@ -48,12 +54,6 @@ Whatever holds one artifact-set consistent, on a spectrum from agent definition 
 skill, instruction, and governance to deterministic code. A compiler is a controller. It
 works within a set, where a [workflow](#workflow) works between sets. A controller
 **holds** a set; a workflow **owns** one. See [Controller](/cyber-truss/model/controller/).
-
-### Council
-
-The people who approve what the [leash](#leash) stops. Any member may approve a stop in any
-workflow; approvers per workflow are deferred. The term is SDD's. See
-[Leash](/cyber-truss/model/workflow/#leash).
 
 ### Downstream candidate
 
@@ -138,8 +138,8 @@ Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/latti
 
 ### Leash
 
-Which writes an agent may make in a [workflow](#workflow) without the [Council](#council)'s
-approval. Owned writes proceed when criteria pass and nothing in the set's
+Which writes an agent may make in a [workflow](#workflow) without an
+[approver](#approver)'s approval. Owned writes proceed when criteria pass and nothing in the set's
 [standing specification](#standing-specification) is removed or reversed. Output writes,
 writes that contradict the standing specification, and architect or oracle outcomes need
 approval by default. Confidence only tightens it. See

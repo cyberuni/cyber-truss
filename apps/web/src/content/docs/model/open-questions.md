@@ -176,7 +176,7 @@ for settling it before there is more than one controller rather than after.
 
 A write that removes or reverses part of a set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-needs the Council's approval by default. That catches erosion inside one set: an exception
+needs approval by default. That catches erosion inside one set: an exception
 that narrows a rule is a criterion that stops covering cases it covered.
 
 It does not catch erosion that lives in how two sets combine. In the
@@ -192,7 +192,7 @@ and the run reports every step as additive.
 
 The [leash](/cyber-truss/model/workflow/#leash) checks every write against the set's standing
 specification, and an approval at one set changes nothing another set held before the run. So
-a change the Council accepted once stops again at each set that has to follow it. A spec rule
+a change an approver accepted once stops again at each set that has to follow it. A spec rule
 approved at `{spec}` stops again when the mockups redraw the page count. A brand lead who
 settles a conflict at the brief is asked again when the messaging framework is amended to
 match. A thesis closed because its own invalidation criterion requires it stops as though

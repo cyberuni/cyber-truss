@@ -33,6 +33,8 @@ Expressed in this model:
 | Governance targets | oracle / builder / architect bars at each gate; format governances across artifact types |
 | Connection | the spec unit ↔ the implementation unit |
 | Discharge | the implementation gate |
+| Standing specification | the frozen `.feature` suite, authored through use cases and a control-flow graph in `spec.md` |
+| Approver | the Council, who ratifies what a gate escalates |
 
 The vocabulary holds. Two units, a governance table that already exists, one connection,
 and gates that turn out to be **where conformance is evaluated at a connection crossing**.

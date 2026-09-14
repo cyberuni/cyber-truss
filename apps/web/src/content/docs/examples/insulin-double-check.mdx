@@ -50,9 +50,9 @@ nursing informatics nurse builds the order set. An accreditation coordinator ans
 surveyors, who compare bedside practice with the hospital's own policy. The chief nursing
 officer holds nursing practice across units.
 
-These are the hospital's [Council](/cyber-truss/model/workflow/#leash): the people who hold
-its positions. Any of them may approve a stop. Which of them should approve a change in one
-unit is permission management, which the model defers.
+These are the hospital's [approvers](/cyber-truss/model/workflow/#leash). Any of them may
+approve a stop. Which of them should approve a change in one unit is permission management,
+which the model defers.
 
 ## Workflows
 
@@ -68,7 +68,7 @@ every write is owned.
 Both keep the default [leash](/cyber-truss/model/workflow/#leash) on every set. A write that
 removes or reverses part of a set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-stops for the Council. No set here loosens it. Each set holds a check that prevents harm to a
+stops for approval. No set here loosens it. Each set holds a check that prevents harm to a
 patient, so a stop before a check is removed is not ceremony. Removing a check is also the
 change the hospital most wants a person to own.
 
@@ -142,21 +142,21 @@ each bag change.*
      controller then compares the write with the policy's standing specification. The use
      case of a nurse giving a high-alert drug covers every administration, and the write takes
      titration out of it. The write **removes** part of the standing specification, so the run
-     stops for the Council.
+     stops for approval.
    - The `{ICU protocol}` controller writes the exemption. *Every rate change* becomes three
-     steps. That removes a stated criterion, and the run stops for the Council again.
+     steps. That removes a stated criterion, and the run stops for approval again.
 6. **Reconcile at the source.** The `{order set}` controller keeps the removed prompt. The
    criteria require pump limits, so it adds a rule that restores the prompt when the pump is
    not linked to the order. The result removes the prompt at every rate change that the
    build's standing specification held, so reconciliation reports a contradiction and the
-   run stops for the Council. The comparison is a builder outcome.
+   run stops for approval. The comparison is a builder outcome.
 7. **Propagate.** Nothing else reads these sets in this declaration. In the hospital, every
    unit's protocol reads `{hospital policy}`, and the new definition lets any unit with a
    titration table drop the check at its next revision.
 
 ### Settled state
 
-If the Council approves each stop:
+If the approvers approve each stop:
 
 - `{accreditation standard}` is unchanged.
 - `{hospital policy}` defines on-table titration as a continuation of a checked
@@ -165,7 +165,7 @@ If the Council approves each stop:
 - `{order set}` matches the protocol and restores the prompt when the pump is not linked.
 - Each approval is recorded as a decision.
 
-If the Council declines at the policy, the run stops there and nothing below it is written.
+If the approver declines at the policy, the run stops there and nothing below it is written.
 
 ### Status: Unresolved
 
@@ -183,8 +183,9 @@ Whether P&T is asked turns on two things the model leaves open.
   [grain](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases). A
   policy whose use cases had named the titrating nurse would have settled it when written.
 - **Who approves is deferred, not open.** The hospital wants P&T to approve the policy stop,
-  not the ICU committee chaired by the manager who filed the ticket. The model lets any Council
-  member approve, and leaves approvers per workflow to permission management.
+  not the ICU committee chaired by the manager who filed the ticket. The model lets any
+  approver approve any workflow's stop, and leaves who approves which workflow to permission
+  management.
 
 ## Variant B: the policy lets units name the steps
 
@@ -214,12 +215,12 @@ change uses it to remove most of them.
 6. **Reconcile at the source.** As in variant A, the `{order set}` controller keeps the change
    and adds the pump rule. The build's standing specification prompted at every rate change,
    and the result does not, so reconciliation reports a contradiction and the run stops for
-   the Council. The comparison is a builder outcome.
+   approval. The comparison is a builder outcome.
 7. **Propagate.** Nothing reads the protocol or the order set.
 
 ### Settled state
 
-If the Council approves the stop at the order set:
+If the approver approves the stop at the order set:
 
 - `{accreditation standard}` and `{hospital policy}` are unchanged.
 - `{ICU protocol}` names three steps, and on-table titration is not one of them.
@@ -280,12 +281,12 @@ builds it with an end date.
 5. **Replay from the highest affected set.**
    - The `{hospital policy}` controller writes a contingency clause. The clause lets a step
      proceed without the check the policy requires, so it reverses a stated criterion for a
-     period. The run stops for the Council.
+     period. The run stops for approval.
    - The `{ICU protocol}` controller writes the contingency with the end date. A named step may
-     now proceed unchecked, which removes a stated criterion. The run stops for the Council.
+     now proceed unchecked, which removes a stated criterion. The run stops for approval.
 6. **Reconcile at the source.** The order set keeps the skip button and its record. The
    build's standing specification required the co-sign at every named step, so
-   reconciliation reports a contradiction and the run stops for the Council.
+   reconciliation reports a contradiction and the run stops for approval.
 7. **Expiry.** The end date is a
    [criterion that depends on time](/cyber-truss/model/canonical-execution/#the-loop-starts-only-from-a-change).
    A scheduled controller removes the button when it passes, and that removal is a change
@@ -294,8 +295,8 @@ builds it with an end date.
 
 ### Settled state
 
-- `{hospital policy}` gains a contingency clause with an end date if the Council approves it.
-  If the Council declines, the run stops there and nothing below it is written.
+- `{hospital policy}` gains a contingency clause with an end date if the approver approves it.
+  If the approver declines, the run stops there and nothing below it is written.
 - `{ICU protocol}` names every rate change as a step, with a four-week night contingency.
 - `{order set}` has the skip button until the end date, then does not.
 

@@ -71,7 +71,7 @@ design implementation can derive code from the mockups, and it can never change 
 Every set keeps the default [leash](/cyber-truss/model/workflow/#leash). A write that
 removes or reverses part of a set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-stops for the Council. The team does not loosen `{spec}`. Its page-count rule is what the
+stops for approval. The team does not loosen `{spec}`. Its page-count rule is what the
 code, the docs and the mockups are all checked against, and a fix that rewrites it moves all
 three. From inside the set a fix to a wrong rule looks the same as a change nobody wanted,
 so one approval is cheaper than a rule reversed by a misread fix. The team does not loosen
@@ -136,9 +136,9 @@ down, plus one. That rule is the bug.
    The round-up rule
    [replaces](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) *round down,
    plus one*, so the write reverses a criterion of the spec's standing specification. The
-   [leash](/cyber-truss/model/workflow/#leash) stops it for the Council. The stop reaches
-   the position that holds the feature's shape, here the product owner who keeps the PRD and
-   the spec. On a solo project that is the developer who made the fix, which the model
+   [leash](/cyber-truss/model/workflow/#leash) stops it for approval. The approver here is
+   the product owner who keeps the PRD and the spec. On a solo project that is the developer
+   who made the fix, which the model
    accepts. The product owner approves. The approval is a recorded decision under
    [rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest), and it changes
    no criterion. The empty-list case only adds, so it needs nothing of its own.
@@ -156,13 +156,13 @@ down, plus one. That rule is the bug.
    proceeds. Design update's job is now ready and amends the page indicator. The indicator
    drew an empty last page, and design implementation checks the code against that drawing,
    so the drawing is a criterion of `{mockups}`. The write reverses it, and the leash stops
-   it for the Council a second time. The same product owner is asked to accept the same
+   it for approval a second time. The same product owner is asked to accept the same
    change of direction, now as a drawing. The product owner approves. Design implementation
    then reconciles the code against the mockups. The code already meets them, so it keeps
    everything and changes nothing.
 
 The ledger schedules this work. It does not decide the outcome. The spec's write waits on
-the Council, and every job that reads `{spec}` waits with it. Design implementation's
+approval, and every job that reads `{spec}` waits with it. Design implementation's
 reconciliation is an owned write that changes nothing, so
 [strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) lets it proceed
 before the mockups settle, against the criteria the mockups' controller already derived. It
@@ -254,7 +254,7 @@ is overturned.
 The mockups do not decide where the rule lands. If a mockup happens to depict an exact
 multiple, its controller answers that it is affected, design update is routed as in variant
 A, and design update amends the drawing once the spec is amended. That write reverses a
-drawing design implementation checks the code against, so it stops for the Council. There
+drawing design implementation checks the code against, so it stops for approval. There
 the stop is the only one in the run, and it is the one place a stated rule is overturned, so
 it is not ceremony. Either way the rule lands in the spec, because missing strain comes from
 the criteria the spec's controller derives from the intent, not from what a drawing depicts.
@@ -291,12 +291,12 @@ apart.
   fix could break.
 - The [leash](/cyber-truss/model/workflow/#leash) against the
   [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
-  Variant A's spec write reverses a stated rule and stops for the Council. Variant B's only
+  Variant A's spec write reverses a stated rule and stops for approval. Variant B's only
   adds and proceeds. The mockups' write in variant A stops again for a change already
   accepted, which is the gap.
 - [Replacement](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) under the
   leash. The round-up rule removes *round down, plus one* rather than joining it, and the
-  write that makes that replacement is the one the Council approves.
+  write that makes that replacement is the one the product owner approves.
 - The contradiction case. In variant A the code contradicts a rule `{spec}` states, across
   two units of change. Which kind of strain that is
   [remains open](/cyber-truss/model/open-questions/#which-strain-does-an-implementation-that-contradicts-its-specification-leave).

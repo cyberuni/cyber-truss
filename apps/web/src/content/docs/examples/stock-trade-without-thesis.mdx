@@ -90,7 +90,7 @@ All three workflows keep the default
 adds proceeds when the criteria pass. A write that removes or reverses part of a set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
 needs approval. So does emitting an order, because an order cannot be taken back. Approval
-comes from the Council, and on a one-person desk the Council is the trader.
+comes from an approver, and on a one-person desk the approver is the trader.
 
 The desk does not loosen the leash on `{theses}`. A thesis rewritten or dropped after the
 price has moved is the failure a thesis exists to prevent. Every change to what a thesis
@@ -286,10 +286,10 @@ condition the Kessler Semi thesis names. The feed job records the announcement i
    the Kessler Semi thesis, its reason and its invalidation condition, from the
    [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
    of `{theses}`. The theses controller reports the contradiction, and the
-   [leash](/cyber-truss/model/workflow/#leash) stops the write for the Council. The check runs
+   [leash](/cyber-truss/model/workflow/#leash) stops the write for approval. The check runs
    at every write to the set, so it catches this one although the workflow is a downstream
    candidate that asked nothing. The change came from a feed job, so there is no requester to
-   ask. The stop reaches the trader, who holds every position on this desk. The sell order is
+   ask. The stop reaches the trader, the only approver on this desk. The sell order is
    an output and waits for the same person. The trader approves both, and the closure is
    recorded as a decision.
 8. **Propagate.** Once the order fills, semiconductors fall further under 25%, so
@@ -350,7 +350,7 @@ Two things remain outside the settled state.
   and the stop still reaches the trader. It fires even though another standing criterion
   requires the closure. Variant B shows the other side: an angle added beyond the derived
   criteria only adds, so the leash lets it through.
-- The Council on a one-person desk. The trader approves every stop, whoever or whatever made
+- The approver on a one-person desk. The trader approves every stop, whoever or whatever made
   the change.
 - [Criteria over the outcome](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)
   where the earlier state cannot be restored. Variant A settles by a new order rather than

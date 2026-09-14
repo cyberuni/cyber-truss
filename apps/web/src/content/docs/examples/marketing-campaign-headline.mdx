@@ -37,8 +37,8 @@ it is a new launch decision, not a revision of the old one. So `{ads}` is
 `{campaign results}` is written by the ad platform's and the analytics tool's reporting,
 its [controller](/cyber-truss/model/controller/). No workflow writes it.
 
-Two people form the campaign's
-[Council](/cyber-truss/model/workflow/#leash). The brand lead holds positioning: the
+Two people are the campaign's
+[approvers](/cyber-truss/model/workflow/#leash). The brand lead holds positioning: the
 proposition and what the framework allows. The performance marketer holds spend. The model
 lets either approve any stop; the team sends direction to the brand lead and spend to the
 performance marketer.
@@ -96,7 +96,7 @@ and message match makes the ads the specification of the page. Only campaign pla
 Every workflow keeps the default [leash](/cyber-truss/model/workflow/#leash) with one
 loosening, on each set it owns. A write that removes or reverses part of the set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-stops for the Council, unless a decision recorded in the same run already removed that part
+stops for approval, unless a decision recorded in the same run already removed that part
 and lands in the set. Then the write proceeds if it removes nothing more. The set's
 controller checks that against the decision, which it can read because
 [a decision lands in the set it affects](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion).
@@ -180,9 +180,9 @@ touches `{ads}` and `{launches}`.
     and a page variant beside the ones that stand. They proceed when the criteria pass. The
     amended framework is different. Before the run it kept savings out of headlines, and
     the write reverses that for paid social. By the
-    [default](/cyber-truss/model/workflow/#leash) it stops for the Council, and its lens is
-    positioning, so it reaches the brand lead. The brand lead made exactly that call in step
-    7, and the decision is recorded in `{messaging}`. The declared leash lets the write
+    [default](/cyber-truss/model/workflow/#leash) it stops for approval, here from the brand
+    lead. The brand lead made exactly that call in step 7, and the decision is recorded in
+    `{messaging}`. The declared leash lets the write
     proceed, because it removes nothing the decision did not. The brand lead is asked once.
     The reconciliation report is a builder outcome: a kept headline and a filled hole. The
     relaunch is an output, so it goes to the performance marketer for approval. Once live,
@@ -280,8 +280,8 @@ touches `{landing page}`.
    is held as obligation strain on `{landing page}` to `{campaign results}`.
 8. **Leash.** If savings replaces the proposition, every write below the brief reverses
    something that stood before the run: the framework's clarity headlines, the ads' clarity
-   promise, and the page's clarity headline. Each stops for the Council by default, and the
-   lens is positioning. The brand lead's decision removed the clarity proposition and lands
+   promise, and the page's clarity headline. Each stops for approval by default, here from
+   the brand lead. The brand lead's decision removed the clarity proposition and lands
    in each set it affects, so the declared leash lets each write proceed if it removes
    nothing more. The rewritten ads leave every live launch running copy that no longer
    exists, so each needs a superseding launch, and those are outputs that wait for the
@@ -346,7 +346,7 @@ What differs is the intent each run hands the brand lead, and the leash never re
 - The [leash](/cyber-truss/model/workflow/#leash) on spend and on direction. Copy and pages
   that only add proceed on the criteria. A write that reverses what the framework allowed
   stops for the brand lead, and every launch waits for the performance marketer. The
-  [Council](/cyber-truss/model/workflow/#leash) is two people.
+  campaign has two [approvers](/cyber-truss/model/workflow/#leash).
 - A loosened leash that avoids asking one person twice. A write that removes only what a
   recorded decision in the run removed proceeds, because the model does not say whether
   that decision is already the approval.

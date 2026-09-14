@@ -94,9 +94,8 @@ an exported prop is a breaking change, and needs a major version and a migration
 The page has a [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
 of its own. Its use case is a consumer who arrives to learn what to pass the component. The
 prop names, types, and defaults are criteria bound to it. By default the
-[leash](/cyber-truss/model/workflow/#leash) stops any write that removes one, and the
-Council approves it. In this library the Council position that holds the API is the
-maintainer.
+[leash](/cyber-truss/model/workflow/#leash) stops any write that removes one, and an
+approver approves it. In this library the approver who holds the API is the maintainer.
 
 The team keeps the default leash on every set but one. On `{API docs}` it loosens it for one
 kind of write: a change to the prop list that makes the page match the props the code
@@ -156,9 +155,9 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
    - Release reads the code. Its controller finds an exported prop removed, which its
      convention names a breaking change, so the emission needs a major version and a
      migration note. It is an output write, so it waits for approval. The report is
-     *change course*: the fix changed the component's API. The architect lens sends it to
-     the [Council](/cyber-truss/model/workflow/#leash) position that holds the API, the
-     maintainer. This is the only stop in the run.
+     *change course*: the fix changed the component's API. The
+     [approval](/cyber-truss/model/workflow/#leash) comes from the maintainer, the
+     approver who holds the API. This is the only stop in the run.
 7. **Decide.** The maintainer's answer is a
    [recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest).
    - **Rejected.** The decision adds a criterion, *the component accepts `totalPages`*,
@@ -264,7 +263,7 @@ end in different places because the decision changed the intent, and the record 
 
 The status rests on the formula not being a criterion of the page. Had the team bound
 *compute the count as `Math.floor(items.length / pageSize) + 1`* to the consumer's use case,
-the correction would reverse it and stop for the Council. That is the case where a fix to a
+the correction would reverse it and stop for approval. That is the case where a fix to a
 stated rule and a change of direction
 [look the same from inside the set](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join).
 Here the rule is the spec's criterion, and the formula is how the page failed it.

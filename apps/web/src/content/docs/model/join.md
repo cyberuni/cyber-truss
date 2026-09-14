@@ -79,7 +79,7 @@ so the write that makes it contradicts that specification, and the
 [leash](/cyber-truss/model/workflow/#leash) decides whether it needs approval. By default it
 does. A fix to a stated rule and a deliberate change of direction look the same from inside
 the set, and nothing in the run can tell them apart without judging the intent, so the
-default treats both as a change the Council accepts. A team that finds the stop is ceremony
+default treats both as a change an approver accepts. A team that finds the stop is ceremony
 for a set loosens that set's leash.
 
 **Status: Settled** that replacement is distinct from join. **Thesis** that the leash
