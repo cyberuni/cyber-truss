@@ -38,6 +38,62 @@ examples section, and the Workflow and Controller pages. Read this, then
 | Run ledger MVP includes pruning of closed runs | docs/backlog.md C11 |
 | Only workflows the run's criteria strain get intent and a Request. A workflow reached only through a changed input hands its controller a reference to that input, with no re-distillation. Strain does not carry intent; the provenance marker names the run, whose record holds the intent for non-spec inputs (user-directed) | workflow, canonical-execution, controller |
 
+## Model revision: distillation moves into each workflow (2026-09-13, later)
+
+Agreed after the row above, and supersedes parts of it. Central distillation judged each
+workflow's shape from outside that workflow's context. Two defects came from that: a set
+too coarse to hold a criterion ended the walk as though it held it, and a set below the
+change inside the same workflow was never checked.
+
+The run, for workflow X spanning A, B, C, D with the change landing in C (the source):
+
+1. **Lookup.** Every workflow whose span includes a changed set. Upstream candidates own
+   or output it; downstream candidates read it.
+2. **Distil, per workflow.** Each candidate reads the change within its own span and
+   states what it is for, not whether it is right (rightness stays with reconciliation and
+   the leash). A workflow that finds nothing in its context abstains.
+3. **Ask the controllers above.** X hands the intent to the controllers of B, then A,
+   nearest first. Each derives the criteria the intent implies for its own set and answers
+   holds, affected, or too coarse (pass through). The controller judges level, since it
+   knows its set.
+4. **Replay from the highest affected set.** If B is affected and A holds, X replays from
+   B. An affected set X cannot write (an input) is routed to its owners, whose job begins
+   by asking its own sets above.
+5. **Reconcile at the source.** C's controller joins the change that landed with the
+   criteria arriving from B, and reports what it kept, changed, and added. That report is
+   the comparison; the leash floor applies to it. Then X continues to D.
+6. **Propagate.** B's write is a change; workflow Y spanning B picks it up under the run's
+   intent through the provenance marker, never as a new intent.
+7. **Run ledger.** Pending jobs (workflow, start set) and waits (a job whose input has a
+   pending writer) form a graph with a ready frontier, like SDD's mission graph. It
+   schedules to reduce rework and must never be what makes a run correct: confluence is
+   claimed over criteria regardless of order. Waiting on upstream is strain policy (owned
+   writes proceed, output writes wait), not a selection rule.
+
+Rules found by running the component-library and fiction examples:
+
+| Rule | Found by | Cost to undo |
+| --- | --- | --- |
+| Expression stays with the source: controllers above the source get intent only; only a workflow that reads the source set as an input sees the change itself | Component library A: otherwise the props circle code to docs to code | High |
+| The source set is settled by definition in the ledger: a job reading it does not wait on reconciliation jobs at it | Fiction A: reverse outlining and drafting deadlock otherwise | High |
+| Direction between revisable sets follows level: a set describing another at the same level reads its expression; a set above it is reached through intent | API docs versus spec | High; rests on the open levels question |
+| Contracts live at outputs, not on edges between revisable sets. Both directions may be declared on a revisable edge, and then neither side guards the other | Component library: the API contract guard never worked | High |
+
+Consequences recorded: the component-library example's claim that a wider reading becomes a
+conflict was false under the old model too (docs update owns the page). The example flips
+to an API reference workflow (reads `{code, test}`, owns `{API docs}`) and brings the
+published package in as an output, where a breaking-change convention and output approval
+are the guard. Fiction A no longer derives a second chapter 14.
+
+Reversed decisions: central distillation along upstream candidates; replay starts at the
+declared start; a workflow never reads a change in a set it owns (reconciliation at the
+source reads it, against criteria authored above it without the expression); translation of
+intent into a per-workflow Request.
+
+New open questions: a workflow that wrongly abstains goes unnoticed; a wide reading of intent
+is caught only by a controller convention or an output; how levels are identified is now
+load-bearing for direction.
+
 ## Examples (test cases)
 
 Five examples in `apps/web/src/content/docs/examples/`, re-graded against the three roles
