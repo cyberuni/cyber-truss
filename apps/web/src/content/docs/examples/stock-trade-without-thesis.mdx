@@ -85,10 +85,17 @@ order that reaches it. It
 no replay can keep a thesis alive by amending the data it is tested against. A trade does
 not change the policy, so rebalance and thesis review read `{mandate}` and never write it.
 
-Both trading workflows keep the default
-[leash](/cyber-truss/model/workflow/#leash). Writes to `{theses}` and `{portfolio}` proceed
-when the criteria pass. Emitting an order needs a person's approval, because an order
-cannot be taken back.
+All three workflows keep the default
+[leash](/cyber-truss/model/workflow/#leash). A write to `{theses}` or `{portfolio}` that only
+adds proceeds when the criteria pass. A write that removes or reverses part of a set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+needs approval. So does emitting an order, because an order cannot be taken back. Approval
+comes from the Council, and on a one-person desk the Council is the trader.
+
+The desk does not loosen the leash on `{theses}`. A thesis rewritten or dropped after the
+price has moved is the failure a thesis exists to prevent. Every change to what a thesis
+says, including closing it, reaches the trader. The desk pays for that with one more
+approval, which in practice arrives next to an order the trader approves anyway.
 
 ## The change
 
@@ -130,8 +137,9 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
    the theses controller writes the Kessler Semi thesis.
 6. **Reconcile at the source.** The change landed in two sets, and neither can be revised
    the way a document can.
-   - `{portfolio}` receives the criteria from both workflows, joined at its controller:
-     every position has a thesis, which now holds, and both limits, which the 8% position
+   - Both workflows send `{portfolio}` the intent and references to the criteria of the sets
+     above. Its controller joins them: every position has a thesis, which now holds, and
+     both limits, which the 8% position
      and the 30% sector weight break. The portfolio's controller is the broker's fills, so
      the only way to change it is an order.
    - `{orders}` is an output. The arriving order has filled and the price has moved, so the
@@ -144,9 +152,12 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
    25% means selling 5 points of semiconductors, and the sale can come all from Kessler Semi
    or be split with the other chip holdings. Both meet the criteria, and the choice is
    recorded.
-7. **Leash.** The thesis is an owned write and the criteria pass, so it proceeds. The sell
-   order is an output, so it goes to the trader for approval. Once approved and filled, it
-   supersedes the arriving order, and the obligation clears.
+7. **Leash.** The thesis is an owned write and the criteria pass. `{theses}` held nothing
+   for Kessler Semi, so the write only adds, and it proceeds. The fill changes positions in
+   `{portfolio}`, not the criteria it is checked against, so nothing in any standing
+   specification is removed or reversed. The sell order is an output, so it goes to the
+   trader for approval. Once approved and filled, it supersedes the arriving order, and the
+   obligation clears.
 8. **Propagate.** The new thesis is a change of its own. Thesis review owns `{theses}` and
    asks `{mandate}`, which holds, because the thesis states an invalidation condition. Market
    data does not meet that condition, so `{market data}` to `{theses}` holds. Nothing else is
@@ -209,8 +220,8 @@ rumoured data-centre contract.
 6. **Reconcile at the source.** The 3% position has a thesis and is within both limits, so
    the portfolio's controller keeps it, changes nothing, and adds nothing. No order is
    emitted, and the arriving order carries no strain. The builder lens reports a match.
-7. **Leash.** The thesis is an owned write and proceeds. No order is emitted, so nothing
-   waits for approval.
+7. **Leash.** The thesis is an owned write that only adds, so it proceeds. No order is
+   emitted, so nothing waits for approval.
 
 ### Settled state
 
@@ -234,9 +245,11 @@ not closed.
   what puts the recall headline in its reading at all. The order alone does not carry it.
 - The bound is stated for distillation, not for the controllers after it. The theses
   controller writes against `{market data}` as it now stands, rumour included. What keeps
-  the rise out of the thesis is that the criteria it was handed came from the bounded
+  the rise out of the thesis is that the controller derived its criteria from the bounded
   intent. A write that adds a data-centre angle beyond those criteria is reported, and
-  nothing in the model says whether that report is enough.
+  nothing in the model says whether that report is enough. The leash does not catch it
+  either. `{theses}` held no Kessler Semi thesis before the run, so the angle removes
+  nothing from the standing specification, and a write that only adds proceeds.
 - The bound covers artifacts, not people. A distiller that asks the trader two days later
   gets an answer shaped by the rise, because no bound restricts what a person remembers.
   Deferring the ceremony, which is [half the guarantee](/cyber-truss/model/#the-guarantee),
@@ -269,15 +282,24 @@ condition the Kessler Semi thesis names. The feed job records the announcement i
    no position may outlive its thesis, and the only way to reach that is a sell order.
 6. **Reconcile.** Nothing is reconciled. The workflow reads the source as an input, so the
    arriving data is not a prediction to check, and the run never writes it.
-7. **Leash.** Closing the thesis is an owned write and proceeds. The sell order is an output
-   and goes to the trader for approval.
+7. **Leash.** Closing the thesis is an owned write, and the criteria pass. It also removes
+   the Kessler Semi thesis, its reason and its invalidation condition, from the
+   [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+   of `{theses}`. The theses controller reports the contradiction, and the
+   [leash](/cyber-truss/model/workflow/#leash) stops the write for the Council. The check runs
+   at every write to the set, so it catches this one although the workflow is a downstream
+   candidate that asked nothing. The change came from a feed job, so there is no requester to
+   ask. The stop reaches the trader, who holds every position on this desk. The sell order is
+   an output and waits for the same person. The trader approves both, and the closure is
+   recorded as a decision.
 8. **Propagate.** Once the order fills, semiconductors fall further under 25%, so
    `{mandate}` to `{portfolio}` holds. `{theses}` to `{portfolio}` holds, because no
    position outlives its thesis.
 
 ### Settled state
 
-- `{theses}` records the Kessler Semi thesis as invalidated in week ten.
+- `{theses}` records the Kessler Semi thesis as invalidated in week ten, with the trader's
+  approval of the closure.
 - `{orders}` holds the approved sell.
 - `{portfolio}` no longer holds Kessler Semi.
 - `{mandate}` and `{market data}` are unchanged by the run.
@@ -290,12 +312,25 @@ lookup over its declared input, not by noticing a stale thesis first. The earlie
 that a press release carries no intent of the portfolio's owner, is true and does not
 matter. The intent the run needs is the thesis's, and the thesis states it as a criterion.
 
+The leash stops the closure, and that is what the desk wants. Passing the criteria is not
+enough to drop a thesis, so a feed job's write cannot close one with no person involved.
+Removing a thesis reaches the trader like any other change to what the desk believes.
+
+The stop fires on a removal the standing specification itself requires. `{market data}` to
+`{theses}` says no thesis stands while the data meets its invalidation condition, and the
+closure carries out that criterion. The [leash](/cyber-truss/model/workflow/#leash) compares
+the write with the standing specification and asks only whether it removes or reverses part
+of it. It does not ask whether another standing
+criterion demands the removal. Here that costs nothing, because the sell order waits for the
+same person at the same moment. On a set with no output next to it, the same stop would be
+ceremony, and the only remedy the model offers is loosening the whole set's leash.
+
 Two things remain outside the settled state.
 
 - How fast the sale happens. Between the announcement and the fill, `{theses}` to
-  `{portfolio}` is strained: a position is held past its invalidation. The sell order waits
-  for approval, and nothing in this instance limits how long. That is the workflow's strain
-  policy to state, as in variant A.
+  `{portfolio}` is strained: a position is held past its invalidation. The closure and the
+  sell order both wait for approval, and nothing in this instance limits how long. That is
+  the workflow's strain policy to state, as in variant A.
 - A feed that stops. The freshness criterion on `{market data}` to `{theses}` goes false
   when the job fails, and the strain says so. A job that fails on every run starts a run
   on every tick, and what bounds that sequence is
@@ -307,7 +342,16 @@ Two things remain outside the settled state.
   emitted, so strain on it clears only by a superseding order, and variant A's breach window
   is the lifetime of that obligation.
 - The [leash](/cyber-truss/model/workflow/#leash) on an irreversible write. Every order the
-  runs produce waits for the trader, while theses proceed on the criteria alone.
+  runs produce waits for the trader. A new thesis only adds, so it proceeds on the criteria
+  alone.
+- The leash against the
+  [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
+  Variant C closes a thesis from a downstream run that asked nothing and has no requester,
+  and the stop still reaches the trader. It fires even though another standing criterion
+  requires the closure. Variant B shows the other side: an angle added beyond the derived
+  criteria only adds, so the leash lets it through.
+- The Council on a one-person desk. The trader approves every stop, whoever or whatever made
+  the change.
 - [Criteria over the outcome](/cyber-truss/model/specification/#a-specification-is-intent-plus-criteria)
   where the earlier state cannot be restored. Variant A settles by a new order rather than
   by undoing the old one, and the criteria do not tell the two apart.

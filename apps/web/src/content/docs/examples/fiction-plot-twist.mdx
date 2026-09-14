@@ -55,8 +55,10 @@ travels in a day, where a character was in a given year.
 
 The premise reads: *Ilse, heir to a fallen house, learns who destroyed her family and must
 decide whether revenge is worth becoming what she hates.* The outline names the betrayer
-as Chancellor Aubrec, a minor court official, revealed in chapter 16. The story bible says
-Ilse's mentor, Maren, spent the year the house fell at sea.
+as Chancellor Aubrec, a minor court official, revealed in chapter 16. It ends in chapters 18
+to 20 with Ilse executing him. Those chapters exist only in the outline, since the draft
+stops at chapter 14. The story bible says Ilse's mentor, Maren, spent the year the house
+fell at sea.
 
 ## Workflows
 
@@ -83,6 +85,20 @@ writes chapters from the outline, and reverse outlining, a technique discovery w
 rebuilds the outline from the chapters. A book written only by plotting needs the first of
 each pair. A book where discoveries happen in the draft needs both, and this author works
 both ways.
+
+Every workflow keeps the default [leash](/cyber-truss/model/workflow/#leash). A write that
+only adds proceeds when the criteria pass. A write that removes or reverses part of a set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+needs approval from the Council. The author works alone, so the author is the Council and
+the person who made the change at once. What the outline and the bible state are criteria,
+the betrayer's name included.
+
+The author does not loosen the leash on `{outline}` or `{story bible}`. A discovery writer
+tries scenes and cuts many of them. If reverse outlining and canon update could rewrite the
+outline and the bible from any draft, each experiment in a chapter would become the book's
+plan and its canon unseen. The outline and the bible are where the author keeps what the
+book has decided, so every change to what they state reaches the author. The cost is a
+review per reversal, by the person who wrote the scene.
 
 ## The change
 
@@ -130,9 +146,10 @@ family. The diff touches chapter 14 only.
    - Reverse outlining and canon update ask nothing above. The manuscript is their input,
      so they read chapter 14 itself and run from it.
 
-   The first criterion and the bible's criterion
+   The first two criteria and the bible's criterion
    [replace](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join) what the outline
-   and the bible state. They are not joined with it.
+   and the bible state. They are not joined with it. A replacement removes part of the set's
+   standing specification, so the writes that carry these will meet the leash.
 5. **Schedule.** The
    [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
    holds the jobs. Reverse outlining and canon update read the source, which is settled by
@@ -141,34 +158,46 @@ family. The diff touches chapter 14 only.
    controller writes once all three have contributed. Drafting's reconciliation reads the
    outline and continuity pass's reads the bible, so both wait. Neither running job waits on the reconciliations
    at the manuscript, so the two edges with opposite roles never wait in both directions.
-6. **Replay.** Canon update puts Maren ashore in the year the house fell. Worldbuilding's
-   job is then ready. Chapter 2 of the old outline had Maren's ship coming into port, so
-   its contribution to the outline moves that beat. The ledger hands the outline's controller
-   all three contributions together, each with its provenance, and they
-   [join](/cyber-truss/model/join/) at the
-   [controller](/cyber-truss/model/controller/#the-join-happens-at-the-controller). It
-   writes once: Maren named, planted in chapters 3 and 9, the ending on Ilse's choice about
-   her, and chapter 2 consistent with the bible. Plotting's contribution adds nothing the
-   others do not, and does not conflict. Drafting runs once, after that write.
+6. **Replay.** Canon update puts Maren ashore in the year the house fell. The bible said
+   she was at sea, so its controller reports that the write reverses the standing
+   specification, and the [leash](/cyber-truss/model/workflow/#leash) stops it for the
+   Council. Canon update asked nothing above. The check runs at every write to the set, so
+   it catches this one anyway. The stop reaches the author, who approves, and the approval
+   is recorded as a decision.
+
+   Worldbuilding's job is then ready. Chapter 2 of the old outline had Maren's ship coming
+   into port, so its contribution to the outline moves that beat. The ledger hands the
+   outline's controller all three contributions together, each with its provenance, and
+   they [join](/cyber-truss/model/join/) at the
+   [controller](/cyber-truss/model/controller/#the-join-happens-at-the-controller). Plotting's
+   contribution adds nothing the others do not, and does not conflict. The joined write
+   names Maren, moves the reveal to chapter 14, plants her in chapters 3 and 9, ends on
+   Ilse's choice about her, and makes chapter 2 consistent with the bible. It removes
+   Aubrec as the betrayer, the chapter 16 reveal, and the ending in which Ilse executes him.
+   Those are part of the outline's standing specification, so the leash stops this write
+   too, whichever of the three workflows contributed each part. The author approves.
+   Drafting runs once, after the approved write.
 7. **Reconcile at the source.** Drafting and continuity pass both reconcile at the
    manuscript, and the criteria from the outline and the bible join at its controller. It
    keeps the author's chapter 14, which meets the reveal criterion. It adds setup scenes in
    chapters 3 and 9, which the setup criterion requires and the change never considered:
    nothing before chapter 14 supported the reveal, which is why the scene read as a twist
-   rather than a turn. It changes the ending in chapters 18 to 20, which had Ilse executing
-   Aubrec and now has her facing someone she loves. Its report lists all three. The
-   reconciled manuscript reaches reverse outlining and canon update as a change of its own,
-   and the outline already plants the setup and ends on Ilse's choice, so nothing further
-   runs.
+   rather than a turn. Chapters 15 to 20 are not drafted, so the manuscript has no ending to
+   change. The new ending lives in the outline, and drafting writes those chapters from it
+   later. Its report lists the kept chapter and the two added scenes. The write adds scenes
+   and removes nothing the manuscript stated, so the leash lets it proceed. The reconciled
+   manuscript reaches reverse outlining and canon update as a change of its own, and the
+   outline already plants the setup and ends on Ilse's choice, so nothing further runs.
 
 ### Settled state
 
 - `{premise}` is unchanged.
-- `{outline}` names Maren, plants her in chapters 3 and 9, and ends on Ilse's choice about
-  her.
-- `{story bible}` puts Maren ashore in the year the house fell.
-- `{manuscript}` carries the author's chapter 14, with derived setup scenes and a derived
-  ending.
+- `{outline}` names Maren, reveals her in chapter 14, plants her in chapters 3 and 9, and
+  ends on Ilse's choice about her, with the author's approval recorded.
+- `{story bible}` puts Maren ashore in the year the house fell, with the author's approval
+  recorded.
+- `{manuscript}` carries the author's chapter 14 and derived setup scenes in chapters 3 and
+  9. Chapters 15 to 20 are still undrafted.
 
 ### Status: Holds
 
@@ -188,9 +217,15 @@ selection then
 outlining and canon update, and has not declared them. The run no longer ends silently with
 the outline still naming Aubrec.
 
-The [leash](/cyber-truss/model/workflow/#leash) does not stop drafting from rewriting three
-chapters of the ending. They are owned writes and they meet the criteria. An author would
-want to approve that, and would have to tighten the leash on `{manuscript}` to get it.
+The [leash](/cyber-truss/model/workflow/#leash) stops the run twice, at the bible and at the
+outline, and that is what this author wants. Both writes reverse what the set stated, and
+most of each was not written by the author. The author wrote chapter 14. The agents wrote
+Maren's new backstory, the moved reveal, and a new ending. Passing the criteria cannot
+accept those, because the criteria were derived from the author's own intent. Part of each
+stop is ceremony: the author is asked to accept a name they already chose by writing the
+scene. The rest is not. The reconciliation at the manuscript does not stop, because it only
+adds. If a setup scene had to rewrite something chapter 3 already said about Maren, it
+would reverse part of the manuscript and stop as well.
 
 The run also leaves one choice to whichever state it reaches. The criteria say Aubrec did
 not betray the house, and nothing else about him. One replay keeps him as a red herring and
@@ -199,8 +234,10 @@ another cuts him, and both states meet the criteria.
 as the usual topology, but topology is only what the criteria constrain, so a character no
 criterion names is a coordinate. An author would not call a character a coordinate. The
 model's reply is that a difference that matters is a criterion nobody stated, and stating
-it starts the next iteration. The reply is consistent, and the choice is recorded rather
-than left to timing.
+it starts the next iteration. The reply is consistent. The leash no longer lets the choice
+pass unseen: either write removes Aubrec as the betrayer, so the outline stops, and the
+author sees whether it keeps or cuts him before approving. The criteria still do not
+decide. The author does, and the approval records it.
 
 ## Variant B: the author writes without an outline
 
@@ -236,17 +273,19 @@ Continuity pass and canon update are unchanged.
 5. **Schedule.** Canon update reads the source and starts. Continuity pass's
    reconciliation waits for the bible. Drafting's has no pending input, and the ledger may
    hold it so the manuscript is reconciled once.
-6. **Replay.** Canon update puts Maren ashore.
+6. **Replay.** Canon update puts Maren ashore. The write reverses what the bible stated, so
+   the [leash](/cyber-truss/model/workflow/#leash) stops it for the author, who approves.
 7. **Reconcile at the source.** The manuscript's controller keeps the author's chapter 14,
-   adds setup scenes in chapters 3 and 9, changes the ending, and applies the bible's
-   facts.
+   adds setup scenes in chapters 3 and 9, and meets the bible's criterion. Chapters 15 to 20
+   are not drafted and there is no outline, so there is no ending to change. The write only
+   adds, so it proceeds.
 
 ### Settled state
 
 - `{premise}` is unchanged.
 - `{story bible}` puts Maren ashore.
-- `{manuscript}` carries the author's chapter 14, with setup in chapters 3 and 9 and a
-  derived ending.
+- `{manuscript}` carries the author's chapter 14, with setup in chapters 3 and 9. Chapters
+  15 to 20 are undrafted, and only the premise says how the book ends.
 
 ### Status: Unresolved
 
@@ -261,6 +300,9 @@ strain is recorded. Two things remain open.
   [expression stays with the source](/cyber-truss/model/canonical-execution/#expression-stays-with-the-source)
   exists to prevent. The model now says so, and the reconciliation report names criteria
   the source's controller derived itself, but naming them does not make them independent.
+  The leash does not help. It compares a write with the standing specification, and these
+  criteria were built during the run, so there is nothing standing to compare them with.
+  The one stop in this variant is on where Maren was, not on who betrayed the house.
   Where the setup criterion should live depends on
   [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level),
   which is still open.
@@ -297,8 +339,11 @@ strain is recorded. Two things remain open.
   in creative work. The author's scene is a prediction, and it stands as written because it
   meets the criteria and prose is a coordinate. If a style guide constrained the prose, the
   prose would be topology, and reconciliation could change the author's own sentences.
-- The [leash](/cyber-truss/model/workflow/#leash) default on owned writes. It lets an agent
-  rewrite an ending that meets the criteria, which an author may not accept.
+- The [leash](/cyber-truss/model/workflow/#leash) default on contradicting writes, with a
+  solo author as the Council. It stops the bible and outline writes, including canon
+  update's, which asked nothing. The author keeps it on both sets, so a draft experiment
+  cannot rewrite the plan or the canon unseen. Part of each stop is ceremony, because the
+  author approves a name they already wrote.
 - Change reaching backwards in reading order. The setup lands in chapters the author
   thought were finished. Connections are
   [undirected](/cyber-truss/model/connections/#connections-are-undirected), and the reach
@@ -306,5 +351,5 @@ strain is recorded. Two things remain open.
 - Coupling inside one artifact-set. The model sees connections between sets. The
   consistency fiction depends on most, one chapter against another, lies within a set, and
   variant B shows what is lost when no connection stands in for it.
-- Actors as topology. Variant A leaves a character's survival to whichever settled state
-  the run reaches.
+- Actors as topology. Variant A leaves a character's survival to the replay, and the leash
+  puts that choice in front of the author at the outline's stop.

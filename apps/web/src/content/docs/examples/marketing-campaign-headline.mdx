@@ -37,6 +37,11 @@ it is a new launch decision, not a revision of the old one. So `{ads}` is
 `{campaign results}` is written by the ad platform's and the analytics tool's reporting,
 its [controller](/cyber-truss/model/controller/). No workflow writes it.
 
+Two people hold the campaign's positions, its
+[Council](/cyber-truss/model/workflow/#leash). The brand lead holds positioning: the
+proposition and what the framework allows. The performance marketer holds spend. A stop
+reaches whichever of them its lens names.
+
 Connections:
 
 - `{brief}` to `{messaging}`
@@ -87,9 +92,20 @@ The declarations are top-down, the way the team plans. Every workflow
 and message match makes the ads the specification of the page. Only campaign planning owns
 `{messaging}`, and it reads the brief. No workflow owns `{brief}`.
 
-Creative production keeps the default [leash](/cyber-truss/model/workflow/#leash). Its
-edits to ad copy proceed when the criteria pass. A launch commits spend, so it needs the
-performance marketer's approval.
+Every workflow keeps the default [leash](/cyber-truss/model/workflow/#leash) with one
+loosening, on each set it owns. A write that removes or reverses part of the set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+stops for the Council, unless a decision recorded in the same run already removed that part
+and lands in the set. Then the write proceeds if it removes nothing more. The set's
+controller checks that against the decision, which it can read because
+[a decision lands in the set it affects](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion).
+
+The team wants this because a positioning call is the brand lead's. Asking the brand lead
+once to decide and again to approve the framework that carries the decision out adds a stop
+and no judgement. A write that goes past the decision still stops.
+
+Under that leash, creative production's edits to ad copy proceed when the criteria pass and
+they only add. A launch commits spend, so it needs the performance marketer's approval.
 
 Writes to `{ads}` and `{landing page}` wait while `{messaging}` has a pending writer, as the
 workflows' [strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) declares.
@@ -159,11 +175,17 @@ touches `{ads}` and `{launches}`.
    change as a superseding relaunch with the basis line. Below `{ads}`, the page's
    controller joins message match's and page build's criteria and writes a paid social
    variant that opens on the figure.
-10. **Leash.** The amended framework, the ad copy, and the page variant are owned writes,
-    and the criteria pass, so they proceed. The reconciliation report is a builder outcome:
-    a kept headline and a filled hole. The relaunch is an output, so it goes to the
-    performance marketer for approval. Once live, it supersedes the arriving launch and the
-    obligation clears.
+10. **Leash.** The ad copy and the page variant only add: a basis line on a new variant,
+    and a page variant beside the ones that stand. They proceed when the criteria pass. The
+    amended framework is different. Before the run it kept savings out of headlines, and
+    the write reverses that for paid social. By the
+    [default](/cyber-truss/model/workflow/#leash) it stops for the Council, and its lens is
+    positioning, so it reaches the brand lead. The brand lead made exactly that call in step
+    7, and the decision is recorded in `{messaging}`. The declared leash lets the write
+    proceed, because it removes nothing the decision did not. The brand lead is asked once.
+    The reconciliation report is a builder outcome: a kept headline and a filled hole. The
+    relaunch is an output, so it goes to the performance marketer for approval. Once live,
+    it supersedes the arriving launch and the obligation clears.
 
 ### Settled state
 
@@ -187,11 +209,28 @@ The route up is now a workflow, not a side effect. The controller of `{messaging
 that the framework is affected, the job is routed to campaign planning because the framework
 is creative production's input, and campaign planning's own question to the brief is where
 the conflict surfaces. The declared roles make that the only route.
-No workflow owns `{messaging}` except one that reads the brief, and no workflow owns
-`{brief}` at all, so a result reaches positioning only through a recorded decision.
 
-The roles also separate two things the earlier run treated as one. Rewriting copy is
-revisable and proceeds on the criteria. Relaunching spends money and waits for a person.
+Two things stop the run for a person, and either would be enough. `{brief}` has no owner, so
+selection step 6 raises it. The framework's write reverses a criterion it stood under, so
+the leash stops it. If the team declared a workflow that owns `{brief}`, step 6 would no
+longer fire, and that workflow's write of the exception would narrow the proposition and
+stop at the leash. A result reaches positioning through the brand lead either way.
+
+The leash separates three things the earlier run treated as two. Rewriting copy adds and
+proceeds on the criteria. Reversing what the framework allows waits for the person who
+holds positioning. Relaunching spends money and waits for the person who holds spend.
+
+The run asks the brand lead once only because the team declared it. The model does not say
+whether a recorded decision is the approval for the write that carries it out. It says the
+converse: "An approval is a decision, and it is recorded like one"
+([Leash](/cyber-truss/model/workflow/#leash)). Under the bare default the conflict decision
+and the leash stop are two asks of one person for one call. Any system whose positioning
+set is unowned or decided at a conflict would need the same declaration.
+
+The relaunch approval reaches the performance marketer, who also made the change. The
+[Leash](/cyber-truss/model/workflow/#leash) section accepts that for a solo developer or
+author and is silent for a team. Here it does no harm, because the change of direction was
+approved by the brand lead, and the marketer approves only spend.
 
 Reconciliation keeps the headline that has results. An earlier reading replayed savings-led
 ads from the framework, which had never run, and recorded a choice between them and the
@@ -238,6 +277,15 @@ touches `{landing page}`.
    controller keeps the headline and adds the basis. If the change is refused, it restores
    the clarity headline. A savings page variant has no results yet, so its cost per sign-up
    is held as obligation strain on `{landing page}` to `{campaign results}`.
+8. **Leash.** If savings replaces the proposition, every write below the brief reverses
+   something that stood before the run: the framework's clarity headlines, the ads' clarity
+   promise, and the page's clarity headline. Each stops for the Council by default, and the
+   lens is positioning. The brand lead's decision removed the clarity proposition and lands
+   in each set it affects, so the declared leash lets each write proceed if it removes
+   nothing more. The rewritten ads leave every live launch running copy that no longer
+   exists, so each needs a superseding launch, and those are outputs that wait for the
+   performance marketer. If the change is refused, the restored page matches its standing
+   specification, and the write proceeds without a stop.
 
 ### Settled state
 
@@ -280,17 +328,27 @@ person. It still does not narrow variant B's intent at the page, where the chang
 leaves open. This pair gives it a case where the instability comes from the structure of the
 field, not from the distiller.
 
-The decision in step 7 can hide the divergence. A brand lead facing variant B's wider
+The brand lead's decision can hide the divergence. A brand lead facing variant B's wider
 conflict can choose variant A's narrower exception, and then the two runs agree. They agree
 because a person chose, and a run with no person in it would not.
+
+The new leash does not change this. It adds a stop in both variants, at the framework, and
+in both the stop reaches the brand lead who already decided. It checks each write against
+what the set stood under before the run, and both variants start from the same framework.
+What differs is the intent each run hands the brand lead, and the leash never reads that.
 
 ## What it tests
 
 - [Outputs](/cyber-truss/model/workflow/#three-roles) against owned sets in one workflow.
   Ad copy is revised in place. A launch spends money, so strain on it clears only by a
   superseding launch.
-- The [leash](/cyber-truss/model/workflow/#leash) on spend. Copy and pages proceed on the
-  criteria. Every launch waits for the performance marketer.
+- The [leash](/cyber-truss/model/workflow/#leash) on spend and on direction. Copy and pages
+  that only add proceed on the criteria. A write that reverses what the framework allowed
+  stops for the brand lead, and every launch waits for the performance marketer. The
+  [Council](/cyber-truss/model/workflow/#leash) is two positions, reached by lens.
+- A loosened leash that avoids asking one person twice. A write that removes only what a
+  recorded decision in the run removed proceeds, because the model does not say whether
+  that decision is already the approval.
 - [Selection](/cyber-truss/model/workflow/#how-workflows-are-selected) that routes an
   affected input to its owner. `{messaging}` is affected and is creative production's input,
   so the job is routed to campaign planning even though the change never touched a set it
@@ -317,7 +375,8 @@ because a person chose, and a run with no person in it would not.
   set.
 - A set no workflow owns. Positioning is decided in `{brief}`, which no workflow writes, so
   both variants reach it through a routed job, raise it as an obligation under step 6, and
-  hand the conflict to a person.
+  hand the conflict to a person. It is not the only way a person is reached. The leash stops
+  the framework's reversal too, and would stop a write to the brief if a workflow owned it.
 - The [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
   and strain policy. Writes below `{messaging}` wait while a person decides, because the
   team declared it, not because the ledger requires it. The
