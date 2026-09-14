@@ -1,0 +1,368 @@
+---
+title: Blade limit found on the night shift
+description: A technician finds a turbine blade that passes the task card but fails the current engine manual. The limit sits five sets below the regulator, and three organisations write the sets between.
+sidebar:
+  order: 7
+---
+
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+Airline maintenance is a regulated chain. A limit is written by an engine manufacturer,
+made mandatory by the regulator, turned into an engineering order by the airline, copied
+onto a task card, and applied by a technician at night. Each set is written by a different
+group, and the people at the bottom may not change anything above them. This example lands
+a change at the bottom and follows it back up to the regulator.
+
+The structure follows a US airline under Part 121. The documents, numbers and limits are
+invented.
+
+## The system
+
+One engine type on an airline's fleet. The high-pressure turbine (HPT) stage-1 blades carry
+a thermal barrier coating, and a borescope inspection checks how much of it has worn away.
+
+| Artifact-set | Holds |
+| --- | --- |
+| `{regulations}` | Part 39 (airworthiness directives), Part 43 (maintenance standards), Part 121 (airline maintenance programmes) |
+| `{AD}` | The airworthiness directive for the blades: a repetitive borescope inspection, with reject limits taken from a cited service bulletin |
+| `{service bulletin}` | The manufacturer's bulletin for the inspection, with its reject limits |
+| `{engine manual}` | The manufacturer's engine manual, including the inspection figure and its limits |
+| `{GMM}` | The airline's general maintenance manual: policy for how cards, source data and revisions are handled |
+| `{CAMP}` | The airline's continuous airworthiness maintenance programme: which tasks, how often, and which data they use |
+| `{engineering order}` | The airline's order that implements the AD on its fleet |
+| `{task card}` | The step-by-step card a technician works from |
+| `{work record}` | Signed entries for work performed and findings made |
+
+Connections:
+
+- `{regulations}` to `{AD}`, and `{regulations}` to `{GMM}`
+- `{service bulletin}` to `{AD}`, and `{service bulletin}` to `{engine manual}`
+- `{AD}` to `{engineering order}`
+- `{GMM}` to `{engineering order}`, and `{GMM}` to `{CAMP}`
+- `{engine manual}` to `{CAMP}`
+- `{engineering order}` to `{task card}`, and `{CAMP}` to `{task card}`
+- `{task card}` to `{work record}`
+- `{work record}` to `{CAMP}`
+
+<ConnectionGraph
+	label="Nine artifact-sets. {regulations} connects to {AD} and {GMM}. {service bulletin} connects to {AD} and {engine manual}. {AD} and {GMM} connect to {engineering order}. {GMM} and {engine manual} connect to {CAMP}. {engineering order} and {CAMP} connect to {task card}, which connects to {work record}. {work record} also connects to {CAMP}."
+	nodes={[
+		{ id: "regs", label: "{regulations}", x: 0, y: 240 },
+		{ id: "sb", label: "{service bulletin}", x: 200, y: 0 },
+		{ id: "manual", label: "{engine manual}", x: 600, y: 0 },
+		{ id: "ad", label: "{AD}", x: 200, y: 120 },
+		{ id: "eo", label: "{engineering order}", x: 400, y: 120 },
+		{ id: "gmm", label: "{GMM}", x: 200, y: 360 },
+		{ id: "camp", label: "{CAMP}", x: 400, y: 360 },
+		{ id: "card", label: "{task card}", x: 600, y: 240 },
+		{ id: "record", label: "{work record}", x: 800, y: 240 },
+	]}
+	edges={[["regs", "ad"], ["regs", "gmm"], ["sb", "ad"], ["sb", "manual"], ["ad", "eo"], ["gmm", "eo"], ["gmm", "camp"], ["manual", "camp"], ["eo", "card"], ["camp", "card"], ["card", "record"], ["record", "camp"]]}
+/>
+
+Two edges carry the difficulty. The `{service bulletin}` to `{AD}` edge is read one way by
+the regulator and the other way by the manufacturer. The `{work record}` to `{CAMP}` edge
+runs from the bottom of the chain back to a set near its top, because the airline's
+reliability programme changes intervals from what the hangar finds.
+
+## Workflows
+
+| Workflow | Input | Owned | Output | Shape |
+| --- | --- | --- | --- | --- |
+| AD issuance (regulator) | `{regulations}`, `{service bulletin}` | none | `{AD}` | `{regulations}` and `{service bulletin}` to `{AD}` |
+| Product support (manufacturer) | `{AD}` | `{service bulletin}`, `{engine manual}` | none | `{AD}` to `{service bulletin}` to `{engine manual}` |
+| Manual control (director of maintenance) | `{regulations}` | `{GMM}` | none | one link |
+| AD compliance (powerplant engineering) | `{AD}`, `{GMM}` | `{engineering order}`, `{task card}` | `{work record}` | `{AD}` and `{GMM}` to `{engineering order}` to `{task card}` to `{work record}` |
+| Maintenance programme (programmes engineering) | `{GMM}`, `{engine manual}` | `{CAMP}`, `{task card}` | `{work record}` | `{GMM}` and `{engine manual}` to `{CAMP}` to `{task card}` to `{work record}` |
+| Reliability (reliability control board) | `{work record}` | `{CAMP}` | none | one link |
+
+An AD is published and cannot be edited. It is superseded by a later AD, so it is an
+[output](/cyber-truss/model/workflow/#three-roles). A work record entry is never erased
+either. A mistake is corrected by a later entry.
+
+The regulator reads the bulletin to write the AD, because an AD cites a bulletin revision.
+The manufacturer reads the AD to revise the bulletin, because a bulletin that an AD mandates
+has to state the AD's compliance terms. So the edge is
+[declared in both directions](/cyber-truss/model/workflow/#direction-lives-in-the-workflow),
+by two workflows that both write.
+
+`{engineering order}` and `{CAMP}` are siblings. Both are airline engineering documents
+directly above `{task card}`, and each workflow that writes the card reaches it through one
+of them.
+
+The longest chain is five sets: `{regulations}` to `{AD}` to `{engineering order}` to
+`{task card}` to `{work record}`. `{regulations}` to `{GMM}` to `{CAMP}` to `{task card}` to
+`{work record}` is the other.
+
+No set loosens the [leash](/cyber-truss/model/workflow/#leash). A write that removes or
+reverses part of a set's
+[standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+stops for approval everywhere in this system. That is how the trade already works. A limit,
+an interval, a policy clause or a bulletin is not changed without the signature of someone
+who holds that document. The stop that looks most like ceremony is the one at `{task card}`,
+since the card copies its limits from the sets above. It stays. On the maintenance
+programme's path, `{CAMP}` names the manual and holds no limits, so the card is the first
+airline document to state a new manual limit. Its approval is the evaluation GMM section 5.4
+asks for.
+
+Approval comes from the Council, the people who hold the system's positions. This system
+has three organisations, and each approves only its own documents. An FAA engineer cannot
+approve a manufacturer's bulletin, and a manufacturer's engineer cannot approve an AD. The
+airline's positions are the director of maintenance, powerplant engineering, programmes
+engineering, and the reliability board.
+
+## The standing documents
+
+Every variant starts from these.
+
+- `{AD}` requires a borescope inspection every 1,000 cycles, and rejects a blade whose
+  coating loss exceeds the limits in service bulletin revision 2: more than 25% of the
+  leading edge.
+- `{engine manual}` revision 53, issued last month, rejects a blade with coating loss over
+  20% of the leading edge, or any loss next to a cooling hole.
+- `{CAMP}` lists the borescope task at the AD's interval, uses the engine manual's limits,
+  and incorporates manual revisions under GMM section 5.4.
+- `{GMM}` section 3.2: when a task card disagrees with current source data, stop, record
+  the finding, refer to maintenance control, and do not return the aircraft to service until
+  engineering gives a disposition. Section 5.4: engineering evaluates a manufacturer revision
+  within 30 days before it is incorporated into cards, and may incorporate it earlier.
+- `{engineering order}` implements the AD with the 25% limit, citing bulletin revision 2.
+- `{task card}` rejects over 25%, with a reference to the engine manual figure.
+
+## The change
+
+At night, a technician borescopes blade 14 and finds 22% coating loss on the leading edge,
+part of it next to a cooling hole. That passes the card and fails manual revision 53. The
+technician makes an entry: the finding, the two limits, the disagreement, work stopped under
+GMM 3.2, referred to maintenance control, not signed off. The aircraft is held.
+
+## Variant A: the manufacturer has revised the bulletin too
+
+Service bulletin revision 3 was issued with manual revision 53 and states the same limits.
+The AD still cites revision 2.
+
+### Expected run
+
+1. **Lift.** The entry lands in `{work record}`, the source. It is an output, so the entry
+   stays as written.
+2. **Find candidates.** AD compliance and maintenance programme both output
+   `{work record}`, so both are
+   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
+   Reliability reads it, so it is a downstream candidate.
+3. **Distill.** Each upstream candidate
+   [reads the entry within its span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
+   Both state the same intent: *an HPT stage-1 blade is rejected when its coating loss covers
+   more than 20% of the leading edge, or lies next to a cooling hole.* The intent is written
+   at the level of one blade. Reliability reads the entry as an input and looks the intent
+   up.
+4. **Ask the controllers above**, nearest first. Each receives the intent and its set's
+   current state, and nothing about where the change landed.
+   - AD compliance asks `{task card}`. The card states 25% and says nothing of cooling holes,
+     so it is **affected**.
+   - AD compliance asks `{engineering order}`. It states 25% from bulletin revision 2, so it
+     is **affected**.
+   - Two inputs sit above the order. `{AD}` states 25%, so it is **affected**. It is an input,
+     so it is routed to AD issuance.
+   - `{GMM}` is three sets above the source. Its controller receives a blade limit and has to
+     abstract it to the level of policy. There are three readings. Read as a finding at
+     inspection, section 3.2 already covers it, and the GMM **holds**. Read as a rule that
+     the current manual governs over a card, the GMM is **affected**, either because it lacks
+     that clause or because the clause would reverse the evaluation window in section 5.4.
+     The people would answer *holds*. Nothing in the ask points the controller at 3.2 rather
+     than 5.4.
+   - Maintenance programme asks `{task card}` and gets the same answer.
+   - Maintenance programme asks `{CAMP}`. It names the manual and holds no limits, so it is
+     **too coarse**, and the question passes up. `{engine manual}` **holds**: revision 53
+     states both limits. `{GMM}` is asked again, by a second workflow, with the same intent.
+
+   The highest affected set AD compliance can write is `{engineering order}`. Maintenance
+   programme's highest affected set is `{task card}`, since `{CAMP}` passes through.
+5. **Route.** AD issuance receives the routed job: the root intent, and a reference to the
+   AD's criteria labelled as coming from AD compliance. It asks above `{AD}`.
+   `{service bulletin}` revision 3 holds. `{regulations}` is too coarse: Part 39 requires
+   compliance with an AD and states no blade limit.
+6. **Schedule.** The
+   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+   collects both workflows' contributions to `{task card}`, so its controller writes once.
+   The airline's jobs do not wait on the FAA's.
+7. **Replay.** The order's controller joins the intent's criteria with the AD's. A 20% limit
+   with the cooling-hole rule meets the AD's 25% limit as well, so the
+   [join](/cyber-truss/model/join/) has a state that meets both. The write revises the order
+   to the stricter limits and notes that the AD is still met.
+
+   The write removes a criterion the order stated, a 25% reject limit, and puts a new one in
+   its place. That is a
+   [replacement](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join). It still
+   meets the AD, but the old limit leaves the set, and a blade at 22% that the order accepted
+   is now rejected. The [leash](/cyber-truss/model/workflow/#leash) stops the write for
+   approval, and powerplant engineering approves it.
+
+   The card's controller joins the contributions from the order and the programme, and writes
+   both limits. The write replaces the card's 25% limit, so it stops too. One write means one
+   approval, by the airline's engineering. The superseding AD is
+   an output write and replaces the AD's limit, so it stops for the FAA. It takes as long as
+   the FAA takes, and the aircraft does not wait for it.
+8. **Reconcile at the source.** The source is an output, so the entry is kept. The
+   reconciliation adds entries after it: the blade rejected against the revised card, the
+   blade replaced, and the return to service. Each is an output write and needs a signature.
+   They only add to the record.
+9. **Propagate.** Once approved, the superseding AD cites bulletin revision 3. AD compliance
+   reads it and the order already holds. Product support reads it and the bulletin already
+   holds. Reliability reads the new entries. One finding is below its alert level, so
+   `{CAMP}` is unchanged.
+
+### Settled state
+
+- `{regulations}`, `{service bulletin}`, `{engine manual}` and `{CAMP}` are unchanged.
+- `{GMM}` is unchanged, if its controller answered *holds*.
+- `{AD}` is superseded by an AD that cites bulletin revision 3.
+- `{engineering order}` and `{task card}` state 20% and the cooling-hole rule.
+- `{work record}` holds the original entry and the entries after it.
+
+### Status: Unresolved
+
+The aircraft settles the way the people would want. The airline applies a limit stricter
+than the AD without waiting for the FAA, because the join of the two sets of criteria has a
+state that meets both. Every limit that changes stops for someone who holds that document.
+
+Two things keep it from holding.
+
+- **Abstraction at distance changes the answer.** The GMM controller turns a blade limit
+  into policy, three sets above the source and with nothing but the intent. The same intent
+  reads as *holds* or *affected*, depending on which section it abstracts to. The leash now
+  limits the damage. If the controller answers *affected* and manual control writes a clause
+  that makes every manufacturer revision govern on issue, the clause removes the 30-day
+  window in section 5.4, and the director of maintenance is asked. What the leash cannot
+  catch is a wrong *holds*, which ends the search with nobody asked.
+  [Controllers answer for their own sets](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets)
+  says the distance is short in practice, and that a long chain is untested. This chain is
+  five sets, and the answer that matters is the one furthest from the blade. `{GMM}` is also
+  asked twice, by two workflows, with the same intent. Nothing joins two answers to one ask.
+  See
+  [Do controllers derive the same criteria from one intent?](/cyber-truss/model/open-questions/#do-controllers-derive-the-same-criteria-from-one-intent)
+- **The Council spans three organisations.** The order and the card stop for the airline,
+  and the superseding AD stops for the FAA. The right people answer only if the stop reaches
+  the organisation whose workflow makes the write. Variant B shows why that is not given.
+
+## Variant B: the manufacturer has revised only the manual
+
+Manual revision 53 is a temporary revision. Service bulletin revision 2, with its 25% limit,
+is still current.
+
+### Expected run
+
+Steps 1 to 4 are the same as variant A.
+
+5. **Route to the regulator.** AD issuance's routed job asks `{service bulletin}`. It states
+   25%, so it is affected. The bulletin is AD issuance's input, so it is routed to product
+   support. The superseding AD waits, since an output write waits on a pending writer of its
+   input.
+6. **Route to the manufacturer.** Product support's routed job carries the root intent and a
+   reference to the bulletin's criteria, labelled as coming from AD issuance. It asks the
+   controllers above `{service bulletin}` in its own shape, which is `{AD}`. `{AD}` is
+   affected. It is product support's input, so it is routed to AD issuance, which already
+   has that job. No new job is created, so the loop across the two-way edge ends.
+7. **Replay.** Product support writes `{service bulletin}` revision 3 with both limits. The
+   write replaces the bulletin's 25% limit, so the leash stops it for approval.
+   `{engine manual}` below it already holds. The FAA's emission is now ready. It replaces
+   the AD's limit and is an output write, so it stops for approval too.
+8. **Reconcile and propagate.** As in variant A.
+
+### Settled state
+
+The same as variant A.
+
+### Status: Unresolved
+
+The stops are in the right places. Each is at the write to the set that changes, in the
+workflow that writes it, and the approval is recorded in that set. The bulletin's controller
+can read its own decision, which it needs to
+[catch a reversal renamed as a new criterion](/cyber-truss/model/canonical-execution/#a-reversal-renamed-as-a-new-criterion).
+No authority is asked about the other's document at the ask, because an ask brings in no
+person.
+
+Who answers each stop is not settled. The people who should are plain: the manufacturer's
+engineering approves bulletin revision 3, and the FAA approves the superseding AD. The model
+sends a stop to the Council position its lens names. The lens here is the same at both
+stops, a stated limit reversed, so the lens cannot tell the bulletin from the AD. What tells
+them apart is the organisation whose workflow makes the write.
+
+A single Council spanning a regulator and a manufacturer is not realistic. No such body
+exists, and neither side may approve the other's documents. The model reaches the right
+people only if a Council is seated per organisation, and a stop goes to the Council of the
+organisation that writes the set. That is the open question
+[How is a Council seated for a field?](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field)
+This example gives it a sharper case than the hospital one. There the committee that holds
+the rule and the council that keeps the protocol are in one hospital. Here they are in
+separate legal entities, and a wrong seat is an approval with no authority behind it.
+
+## Variant C: the third finding this quarter
+
+As variant A, but two other engines on the fleet showed similar coating loss in the last 90
+days. This entry takes task 72-51-01 over the reliability programme's alert level.
+
+### Expected run
+
+Steps 1 to 8 are the same as variant A.
+
+9. **Propagate.** Reliability is a downstream candidate. It reads `{work record}` as an
+   input, including the new entries and the two earlier ones, and runs downward from it. It
+   asks no controller above anything. The `{CAMP}` controller finds the alert level crossed,
+   and writes the borescope interval shorter, from 1,000 cycles to 500.
+
+The write is owned, and reliability asked nothing. The leash is still
+[checked at every write](/cyber-truss/model/workflow/#leash), whichever workflow
+contributed. The write replaces the interval `{CAMP}` states. A shorter interval still meets
+the AD, but the 1,000-cycle criterion leaves the set, so the write stops for approval. The
+reliability board is asked.
+
+The board would leave the interval alone for now. It would note that this finding passes the
+old limit and fails only the new one. The alert level was crossed partly because the limit
+got stricter, not because the blades got worse. It declines the write, and records why.
+
+### Settled state
+
+- As variant A. `{CAMP}` lists the borescope task at 1,000 cycles.
+- The board's decision is recorded in `{CAMP}`.
+
+### Status: Holds
+
+The stop reaches the board, which owns the decision about the programme. A downstream write
+makes no ask, so only a check at the write could catch it. It depends on the `{CAMP}` controller reading a changed interval as
+a replacement even though the new value is stricter. [Join](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join)
+gives that reading: the old criterion leaves the set.
+
+## What it tests
+
+- **The leash at every write.** Every reversal stops where it is written: the order and the
+  card in variant A, the bulletin in variant B, and a downstream write that asked nothing in
+  variant C. A stricter limit and a shorter interval both count, because each replaces a
+  stated value. See [Leash](/cyber-truss/model/workflow/#leash).
+- **A Council across organisations.** Variant B needs the manufacturer to approve the
+  bulletin and the FAA to approve the AD. The lens is the same at both stops, so the lens
+  does not choose. See
+  [How is a Council seated for a field?](/cyber-truss/model/open-questions/#how-is-a-council-seated-for-a-field)
+- **Abstraction at distance.** Variant A asks `{GMM}` three sets above the source, and routes
+  to `{regulations}` at the top of a five-set chain. `{regulations}` answers *too coarse*,
+  which is easy. The `{GMM}` answer decides whether manual control runs at all, and depends
+  on how a blade limit is turned into policy with nothing but the intent. A wrong *holds*
+  passes no leash, because nothing is written. See
+  [Controllers answer for their own sets](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets).
+- **Routing to every owner.** `{AD}` and `{service bulletin}` route to each other's owner,
+  and the ledger's existing job ends the loop. See
+  [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
+- **Sibling sets.** `{engineering order}` and `{CAMP}` both sit above `{task card}`. Two
+  workflows contribute to the card, and its controller writes once, so it stops once.
+- **A source that is an output.** The technician's entry stays as written, and
+  [reconciliation](/cyber-truss/model/canonical-execution/#reconciling-at-the-source) adds
+  entries after it.
+- **The join across an input.** The airline meets a stricter limit than the AD without the
+  AD changing first, because the joined criteria have a state that meets both. See
+  [Join](/cyber-truss/model/join/).
+- **Strain policy.** The FAA's output write waits for the bulletin. The airline's writes
+  wait for the airline's approval, not the FAA's. See
+  [the run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide).
