@@ -92,8 +92,9 @@ edited, only superseded. The release controller holds one convention: removing o
 an exported prop is a breaking change, and needs a major version and a migration note.
 
 The page has a [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
-of its own. Its use case is a consumer who arrives to learn what to pass the component. The
-prop names, types, and defaults are criteria bound to it. By default the
+of its own, though no declared workflow reads it, because consumers' code is judged against
+it. Its use case is a consumer who arrives to learn what to pass the component. The prop
+names, types, and defaults are criteria bound to it. By default the
 [leash](/cyber-truss/model/workflow/#leash) stops any write that removes one, and an
 approver approves it. In this library the approver who holds the API is the maintainer.
 
@@ -137,9 +138,9 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
 5. **Reconcile at the source.** The code controller checks the developer's change against
    the spec's criteria. The component rounds up and an exact multiple produces no empty page,
    so it keeps the change as written. The report is a match. The controller also compares
-   the result with the set's standing specification. The example authors no use cases for
-   `{code, test}`, so its standing specification is the criteria it stood under from
-   `{spec}` and `{mockups}`. Neither names a prop, so keeping the change removes nothing.
+   the result with the set's standing specification. `{code, test}` authors no use cases of
+   its own, so that is the criteria it stood under from `{spec}` and `{mockups}`. Neither
+   names a prop, so keeping the change removes nothing.
 6. **Propagate.** The downstream candidates run from the reconciled code.
    - API reference documents `totalItems` and `pageSize` and removes `totalPages`. The usage
      example no longer computes a count. Removing a documented prop contradicts the page's
@@ -213,15 +214,20 @@ Four judgements carry the status.
   set has no writer. The API reference write would still stop and reach the maintainer,
   because the team kept the default leash on `{API docs}`. Had it loosened that set for
   every run, nothing would stop, and consumers would find the break.
-- **Whether `{code, test}` has a standing specification of its own.** The example gives it
-  none beyond the criteria from above, so reconciliation at the source removes nothing. If
-  the team authored the component's tests through use cases, `totalPages` would be a
-  criterion of the code, and the source would stop first, on the question release asks. The
-  maintainer would answer there and pre-approve the rest. The
-  model says a set's criteria are authored through
-  [use cases](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases), but
-  not whether an implementation set carries use cases of its own or only the criteria of the
-  sets above it.
+- **That `{code, test}` states no criterion of its own.** Use cases belong to a set's
+  [specification role](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases),
+  and here the code is downstream in every workflow that spans it, so its standing
+  specification is the criteria arriving from `{spec}` and `{mockups}`. Neither names a prop,
+  so reconciliation removes nothing and the break travels to the sets that do name one. A
+  team that wants it stopped sooner does not give the code use cases. It authors the rung
+  that holds the prop list, a
+  [component spec above the code](/cyber-truss/model/specification/#a-lower-rung-is-its-own-artifact-set).
+  Then `totalPages` is a criterion the code stands under, the reconciliation cannot keep the
+  change and meet it, and the report is *change course*, which
+  [goes to a person](/cyber-truss/model/canonical-execution/#reading-the-comparison) whatever
+  the role. The maintainer answers at the source and pre-approves the rest. That rung is worth
+  keeping only while no workflow writes it from the code, which is the same condition the
+  rejected API contract failed.
 - **Where the connection sits.** `{spec}` connects to `{code, test}` at behaviour.
   `{API docs}` connects to it at the exported props and their types, a rung below. The
   model has not said [how levels are identified](/cyber-truss/model/specification/#specifications-exist-at-every-level)
