@@ -220,6 +220,41 @@ checked against.
 
 **Status: Thesis.**
 
+## Some criteria are never stated
+
+A specification states a fraction of what is true of its implementation, and it is meant to.
+Mutation testing shows how many permutations a suite leaves untouched, and nobody writes a
+suite for the dependencies they install either. Some criteria go unstated by accident and
+some by decision, and demanding that every one be written would manufacture the ceremony this
+model exists to remove.
+
+Call them **implicit criteria**: rules something depends on that no set states. Behaviour
+consumers rely on and nobody wrote down is the familiar case; so is a rule that follows from
+a design decision the specification above it cannot see, such as a queue somebody must drain.
+They have three properties.
+
+- **Preserved by default, not enforced.** A controller writes in the set as it stands and
+  keeps what it has no reason to touch. A refactor keeps all of them, because preserving
+  behaviour is its intent. That is convention, not a guarantee, and it is what the existing
+  artifacts contribute to a write: how, never what.
+- **Found by a break.** When a write breaks one, it returns as a change — a bug report, a
+  consumer's complaint — carrying a criterion no set states. That is
+  [missing strain](/cyber-truss/model/connections/#missing), already in the model. Nothing
+  new is needed to pick it up.
+- **Stated only if the team decides to.** Once surfaced, writing it into a specification is
+  one option and leaving it implicit is another. Leaving it implicit is a decision, recorded
+  like any other, not an open defect.
+
+The limit this sets on the guarantee is worth saying plainly.
+[Confluence is claimed over criteria](/cyber-truss/model/confluence/), so it covers stated
+ones. A run converges on a settled state that meets what the sets state, and an implicit
+criterion broken on the way is not seen. That is a different limit from a
+[missing connection](/cyber-truss/model/connections/#a-missing-connection-is-found-outside-the-run),
+where the relation is undeclared. Here the relation is declared and the rule inside it was
+never written.
+
+**Status: Thesis.**
+
 ## What the roles explain
 
 Read the [kinds of strain](/cyber-truss/model/connections/#kinds-of-strain) through the
