@@ -37,6 +37,48 @@ Also open from this round: whether an implementation set has use cases
 of its own (component library). Deferred past MVP (user-directed): approvers per workflow.
 Any approver approves any stop for now; the term Council was dropped; see `docs/backlog.md` §D.
 
+## Update 2026-09-23: where use cases live, and a lower rung
+
+Settled (user-directed): **an implementation set has no use cases of its own.** A downstream
+set's standing specification is the criteria it stands under from above. Besides those it
+reads workflow governance and the existing artifacts, and the latter supply *how*, never
+*what*. Every counterexample tried folded into the set's specification role or into a
+criterion the specification above should have stated; both are in `docs/backlog.md` under
+*Settled*.
+
+Refinement found while applying it: a set authors use cases for whatever is **checked
+against** it, including beyond the system's boundary. A library's reference page is downstream
+of the code in every declared workflow and still holds its own standing specification, because
+consumers' code is judged against it. Being read is not enough; a maintainer reading code is
+context.
+
+**Implicit criteria** named as a limit (user-directed): a specification states a fraction of
+what is true of its implementation, deliberately. They are preserved by convention, surfaced
+by a break as missing strain, and stated only if the team decides to. Confluence covers stated
+criteria.
+
+**A lower rung is its own artifact-set** (`button.spec.md` beside a feature spec). The two
+axes decide it: not one unit of change with either neighbour, shared governance target with
+the feature spec. Who writes it is the team's declaration. Two constraints are not free: it
+must sit in the span of every workflow that owns the implementation, or its criteria fall back
+to the source; and no declared workflow may write it from the implementation, or it is
+revisable from the side it constrains, which is how the rejected API contract failed.
+
+Re-run of the component library: with a component spec above the code, reconciliation cannot
+keep the API change and meet the prop criterion, so the report is *change course* and the
+floor sends it to the maintainer at the source, before docs and release. The fiction example
+needs no equivalent rung — `{outline}` already is one, and variant B is unresolved because the
+author keeps none.
+
+Commits: `6dddbe6`, `d32076c`, `a237fb7`, `a22aba3`, `1a0dfa3`.
+
+Next, proposed and not yet done: rename the **upstream/downstream candidate** labels on
+`workflow.md:102`. They name the direction a run travels from a change, so the code
+implementation workflow is an *upstream candidate* when code changes though code sits at its
+bottom. Suggested *deriving* and *reading* candidates, keeping upstream/downstream for sets
+only. Touches `workflow.md`, `canonical-execution.md`, the glossary, and step 2 of every
+example.
+
 ## Positioning (settled)
 
 - cyber-truss **makes a system self-converging**. Not a "layer", not scoped to
