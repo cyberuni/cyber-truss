@@ -121,10 +121,21 @@ workflow spanning it authors none of its own, and its standing specification is 
 it stands under from above. `{code, test}` is the ordinary case: the tests are criteria, and
 the use cases they were derived from live in the specification.
 
+A set specifies something beyond the system's boundary as readily as inside it. A library's
+reference page is written from the code and read by consumers whose own code is judged
+against it, so it authors use cases of its own — a consumer arriving to learn what to pass —
+even though no declared workflow reads it. Downstream in the topology and upstream of
+somebody are not exclusive. The test is whether anything is checked against the set, not
+whether a declared set reads it.
+
+That is what separates it from a set that is merely read. A maintainer reads the code before
+changing it, and follows what is there, but nothing is judged against it, so the existing
+code is context rather than criteria.
+
 A set can look like an exception and not be one. The consumer who arrives to learn what to
 pass a component is a real actor with a real goal, and the prop list they read sits in the
-code. What the code holds there is a specification at a lower rung, written into
-implementation files. Name the rung, and the use cases move to it.
+code as well as on the page. What the code holds there is a specification at a lower rung,
+written into implementation files. Name the rung, and the use cases move to it.
 
 **Status: Thesis**, including that use cases belong to the specification role.
 **Open:** grain. Whether a criterion covers a case can turn on one
