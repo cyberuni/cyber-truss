@@ -116,7 +116,18 @@ works the same way: its implementation producer reads the suite, not the use cas
 graph in `spec.md` that the suite was derived from. A controller handed another set's use
 cases would be invited to re-derive that set's reasoning instead of reading the intent.
 
-**Status: Thesis.** **Open:** grain. Whether a criterion covers a case can turn on one
+Use cases belong to a set's **specification role**. A set that is downstream in every
+workflow spanning it authors none of its own, and its standing specification is the criteria
+it stands under from above. `{code, test}` is the ordinary case: the tests are criteria, and
+the use cases they were derived from live in the specification.
+
+A set can look like an exception and not be one. The consumer who arrives to learn what to
+pass a component is a real actor with a real goal, and the prop list they read sits in the
+code. What the code holds there is a specification at a lower rung, written into
+implementation files. Name the rung, and the use cases move to it.
+
+**Status: Thesis**, including that use cases belong to the specification role.
+**Open:** grain. Whether a criterion covers a case can turn on one
 undefined term, such as whether *administration* includes a rate change. The chain is meant
 to catch that when the criterion is written, and a controller that meets it at run time has
 found strain in its own set.
@@ -145,6 +156,58 @@ the first thing this page needs that it does not have.
 
 **Status: Settled** that specifications are multi-level. **Open:** how levels are
 identified across artifact types.
+
+## A lower rung is its own artifact-set
+
+A team may keep a specification below the one its process names. SDD keeps project and
+feature specs in `.agents/spec/`, and a component still earns a `button.spec.md` beside it,
+holding the component's design decisions and the checklist the implementation is written
+against. The implementation producer reads that file and never writes it.
+
+It is a set of its own, and the [two axes](/cyber-truss/model/artifact-sets/#two-axes) say
+so. It is not one unit of change with the feature spec, since either can be amended without
+the other, and one component is read by many features, so no feature's set can own it. It is
+not one unit of change with `{code, test}` either, because the producer that writes the code
+only reads it. What it does share with the feature spec is a governance target: the same
+rules govern both as prose.
+
+**Who writes it is the team's declaration.** A [workflow](/cyber-truss/model/workflow/)
+between the feature spec and the component spec may be the same producer that writes the
+feature spec, or a separate one. A producer that writes two sets does not merge them, because
+a [controller](/cyber-truss/model/controller/) holds one set and a workflow works between
+sets.
+
+Two things are not free choices.
+
+**It must sit in the span of every workflow that owns the implementation.** A workflow asks
+the controllers above its source, nearest first, and a set with no place for the criteria
+answers [too coarse](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets).
+A feature spec is too coarse for a prop name or a component-grain rule. If the component spec
+is outside the implementation workflow's span, a code change never asks it, and those criteria
+fall back to being derived at the source by the controller that has already seen the change.
+Holding that rung is the whole reason the set exists.
+
+**No declared workflow may write it from the implementation.** The moment one does — a
+workflow that reads the code and regenerates the component spec — the set is revisable from
+the side it constrains, and a change can bring it along instead of stopping against it. This
+is why the
+[component library example](/cyber-truss/examples/component-library-bug-fix/#status-holds)
+rejected an API contract on an edge between two revisable sets. A component spec escapes that
+only while it is authored from above.
+
+Membership follows the role, not the directory. `button.spec.md` sits next to `button.tsx`
+and is not in `{code, test}`. The same reading applies in the other direction: where a
+specification is embedded in implementation files, such as an exported type signature,
+[lifting](/cyber-truss/model/artifact-sets/#lifting) has to raise it into the set it belongs
+to before anything can be asked of it.
+
+Keeping the rung is a choice, and declining it has a cost the model can name. The
+[plot twist example](/cyber-truss/examples/fiction-plot-twist/) has the same shape: with an
+outline, chapter-grain criteria have a home above the draft, and without one they land on the
+manuscript, where the controller that reconciles the change also derives what the change is
+checked against.
+
+**Status: Thesis.**
 
 ## What the roles explain
 
