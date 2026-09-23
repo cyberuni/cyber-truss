@@ -126,6 +126,22 @@ is not re-litigated.
   routine steps. The requirement comes from the accreditation standard, which has no connection
   to the unit protocol, so the guard patches a relation nobody declared. What is missing is the
   connection; a run cannot detect it, and an audit loop outside the run finds it.
+- **An implementation set carrying use cases of its own** (rejected 2026-09-23,
+  user-directed). Proposed so that a library's prop list would be a criterion of the code and
+  the break would stop at the source. Every candidate counterexample folded: a library's
+  exported API, a design decision the spec cannot see, and an aviation task card are the set
+  in its *specification* role, and a regression case or behaviour consumers rely on is a
+  criterion the specification above should have stated. Use cases belong to the specification
+  role; where an implementation appears to hold them, it holds a lower rung written into
+  implementation files, and that rung is its own set. What a downstream set reads besides the
+  criteria from above is workflow governance and the existing artifacts, and the latter
+  supply *how*, never *what*.
+- **Backfilling every criterion that turns up in context** (rejected 2026-09-23,
+  user-directed). The first form of the rule above said that a rule found in the existing
+  artifacts should be written into a specification. Not practical, and not desirable: nobody
+  writes a suite covering every permutation, or one for each dependency they install.
+  Implicit criteria are stated only when a team decides to, and the model says so on the
+  specification page.
 
 ## A. Docs site
 
