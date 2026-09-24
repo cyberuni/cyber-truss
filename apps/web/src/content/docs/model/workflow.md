@@ -94,24 +94,27 @@ the workflow that restores the relation.
 **Status: Settled** that direction lives in the workflow. **Thesis** that level suggests the
 default and that contracts live at outputs.
 
-## A change finds its candidates
+## Every workflow over the set picks the change up
 
-Two lookups over declared roles find every workflow a change might need. Neither is a
-judgement.
+A change lands in a set. Every workflow whose declared roles include that set picks it up. It
+reads the change within its own span, induces the intent, and runs under that intent. The
+lookup is over declarations, and it is not a judgement.
 
-- **Upstream candidates** own or output a changed set. The change skipped their derivation,
-  so they ask the controllers above it what must now move.
-- **Downstream candidates** read a changed set as an input. The change moved something
-  they depend on, and they run from it.
+Where the set sits in the workflow decides where the run starts. If the set is where this
+workflow starts, the workflow runs forward from there. Otherwise the workflow derives the
+set, and the change skipped that derivation. It asks the controllers above the set, nearest
+first, and replays from the highest affected one.
 
-When feature delivery amends `{spec}`, docs update is a downstream candidate because it
-reads `{spec}`. Nothing has to notice the docs going stale first.
+When feature delivery amends `{spec}`, docs update picks the change up because `{spec}` is
+where docs update starts. Nothing has to notice the docs going stale first.
 
-A set can be owned or output by several workflows. In the
+Being picked up is not being used. A workflow that finds nothing in the change abstains.
+
+A set can be derived by several workflows. In the
 [bug-fix example](/cyber-truss/examples/software-bug-fix/), `{code, test}` is written by
-feature delivery and by design implementation, so a change to the code finds both as
-upstream candidates. A set no workflow declares finds nothing, and a change there reaches
-no workflow at all.
+feature delivery and by design implementation, so a change to the code is picked up by both.
+A set no workflow declares is picked up by nothing, and a change there reaches no workflow at
+all.
 
 **Status: Thesis.**
 
@@ -149,14 +152,15 @@ protect it by deriving the criteria without the change.
 Selection yields every workflow that applies. There is no single global workflow with one
 starting point, and a change rarely needs only one.
 
-1. **Find candidates.** The upstream and downstream candidates of every changed set. A
+1. **Look up the workflows.** Every workflow whose declared roles include a changed set. A
    lookup.
-2. **Distill.** Each candidate states what the change is for within its span, or abstains.
-3. **Ask upward.** Each upstream candidate asks the controllers above the changed set,
+2. **Distill.** Each of them states what the change is for within its span, or abstains.
+3. **Ask upward.** A workflow that derives the changed set asks the controllers above it,
    nearest first, whether their sets hold the criteria the intent implies. A set too coarse
-   to hold them passes the question up. Asking stops at the first set that holds. An
-   upstream candidate for which every set asked holds, and whose changed set meets its
-   criteria at reconciliation, has nothing to replay.
+   to hold them passes the question up. Asking stops at the first set that holds. A workflow
+   for which every set asked holds, and whose changed set meets its criteria at
+   reconciliation, has nothing to replay. A workflow that starts at the changed set runs
+   forward from it and asks nothing.
 4. **Route what the workflow cannot write.** An affected set that is the workflow's input is
    routed to every workflow that owns or outputs it, carrying the root intent unchanged and
    references to the affected set's criteria. Each reads them within its span, then asks upward in its own
@@ -171,17 +175,17 @@ starting point, and a change rarely needs only one.
    outputs cannot be cleared by any run. It is raised as an obligation against that set. It
    also means the declarations have a gap: the team needs a workflow it has not declared.
 
-Candidates are cheap to find and costly to run, which is why step 3 filters them. A
-refactor inside `{code, test, stories}` finds the mission loop as an upstream candidate,
-because the loop owns the code. The refactor's intent says behaviour is unchanged, the
+The lookup is cheap and running a workflow is costly, which is why step 3 filters. A
+refactor inside `{code, test, stories}` is picked up by the mission loop, because the loop
+derives the code. The refactor's intent says behaviour is unchanged, the
 spec's controller answers that the spec holds it, and the loop replays nothing. Routing
 every change through the longest path would reintroduce exactly the ceremony the model
 removes.
 
-Selection is not decided once, up front. A replay changes artifacts, those changes have
-their own candidates, and further workflows are selected. Reach is discovered by
-propagation rather than predicted, because predicting reach is the step people fail at
-today.
+Selection is not decided once, up front. A replay changes artifacts, those changes are picked
+up by the workflows over the sets they land in, and further workflows are selected. Reach is
+discovered by propagation rather than predicted, because predicting reach is the step people
+fail at today.
 
 Plural selection moves the confluence question rather than removing it. Canonicalization
 now needs two things: an intent must pick out one set of workflows, and the set's results

@@ -109,9 +109,9 @@ each bag change.*
 ### Expected run
 
 1. **Lift.** The change touches `{order set}`, which is the source.
-2. **Find candidates.** Both workflows own `{order set}`, so both are
-   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates). No
-   workflow reads it.
+2. **Look up the workflows.** Both workflows own `{order set}`, so both
+   [derive the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+   and pick the change up. No workflow reads it.
 3. **Distill.** Each workflow
    [reads the change within its span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
    Both state one intent: *a rate change made exactly per the titration table, with pump
@@ -199,7 +199,7 @@ change uses it to remove most of them.
 ### Expected run
 
 1. **Lift.** The source is `{order set}`.
-2. **Find candidates.** The same two upstream candidates as variant A.
+2. **Look up the workflows.** The same two workflows as variant A, both deriving the set.
 3. **Distill.** The same intent as variant A.
 4. **Ask the controllers above.**
    - Policy deployment asks the `{ICU protocol}` controller. The protocol names no steps, so
@@ -264,7 +264,7 @@ builds it with an end date.
 ### Expected run
 
 1. **Lift.** The source is `{order set}`.
-2. **Find candidates.** The same two upstream candidates.
+2. **Look up the workflows.** The same two workflows, both deriving the set.
 3. **Distill.** Both state: *for four weeks, on nights, an insulin step may proceed without a
    second nurse when none is available within ten minutes, and the gap is recorded.*
 4. **Ask the controllers above.**

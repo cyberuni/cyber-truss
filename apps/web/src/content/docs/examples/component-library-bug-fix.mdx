@@ -121,10 +121,11 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`. It is the source.
-2. **Find candidates.** Component delivery and design implementation own `{code, test}`,
-   so they are [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-   API reference and release read it, so they are downstream candidates.
-3. **Distill.** Each candidate
+2. **Look up the workflows.** Component delivery and design implementation own
+   `{code, test}`, so both
+   [derive the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+   and pick the change up. API reference and release read it, so both run forward from it.
+3. **Distill.** Each of them
    [reads the change within its own span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
    - Component delivery: *every page shows at least one item.* The new props are how the
      developer expressed it.
@@ -141,7 +142,7 @@ round up, and commit. The diff touches the code and tests only. Every consumer p
    the result with the set's standing specification. `{code, test}` authors no use cases of
    its own, so that is the criteria it stood under from `{spec}` and `{mockups}`. Neither
    names a prop, so keeping the change removes nothing.
-6. **Propagate.** The downstream candidates run from the reconciled code.
+6. **Propagate.** The workflows that read the set run from the reconciled code.
    - API reference documents `totalItems` and `pageSize` and removes `totalPages`. The usage
      example no longer computes a count. Removing a documented prop contradicts the page's
      standing specification, so the [leash](/cyber-truss/model/workflow/#leash) stops the
@@ -242,8 +243,9 @@ page only.
 ### Expected run
 
 1. **Lift.** The change touches `{API docs}`. It is the source.
-2. **Find candidates.** Docs update and API reference own `{API docs}`, so both are
-   upstream candidates. Nothing reads the page, so there are no downstream candidates.
+2. **Look up the workflows.** Docs update and API reference own `{API docs}`, so both
+   derive the set and pick the change up. Nothing reads the page, so nothing runs forward
+   from it.
 3. **Distill.** Docs update: *the documented way to reach a page count produces no empty
    page.* API reference finds nothing about the code's exported props in the change and
    abstains.
@@ -297,8 +299,8 @@ Here the rule is the spec's criterion, and the formula is how the page failed it
   own that the change removes.
 - [Distillation per workflow](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow),
   with design implementation and, in variant B, API reference abstaining.
-- [Candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates) on both sides.
-  Variant A runs API reference and release as downstream candidates.
+- [Workflow lookup](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+  on both sides. Variant A runs API reference and release forward from the set.
 - [Recorded decisions](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest)
   choosing between settled states. Rejecting the break converges with variant B; accepting it
   widens the intent.

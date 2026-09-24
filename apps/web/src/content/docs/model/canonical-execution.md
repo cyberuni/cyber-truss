@@ -27,10 +27,10 @@ out what the change is for, finds the highest set that must move, and replays fr
 back to the source, where the change is reconciled.
 
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
-2. **Find candidates**: the workflows that own or output the source, and the workflows that
-   read it. A lookup. See
-   [A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-3. **Distill, per workflow.** Each candidate reads the change
+2. **Look up the workflows**: every workflow whose declared roles include the source. A
+   lookup. See
+   [Every workflow over the set picks the change up](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up).
+3. **Distill, per workflow.** Each of them reads the change
    [within its own span](#distillation-reads-within-one-workflow) and states its **intent**:
    what the change is for, separated from the particular expression of it.
 4. **Ask the controllers above.** A workflow that owns or outputs the source hands the intent
@@ -198,7 +198,7 @@ evaluate in the whole system.
 A diff alone cannot say what a change is for. Whether the rule it introduces is already
 stated, stated differently, or stated nowhere depends on the sets around it.
 
-Each candidate reads the change within its own span and shape, and answers one question:
+Each workflow reads the change within its own span and shape, and answers one question:
 what is the change for. It does not judge whether the change is right. A workflow whose
 input is authoritative would otherwise read every change to the set it writes as a
 mistake, and two workflows holding opposite roles on one edge would always disagree.

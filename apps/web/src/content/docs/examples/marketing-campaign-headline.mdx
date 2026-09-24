@@ -129,10 +129,10 @@ touches `{ads}` and `{launches}`.
 ### Expected run
 
 1. **Lift.** The change touches `{ads}` and `{launches}`.
-2. **Find candidates.** Creative production owns `{ads}` and outputs `{launches}`, so it is
-   an [upstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-   Message match reads `{ads}` as an input, so it is a downstream candidate. Campaign
-   planning and page build span neither set.
+2. **Look up the workflows.** Creative production owns `{ads}` and outputs `{launches}`, so
+   it [derives the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+   and picks the change up. Message match reads `{ads}` as an input, so it runs forward
+   from it. Campaign planning and page build span neither set.
 3. **Distill.** Creative production reads the change
    [within its span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow),
    `{messaging}` to `{ads}` to `{launches}`. Intent: *lead paid social with the savings
@@ -250,9 +250,9 @@ touches `{landing page}`.
 ### Expected run
 
 1. **Lift.** The change touches `{landing page}`.
-2. **Find candidates.** Page build and message match both own `{landing page}`, so both are
-   upstream candidates. No workflow reads `{landing page}` as an input, so there are no
-   downstream candidates.
+2. **Look up the workflows.** Page build and message match both own `{landing page}`, so
+   both derive the set and pick the change up. No workflow reads `{landing page}` as an
+   input, so nothing runs forward from it.
 3. **Distill.** Page build reads the change within `{messaging}` to `{landing page}`. The page
    serves every visitor, and the change names no channel. Intent: *lead with the savings
    figure wherever visitors land.* Message match reads it within `{ads}` to
@@ -304,7 +304,7 @@ not a harmless difference between settled states. If the two changes carry one i
 confluence is lost.
 
 Distilling within each workflow does not fix it. It moves where the scope comes from, from
-the walks to the spans. From an ad, the only upstream candidate is creative production, and
+the walks to the spans. From an ad, only creative production derives the set, and
 the change sits on one paid social ad. From the page, page build and message match both read
 a page that serves every channel, and nothing in either span narrows it. The controllers
 above do not narrow it either. They derive criteria from the intent they are handed, and

@@ -111,11 +111,11 @@ The order takes Kessler Semi to 8% of the portfolio and semiconductors to 30%.
 ### Expected run
 
 1. **Lift.** The change touches `{orders}`, and the fill touches `{portfolio}`.
-2. **Find candidates.** Thesis-first trade and rebalance both own `{portfolio}` and output
-   `{orders}`, so the order bypassed both. They are
-   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates). No
-   workflow reads `{orders}` or `{portfolio}` as an input, so there are no downstream
-   candidates.
+2. **Look up the workflows.** Thesis-first trade and rebalance both own `{portfolio}` and
+   output `{orders}`, so the order bypassed both. They
+   [derive the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+   and pick the change up. No workflow reads `{orders}` or `{portfolio}` as an input, so
+   nothing runs forward from either.
 3. **Distill.** Each workflow
    [reads the change within its own span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
    Thesis-first trade spans `{market data}` as it stood when the order went in, which holds
@@ -204,7 +204,7 @@ rumoured data-centre contract.
 ### Expected run
 
 1. **Lift.** The change touches `{orders}` and `{portfolio}`.
-2. **Find candidates.** Thesis-first trade and rebalance, as upstream candidates.
+2. **Look up the workflows.** Thesis-first trade and rebalance, both deriving the set.
 3. **Distill.** The order carries a ticker, a size, and a time. Thesis-first trade reads it
    within its span, and
    [distillation is bounded in time](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow):
@@ -264,10 +264,11 @@ condition the Kessler Semi thesis names. The feed job records the announcement i
 ### Expected run
 
 1. **Lift.** The change touches `{market data}`.
-2. **Find candidates.** No workflow owns or outputs `{market data}`. Its controller is the
-   feed job, so there are no upstream candidates. Thesis-first trade reads `{market data}`
-   as an input, so it is a
-   [downstream candidate](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
+2. **Look up the workflows.** No workflow owns or outputs `{market data}`. Its controller is
+   the feed job, so no workflow derives the set. Thesis-first trade reads `{market data}`
+   as an input, so it
+   [picks the change up](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+   and runs forward from it.
 3. **Distill.** The intent is the change's own, and it is thin: *market data is current as
    of week ten.* A press release carries no intent of the portfolio's owner, and the run
    does not need one. The criteria the specifications already state take part in the
@@ -287,8 +288,8 @@ condition the Kessler Semi thesis names. The feed job records the announcement i
    [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
    of `{theses}`. The theses controller reports the contradiction, and the
    [leash](/cyber-truss/model/workflow/#leash) stops the write for approval. The check runs
-   at every write to the set, so it catches this one although the workflow is a downstream
-   candidate that asked nothing. The change came from a feed job, so there is no requester to
+   at every write to the set, so it catches this one although the workflow only read the
+   set and asked nothing. The change came from a feed job, so there is no requester to
    ask. The stop reaches the trader, the only approver on this desk. The sell order is
    an output and waits for the same person. The trader can approve both at once, or approve
    the closure and [pre-approve](/cyber-truss/model/workflow/#leash) the rest of the run's
@@ -354,8 +355,8 @@ Two things remain outside the settled state.
   alone.
 - The leash against the
   [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
-  Variant C closes a thesis from a downstream run that asked nothing and has no requester,
-  and the stop still reaches the trader. It fires even though another standing criterion
+  Variant C closes a thesis from a workflow that only read the set, asked nothing, and has no
+  requester, and the stop still reaches the trader. It fires even though another standing criterion
   requires the closure, and pre-approval can cover only the sell order after it. Variant B
   shows the other side: an angle added beyond the derived criteria only adds, so the leash
   lets it through.
@@ -379,7 +380,7 @@ Two things remain outside the settled state.
   Thesis-first trade finds the intent only because `{market data}` is in its span, and it
   is there because the workflow declares the data as an input. Rebalance, without the data,
   reads a narrower intent that joins with it.
-- [Downstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
+- [Workflows that read the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up).
   Variant C reaches the trade workflow by a lookup over its input, from a feed job's write
   that carries no owner intent, and runs from the input down with nothing to reconcile.
 - [Declared roles](/cyber-truss/model/workflow/#direction-lives-in-the-workflow) as a guard.

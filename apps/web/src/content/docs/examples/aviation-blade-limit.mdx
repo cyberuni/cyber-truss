@@ -150,11 +150,11 @@ The AD still cites revision 2.
 
 1. **Lift.** The entry lands in `{work record}`, the source. It is an output, so the entry
    stays as written.
-2. **Find candidates.** AD compliance and maintenance programme both output
-   `{work record}`, so both are
-   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-   Reliability reads it, so it is a downstream candidate.
-3. **Distill.** Each upstream candidate
+2. **Look up the workflows.** AD compliance and maintenance programme both output
+   `{work record}`, so both
+   [derive the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up)
+   and pick the change up. Reliability reads it, so it runs forward from it.
+3. **Distill.** Each workflow that derives the set
    [reads the entry within its span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
    Both state the same intent: *an HPT stage-1 blade is rejected when its coating loss covers
    more than 20% of the leading edge, or lies next to a cooling hole.* The intent is written
@@ -301,9 +301,9 @@ days. This entry takes task 72-51-01 over the reliability programme's alert leve
 
 Steps 1 to 8 are the same as variant A.
 
-9. **Propagate.** Reliability is a downstream candidate. It reads `{work record}` as an
-   input, including the new entries and the two earlier ones, and runs downward from it. It
-   asks no controller above anything. The `{CAMP}` controller finds the alert level crossed,
+9. **Propagate.** Reliability reads the set, so it runs forward from `{work record}`,
+   including the new entries and the two earlier ones. It asks no controller above
+   anything. The `{CAMP}` controller finds the alert level crossed,
    and writes the borescope interval shorter, from 1,000 cycles to 500.
 
 The write is owned, and reliability asked nothing. The leash is still

@@ -115,7 +115,7 @@ Implementation ahead of its specification. *A bug fix introduces a rule the spec
 stated.*
 
 A controller above the change, asked in a workflow the change
-[bypassed](/cyber-truss/model/workflow/#a-change-finds-its-candidates), answers that its set
+[bypassed](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up), answers that its set
 lacks a criterion the change's intent implies. The
 implementation now meets something its specification does not state, and the
 specification is the side left behind.

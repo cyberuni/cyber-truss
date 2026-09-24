@@ -98,11 +98,11 @@ down, plus one. That rule is the bug.
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`, which is the source.
-2. **Find candidates.** Two workflows own `{code, test}`, so both are
-   [upstream candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates):
-   feature delivery and design implementation. No workflow reads `{code, test}`, so there
-   are no downstream candidates.
-3. **Distill.** Each candidate
+2. **Look up the workflows.** Two workflows own `{code, test}` and
+   [derive the set](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up):
+   feature delivery and design implementation. Both pick the change up. No workflow reads
+   `{code, test}`, so nothing runs forward from it.
+3. **Distill.** Each of them
    [reads the change within its own span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow).
    Feature delivery reads it against `{spec}` and `{PRD}`. Design implementation reads it
    against `{mockups}`, whose page indicator counts pages. Both state the same intent:
@@ -151,7 +151,7 @@ down, plus one. That rule is the bug.
    stated a rule for an exact multiple, so the result removes nothing from `{code, test}`
    and the leash lets it proceed.
 8. **Propagate.** The amended `{spec}` is a change of its own, under the run's intent. Docs
-   update reads it, so it is a downstream candidate. `{user docs}` states the old page
+   update reads it, so it runs forward from it. `{user docs}` states the old page
    count, so docs update writes the new one. The help page's criterion is that it describes
    the rule the spec states, and the write still meets it, so nothing is reversed and it
    proceeds. Design update's job is now ready and amends the page indicator. The indicator
@@ -225,9 +225,9 @@ The spec's criteria never mention how the page count is calculated.
 ### Expected run
 
 1. **Lift.** The change touches `{code, test}`, the source.
-2. **Find candidates.** The same two upstream candidates as variant A, and no downstream
-   ones.
-3. **Distill.** Both candidates state the same intent as in variant A.
+2. **Look up the workflows.** The same two workflows as variant A, both deriving the set,
+   and nothing running forward from it.
+3. **Distill.** Both workflows state the same intent as in variant A.
 4. **Ask the controllers above.**
    - Feature delivery asks the `{spec}` controller. The spec states none of the three
      criteria, so all three are [missing](/cyber-truss/model/connections/#missing), and the
@@ -245,7 +245,7 @@ The spec's criteria never mention how the page count is calculated.
    round-up and adds the empty-list case, and the result removes nothing. Design
    implementation reconciles the code against the mockups, which the code still meets, and
    changes nothing.
-7. **Propagate.** The amended spec has two downstream candidates. `{user docs}` contradicts
+7. **Propagate.** Two workflows run forward from the amended spec. `{user docs}` contradicts
    the new page count, so docs update writes it. As in variant A the help page still
    describes the rule the spec states, so the write proceeds. Design update runs from the
    amended spec as well, and the `{mockups}` controller finds the mockups still meet it, so
@@ -288,9 +288,9 @@ approver has spoken, nothing is pre-approved, and the default stops at `{mockups
 
 ## What it tests
 
-- [Candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates) found by
-  lookup. Both variants find the same two upstream candidates. The amended spec finds docs
-  update and design update downstream, with nothing having to notice the docs first.
+- [Workflow lookup](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up).
+  Both variants find the same two workflows deriving `{code, test}`. The amended spec is
+  read by docs update and design update, with nothing having to notice the docs first.
 - [Missing strain](/cyber-truss/model/connections/#missing). Variant B was a gap until the
   kind existed. Strain-only selection found nothing, because the spec stated no rule the
   fix could break.

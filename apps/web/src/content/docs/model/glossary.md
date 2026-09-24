@@ -56,13 +56,6 @@ skill, instruction, and governance to deterministic code. A compiler is a contro
 works within a set, where a [workflow](#workflow) works between sets. A controller
 **holds** a set; a workflow **owns** one. See [Controller](/cyber-truss/model/controller/).
 
-### Downstream candidate
-
-A workflow that reads a changed set as an [input](#input-owned-output). Found by a lookup
-over declared roles. It reads the change itself and runs from the changed set downward,
-asking nothing above it. See
-[A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
-
 ### Coordinates
 
 The properties that are free to differ between two runs of the same change — prose,
@@ -190,10 +183,10 @@ writer. It schedules to reduce rework and never makes a run correct. See
 
 ### Selection
 
-Finding the workflows a change needs: its [upstream](#upstream-candidate) and
-[downstream](#downstream-candidate) candidates, filtered by what the controllers above the
-[source](#source) answer, and every owner of an affected input, each triggered by a
-routed job carrying the root intent. An affected set no declared workflow can write is raised as an obligation. Extended as replays produce changes of their
+Finding the workflows a change needs: every workflow whose declared roles include a changed
+set, filtered by what the controllers above the [source](#source) answer, and every owner of
+an affected input, each triggered by a routed job carrying the root intent. A workflow that
+starts at the changed set runs forward from it; one that derives the set asks upward first. An affected set no declared workflow can write is raised as an obligation. Extended as replays produce changes of their
 own. See
 [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
 
@@ -240,14 +233,6 @@ diffs.
 [Axis 1](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change). Artifacts that must
 move together for a change to be complete — what belongs in one commit to be coherent.
 Delta-driven.
-
-### Upstream candidate
-
-A workflow that owns or outputs a set a change landed in. The change skipped that
-workflow's derivation, so it asks the controllers above the set what must move, and
-replays from the highest affected set. Found by a lookup over declared
-roles. See
-[A change finds its candidates](/cyber-truss/model/workflow/#a-change-finds-its-candidates).
 
 ### Workflow
 

@@ -48,7 +48,7 @@ that implies.
 
 Canonicalization concentrates the confluence requirement into
 [distillation](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight),
-which each candidate workflow runs within its own span.
+which each workflow that picks the change up runs within its own span.
 Two different expressions of one intent must distill to the same intent.
 
 Distillation is irreducibly agentic, so stability here is an empirical question about

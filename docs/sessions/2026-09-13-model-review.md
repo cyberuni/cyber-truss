@@ -72,12 +72,14 @@ author keeps none.
 
 Commits: `6dddbe6`, `d32076c`, `a237fb7`, `a22aba3`, `1a0dfa3`.
 
-Next, proposed and not yet done: rename the **upstream/downstream candidate** labels on
-`workflow.md:102`. They name the direction a run travels from a change, so the code
-implementation workflow is an *upstream candidate* when code changes though code sits at its
-bottom. Suggested *deriving* and *reading* candidates, keeping upstream/downstream for sets
-only. Touches `workflow.md`, `canonical-execution.md`, the glossary, and step 2 of every
-example.
+Done in the same round: the **candidate** vocabulary is gone (user-directed). *Upstream* and
+*downstream* named a workflow by the direction a run travelled, which contradicted their set
+meaning. Rejected on the way: renaming them *deriving*/*reading candidates*, and *affected
+workflows*, which collides with a controller's `affected` answer. What replaced them is one
+behaviour rather than two classes: every workflow whose declared roles include the changed set
+picks the change up, induces the intent, and runs under it; if the set is where that workflow
+starts it runs forward, otherwise it derives the set and asks upward. The section is now
+`Every workflow over the set picks the change up`, and its anchor changed.
 
 Runtime sketch, discussed and deliberately not written into the model (user-directed): a pod
 realises a controller and is declared by globs, a ship is a worktree and the strain boundary,
@@ -108,9 +110,9 @@ configurations would settle it with evidence.
 
 For workflow X spanning A, B, C, D, with the change landing in C (the **source**):
 
-1. **Lift and look up.** Every workflow whose span includes the source. Upstream candidates
-   own or output it; downstream candidates read it.
-2. **Distill, per workflow.** Each candidate reads the change within its own span and states
+1. **Lift and look up.** Every workflow whose declared roles include the source picks the
+   change up. Where the source sits in it decides where it starts.
+2. **Distill, per workflow.** Each of them reads the change within its own span and states
    what it is for, not whether it is right. A workflow that finds nothing abstains. **Only a
    change is distilled, never an intent** (translation loss compounds otherwise).
 3. **Ask the controllers above**, nearest first (B, then A). Each controller derives the
@@ -134,8 +136,8 @@ For workflow X spanning A, B, C, D, with the change landing in C (the **source**
    the criteria version current when it starts. Waiting on upstream is strain policy (owned
    writes proceed, output writes wait). The ledger never makes a run correct.
 
-Downstream candidates read the change itself and run from the source downward; they do not
-reconcile it.
+A workflow that starts at the source reads the change itself and runs forward from it; it
+does not reconcile it.
 
 ## Decisions (all committed)
 
@@ -146,7 +148,7 @@ reconcile it.
 | Confluence claimed over criteria; join is union of criteria (user-authored) | confluence, join | |
 | Six workflow parameters: span, roles, shape, discharge, strain policy, leash | workflow | |
 | Three roles: input (read), owned (read + revise), output (emitted, supersede only) | workflow | |
-| Candidates by lookup: upstream (own/output the source), downstream (read it) | workflow | |
+| Lookup over declared roles, no candidate class: a workflow that derives the source asks upward, one that starts at it runs forward | workflow | |
 | Leash: owned writes proceed when criteria pass; output writes need approval; architect/oracle go to a person; confidence only tightens | workflow | |
 | Controller holds one set and does the join; workflow owns sets and works between them | controller | |
 | Handoff is three calls: ask, write, reconcile | controller | High |
