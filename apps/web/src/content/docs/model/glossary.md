@@ -89,7 +89,7 @@ in the model. See [the catalog](/cyber-truss/model/workflows/).
 
 ### Governance target
 
-[Axis 2](/cyber-truss/model/artifact-sets/#axis-2--governance-target). Artifacts the same
+[Axis 2](/cyber-truss/model/artifact-sets/#axis-2-governance-target). Artifacts the same
 criteria apply to. State-driven: it needs no diff.
 
 ### Implementation
@@ -232,7 +232,7 @@ thing the model's acceptance test diffs.
 
 ### Unit of change
 
-[Axis 1](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change). Artifacts that must
+[Axis 1](/cyber-truss/model/artifact-sets/#axis-1-unit-of-change). Artifacts that must
 move together for a change to be complete: what belongs in one commit to be coherent.
 Delta-driven.
 

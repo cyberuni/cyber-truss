@@ -60,7 +60,7 @@ A criterion can depend on time. *Market data must not be older than two days* be
 false as the days pass, with no artifact touched. The cron job that refreshes the data is
 a [controller](/cyber-truss/model/controller/), and its run is a change like
 any other. If the job fails, the criterion still goes false, and the strain says so. The
-[compliance audit](/cyber-truss/model/workflows/#compliance-audit--soc-2-iso-27001) in the
+[compliance audit](/cyber-truss/model/workflows/#compliance-audit-soc-2-iso-27001) in the
 catalog has the same shape: *controls verified within the last twelve months*, and a
 scheduled controller whose run is the change.
 

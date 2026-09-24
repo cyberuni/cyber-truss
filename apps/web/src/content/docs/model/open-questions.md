@@ -205,9 +205,9 @@ run reports each step as additive, and nothing ever looks across the sets where 
   obvious analogue of a function is undefined.
 - **How much of the artifact topology is universal?** The catalog of artifact *roles* looks
   close to portable across repositories, and so do most
-  [unit-of-change](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change) edges, which
+  [unit-of-change](/cyber-truss/model/artifact-sets/#axis-1-unit-of-change) edges, which
   follow from what the artifacts mean.
-  [Governance targets](/cyber-truss/model/artifact-sets/#axis-2--governance-target) are
+  [Governance targets](/cyber-truss/model/artifact-sets/#axis-2-governance-target) are
   local by construction: they are a team's opinion about which criteria apply where. If
   that split holds, the product ships a default topology that repositories extend and
   override rather than a blank page. Empirical, and untested against a second repository.

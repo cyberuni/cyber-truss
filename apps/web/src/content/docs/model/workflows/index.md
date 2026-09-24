@@ -60,7 +60,7 @@ backlog is its ledger.
 *What it tests:* whether the strain kinds are genuinely independent. They are: two
 workflows over one lattice differing only in which kinds they will carry.
 
-### Safety certification — DO-178C, IEC 62304
+### Safety certification: DO-178C, IEC 62304
 
 Avionics and medical-device software require **bidirectional traceability**: every
 requirement traced to design, code, and the tests exercising it, and every line of code
@@ -72,12 +72,12 @@ a traceability matrix, and maintained by hand at enormous cost. This is the mode
 "nobody owns the connections" thesis confirmed by an industry that priced the alternative
 and paid it.
 
-### Compliance audit — SOC 2, ISO 27001
+### Compliance audit: SOC 2, ISO 27001
 
 A policy asserts a control exists; the control must be implemented; evidence must show it
 operating. An auditor arrives with no diff at all and evaluates the current state.
 
-*What it tests:* [axis 2](/cyber-truss/model/artifact-sets/#axis-2--governance-target),
+*What it tests:* [axis 2](/cyber-truss/model/artifact-sets/#axis-2-governance-target),
 the state-driven axis, in its purest form. Nothing here is delta-driven: this is
 nonconformance strain evaluated cold, on a repository nobody has just changed. A model with
 only a unit-of-change axis could not express an audit at all.

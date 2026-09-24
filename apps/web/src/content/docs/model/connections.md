@@ -158,7 +158,7 @@ would only patch a relation nobody declared. Missing connections are found by an
 loop** that runs outside normal operation and reads across sets, comparing practice with the
 standards above it. An audit is a scheduled [controller](/cyber-truss/model/controller/)
 whose run is a change, the shape of the
-[compliance audit](/cyber-truss/model/workflows/#compliance-audit--soc-2-iso-27001) in the
+[compliance audit](/cyber-truss/model/workflows/#compliance-audit-soc-2-iso-27001) in the
 catalog. Its finding is a connection to declare, or an
 [obligation](#obligation) against a set when nothing can restore it yet. SDD runs its outer
 loops the same way, beside the mission loop rather than inside it.
