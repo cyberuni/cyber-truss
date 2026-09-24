@@ -1,6 +1,6 @@
 # cyber-truss
 
-The convergence layer — holds a repository in its settled state across every change.
+The convergence layer. It holds a repository in its settled state across every change.
 
 > **Scaffold stage.** The name is settled; the design under it is still being argued in
 > [cyberuni/.github discussion #16](https://github.com/cyberuni/.github/discussions/16).
@@ -10,11 +10,11 @@ The convergence layer — holds a repository in its settled state across every c
 ## Why
 
 SDD is a **mission engine**: it runs from a change request to a handoff, then retires.
-Confluence is a property of the **repository state** — held continuously, across every
+Confluence is a property of the **repository state**, held continuously, across every
 change, including changes no mission produced. A per-mission engine cannot structurally
 hold a per-repo invariant.
 
-SDD keeps what it is good at: the normaliser behind one door — lenses, gates,
+SDD keeps what it is good at, the normaliser behind one door: lenses, gates,
 frozen-suite discipline, modes, classification, DoD. `cyber-truss` holds the state that
 outlives every mission.
 
@@ -34,7 +34,7 @@ npx cyber-truss --version
 
 ## CLI
 
-The binary is `truss`, bare — typed many times a day, and unambiguous on its own. The
+The binary is `truss`, bare. It is typed many times a day, and unambiguous on its own. The
 long name is for the places that need disambiguating (package, plugin, skill prefix);
 the short one is for the shell prompt.
 
@@ -46,9 +46,9 @@ truss --json <command>   # structured output
 
 | Exit code | Meaning |
 | --- | --- |
-| `0` | Success — including `--help` and `--version` |
+| `0` | Success, including `--help` and `--version` |
 | `1` | The command ran and failed |
-| `2` | Usage error — unknown flag or subcommand |
+| `2` | Usage error: unknown flag or subcommand |
 
 ## Plugin
 
