@@ -79,6 +79,18 @@ bottom. Suggested *deriving* and *reading* candidates, keeping upstream/downstre
 only. Touches `workflow.md`, `canonical-execution.md`, the glossary, and step 2 of every
 example.
 
+Runtime sketch, discussed and deliberately not written into the model (user-directed): a pod
+realises a controller and is declared by globs, a ship is a worktree and the strain boundary,
+and dispatch over the ready frontier drives it. Whether one pod holds several artifact types
+in one session, or each type gets its own, is configuration to be measured per artifact type,
+not a model decision. Two things make that flexibility real: no guarantee may rest on the
+arrangement, which is affordable only because adherence is enforced at the gate rather than by
+the producer's prompt; and what crosses a set boundary stays ask, write, reconcile either way.
+The observed SDD failure behind this is a spec-producer that does not load the governances it
+should, which splits into fetch-time failure, answered by composing a pack at birth, and
+dilution, answered by the gate. An ACED comparison of fetch-time, birth-time, and split
+configurations would settle it with evidence.
+
 ## Positioning (settled)
 
 - cyber-truss **makes a system self-converging**. Not a "layer", not scoped to
