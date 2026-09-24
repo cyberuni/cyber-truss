@@ -1,11 +1,11 @@
 ---
 title: Waterfall in the model
-description: A staged, gated process expressed in the model — which half of waterfall survives, and which half turns out to be unnecessary
+description: A staged, gated process expressed in the model. Which half of waterfall survives, and which half turns out to be unnecessary
 ---
 
 :::caution[Design, not implementation]
 Nothing described here is built. This page is an *exercise* run against the model rather
-than a ratified part of it — the same exercise as
+than a ratified part of it: the same exercise as
 [Relationship to SDD](/cyber-truss/model/relationship-to-sdd/), against a process the
 model did not grow from. See [the model overview](/cyber-truss/model/).
 :::
@@ -13,7 +13,7 @@ model did not grow from. See [the model overview](/cyber-truss/model/).
 ## Why run this one
 
 Waterfall is the most path-committed process in wide use. It does not merely suggest an
-order — it *enforces* one, and its entire value proposition rests on the enforcement.
+order. It *enforces* one, and its entire value proposition rests on the enforcement.
 
 That makes it the sharpest available test of the model's guarantee. If a model built on
 path-independence can only express processes that are indifferent to order, the guarantee
@@ -24,7 +24,7 @@ name whatever the model refuses to reproduce.
 
 The first translation error to avoid.
 
-Waterfall names five **phases** — requirements, design, implementation, verification,
+Waterfall names five **phases**: requirements, design, implementation, verification,
 maintenance. A phase is a span of *time*, owned by people. An
 [artifact-set](/cyber-truss/model/artifact-sets/) is a *type* of thing in a repository.
 They appear interchangeable in waterfall's diagram only because it assumes each phase
@@ -34,7 +34,7 @@ The model has no phases. It has sets, connections, and a policy on when strain m
 zero. Translating waterfall means splitting each phase into the two things it was
 conflating: **the set it produces**, and **the connection it crosses on the way in**.
 
-**Status: Settled** as a consequence of the two axes — a unit of change is defined by
+**Status: Settled** as a consequence of the two axes. A unit of change is defined by
 co-variation, not by schedule.
 
 ## Waterfall expressed
@@ -42,14 +42,14 @@ co-variation, not by schedule.
 | Model element | Waterfall |
 | --- | --- |
 | Artifact-sets | `{requirements}`, `{design}`, `{code, test}`, `{verification plan, results}` |
-| Governance targets | the document standard each phase's output must meet — template, review checklist, sign-off criteria |
-| Connections | requirements ↔ design, design ↔ implementation, implementation ↔ verification — a chain |
+| Governance targets | the document standard each phase's output must meet: template, review checklist, sign-off criteria |
+| Connections | requirements ↔ design, design ↔ implementation, implementation ↔ verification (a chain) |
 | Discharge criterion | the phase gate |
 | Strain policy | zero strain behind you before the next set is opened |
 
 The first row says **artifact-sets**, not units of change, and the distinction is not
 pedantry. Waterfall's own completeness standard is that a change is not done until it has
-crossed the whole chain — so reading these four as units of change collapses them into
+crossed the whole chain, so reading these four as units of change collapses them into
 one, and a single set has no connections left to gate. They are separate sets because
 they can be **strained independently**: requirements can move while design has not yet
 followed. Whether that strain is tolerated is the workflow's business, and it is the next
@@ -72,7 +72,7 @@ they are files someone can open:
 | `{code, test}` | source, unit tests, integration tests |
 | `{verification plan, results}` | a test plan, QA reports, UAT sign-off |
 
-Each row is a **type**, not a file — the point
+Each row is a **type**, not a file: the point
 [artifact-sets](/cyber-truss/model/artifact-sets/#artifact) makes with four vendor
 manifests. `{design}` covering both a Figma board and an ADR is not sloppiness: a rule
 keyed to files must be rewritten when the team adopts a fifth design tool, and a rule
@@ -88,13 +88,13 @@ The obvious next question is whether `{spec}` belongs between `{design}` and `{c
 It does not, and the reason is more interesting than the answer.
 
 Waterfall names no spec phase. Inserting one because *this repository* has one would
-repeat, in reverse, the error the SDD page caught — bending the instance to fit the model
+repeat, in reverse, the error the SDD page caught: bending the instance to fit the model
 rather than testing the model against the instance. The catalog is only evidence if each
 entry is expressed in its own terms.
 
 Ask instead where SDD's `{spec.md, .feature}` lands on waterfall's chain, and it turns out
-to **straddle**. `spec.md` states what the system should do — waterfall's requirements
-end. The `.feature` is the executable oracle those requirements are checked against —
+to **straddle**. `spec.md` states what the system should do: waterfall's requirements
+end. The `.feature` is the executable oracle those requirements are checked against:
 waterfall's verification end. SDD fuses the first and last positions of the chain into a
 single artifact-set.
 
@@ -107,8 +107,8 @@ implementation.
 
 Which suggests a rule the catalog did not otherwise surface: fusing requirement with
 verification collapses a chain, and the collapse is what makes the remaining gate
-mechanical rather than a review. Whether that generalises — whether any staged chain can
-be shortened this way — is not established here.
+mechanical rather than a review. Whether that generalises (whether any staged chain can
+be shortened this way) is not established here.
 
 **Status: Thesis** on the fold. The mapping holds on inspection; it has not been run
 against a real waterfall project's artifacts.
@@ -120,19 +120,19 @@ distinguishes waterfall is that it **refuses to open the next set while strain r
 behind it**, and the model's [kinds of strain](/cyber-truss/model/connections/#kinds-of-strain)
 make the refusal precise:
 
-- **Incompleteness strain** must be zero — the phase's own artifacts are all present.
-- **Nonconformance strain** must be zero — each conforms to the standard governing its type.
+- **Incompleteness strain** must be zero: the phase's own artifacts are all present.
+- **Nonconformance strain** must be zero: each conforms to the standard governing its type.
   This is the part of sign-off that is a review against criteria.
-- **Obligation strain** must be zero — and this is the strict one. The model's default is
+- **Obligation strain** must be zero, and this is the strict one. The model's default is
   that an obligation may be *carried*: raised now, discharged later, possibly by someone
   else. Waterfall forbids carrying one across a gate.
-- **Missing strain** must be zero — a later phase may not meet a rule an earlier phase never
+- **Missing strain** must be zero: a later phase may not meet a rule an earlier phase never
   stated. Waterfall's answer is the change request back through the gate, which the next
   section takes apart.
 
 So waterfall is not a different mechanism. It is a **policy on the strain the model
 already tracks**, and the policy is a single sentence: *no strain of any kind may cross a
-gate.* Agile methods are the same chain under a permissive version of the same policy —
+gate.* Agile methods are the same chain under a permissive version of the same policy:
 carry obligation strain freely, discharge it out-of-band.
 
 This is worth stating plainly because it dissolves an argument rather than settling it.
@@ -151,11 +151,11 @@ weeks into implementation who discovers a missing requirement is required to sto
 change request, and route it back through the gate.
 
 Under [canonical execution](/cyber-truss/model/canonical-execution/) that restriction
-becomes unnecessary — while every gate it was protecting stays intact. The developer
+becomes unnecessary, while every gate it was protecting stays intact. The developer
 changes what they can see. The waterfall workflow distills the change to its intent and asks
 the design and requirements above it what the intent requires. It **replays from the highest
 affected set**: when the change reaches requirements, requirements are amended first,
-design follows, and the developer's change is reconciled last — in order, through every
+design follows, and the developer's change is reconciled last, in order, through every
 gate, with every sign-off performed.
 
 The order is preserved. The gates are preserved. What is dropped is the demand that a
@@ -163,12 +163,12 @@ The order is preserved. The gates are preserved. What is dropped is the demand t
 
 That separation is the model's substantive contribution to this process. Waterfall used a
 **scheduling constraint on people** to obtain a **property of artifacts**. It is a
-reasonable way to get the property when nothing else can hold it — and it is the reason
+reasonable way to get the property when nothing else can hold it. It is also the reason
 the process is disliked, because the cost lands on whoever noticed the problem. Once the
 property is held by canonical execution, the constraint is a cost with nothing left to
 buy.
 
-**Status: Thesis**, and directly dependent on distillation being stable — the
+**Status: Thesis.** It depends directly on distillation being stable, the
 [open risk](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight) that
 this claim inherits rather than escapes.
 
@@ -181,7 +181,7 @@ Waterfall-as-practiced holds that **earlier phases do not reopen**. Implementati
 conforms to design; where reality disagrees with the document, the implementation yields.
 
 The model cannot reproduce that, and not by oversight.
-[Connections are undirected](/cyber-truss/model/connections/#connections-are-undirected) —
+[Connections are undirected](/cyber-truss/model/connections/#connections-are-undirected):
 direction is a property of where the delta landed, never of the relation. When
 implementation reveals that a requirement was wrong, "restore the relation" is satisfied
 by amending the requirement just as legitimately as by bending the code. The model has no
@@ -204,18 +204,19 @@ A last consequence, from
 [workflow selection](/cyber-truss/model/workflow/#how-workflows-are-selected).
 
 Expressing waterfall does not make it the workflow. It makes it *a* workflow spanning
-this chain of sets — the appropriate one when a change genuinely reaches requirements, and
+this chain of sets: the appropriate one when a change genuinely reaches requirements, and
 badly wrong for a typo in a docstring. Routing every change through the full chain is
 exactly the ceremony the model exists to remove, and it is how waterfall earned its
 reputation in the first place.
 
 Selection therefore has to reach it only when the controllers above the change answer that
-requirements are affected, which is the same open problem the model already carries. Nothing about this exercise makes that problem easier — but nothing about it
-makes it worse, which is the outcome that mattered.
+requirements are affected, which is the same open problem the model already carries.
+Nothing about this exercise makes that problem easier, but nothing about it makes it
+worse, which is the outcome that mattered.
 
 **Status: Open**, inherited.
 
-The four parameters this exercise settled on — sets, shape, discharge, strain policy —
+The four parameters this exercise settled on (sets, shape, discharge, strain policy)
 turn out to describe staged processes well outside software.
 [Formal workflows](/cyber-truss/model/workflows/) runs the same exercise across
 eight fields.

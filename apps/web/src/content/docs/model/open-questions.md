@@ -55,7 +55,7 @@ Distillation is irreducibly agentic, so stability here is an empirical question 
 agent behaviour rather than a property that can be proven.
 
 **What breaks if it resolves badly:** the guarantee fails at the normalization step
-instead of in the connections — the same failure, relocated. The upside is that this
+instead of in the connections: the same failure, relocated. The upside is that this
 failure is *measurable*: feed one workflow several expressions of one intent and compare
 the intents it states.
 
@@ -101,7 +101,7 @@ the guarantee quietly becomes aspirational.
 Gating is not the fix, because gating is the ceremony the model removes.
 
 **Proposed, not settled:** obligations are non-blocking within a working context and
-blocking at a boundary — realistically the merge to trunk. Work proceeds uninterrupted,
+blocking at a boundary, realistically the merge to trunk. Work proceeds uninterrupted,
 obligations accumulate, and the branch cannot retire while topology is strained.
 Coordinates never block. Transient inconsistency becomes designed, with a stated window,
 rather than accidental.
@@ -163,7 +163,7 @@ should proceed or letting one through that should wait.
 ## Where does the controller interface sit?
 
 Controllers span a spectrum from agent definition to deterministic code. What they have
-in common — what a controller is *handed* and what it *returns* — is undefined. A first
+in common (what a controller is *handed* and what it *returns*) is undefined. A first
 draft is on [the Controller page](/cyber-truss/model/controller/#the-handoff): a workflow
 asks a controller for criteria, asks it to write, or asks it to reconcile a change that
 landed in its set, and each call returns something different.
@@ -200,7 +200,7 @@ run reports each step as additive, and nothing ever looks across the sets where 
   do not re-trigger it?
 - **How are specification levels identified across artifact types?** Two specifications are
   comparable when they sit at
-  [the same rung](/cyber-truss/model/specification/#specifications-exist-at-every-level) —
+  [the same rung](/cyber-truss/model/specification/#specifications-exist-at-every-level):
   function, module, product, system. What fixes the rung for an artifact type that has no
   obvious analogue of a function is undefined.
 - **How much of the artifact topology is universal?** The catalog of artifact *roles* looks
@@ -208,6 +208,6 @@ run reports each step as additive, and nothing ever looks across the sets where 
   [unit-of-change](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change) edges, which
   follow from what the artifacts mean.
   [Governance targets](/cyber-truss/model/artifact-sets/#axis-2--governance-target) are
-  local by construction — they are a team's opinion about which criteria apply where. If
+  local by construction: they are a team's opinion about which criteria apply where. If
   that split holds, the product ships a default topology that repositories extend and
   override rather than a blank page. Empirical, and untested against a second repository.

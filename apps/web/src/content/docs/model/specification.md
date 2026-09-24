@@ -25,8 +25,8 @@ An implementation is a blackbox. What crosses a connection is the criteria on it
 
 ## Specifies is a relation, not a layer
 
-It is tempting to read a repository as two stacked layers — everything that says what to
-do on top, everything that does it underneath. That reading breaks on the first real
+It is tempting to read a repository as two stacked layers: everything that says what to do
+on top, everything that does it underneath. That reading breaks on the first real
 artifact.
 
 A product requirements document is a specification of the product. It is also the thing
@@ -68,7 +68,7 @@ criteria cannot be checked, criteria without intent cannot be
 when they turn out to encode the wrong goal.
 
 SDD shows the cost of leaving the pair unnamed. Its specification is `spec.md` together
-with the `.feature` suite — intent and criteria in two files — and "the spec" is used for
+with the `.feature` suite (intent and criteria in two files), and "the spec" is used for
 both the pair and the first file alone. The ambiguity is why that phrase has to be
 expanded to "spec + suite" wherever precision matters.
 
@@ -123,7 +123,7 @@ the use cases they were derived from live in the specification.
 
 A set specifies something beyond the system's boundary as readily as inside it. A library's
 reference page is written from the code and read by consumers whose own code is judged
-against it, so it authors use cases of its own — a consumer arriving to learn what to pass —
+against it, so it authors use cases of its own (a consumer arriving to learn what to pass)
 even though no declared workflow reads it. Downstream in the topology and upstream of
 somebody are not exclusive. The test is whether anything is checked against the set, not
 whether a declared set reads it.
@@ -149,16 +149,16 @@ The relation chains. A function has expectations, so does the module containing 
 the product and the system. Each rung specifies the rung beneath it and implements the
 rung above.
 
-So the earlier question — whether a specification attaches to an artifact or to an
-[artifact-set](/cyber-truss/model/artifact-sets/) — is a false choice. Both, at different
+So the earlier question, whether a specification attaches to an artifact or to an
+[artifact-set](/cyber-truss/model/artifact-sets/), is a false choice. Both, at different
 levels. `{code, test, stories}` has criteria as a set; the exported function inside it has
 its own, narrower ones.
 
 Two consequences worth stating.
 
 **Not every artifact-set has a specification.** Many are held entirely by their
-[controller](/cyber-truss/model/controller/) — formatting has no intent
-worth writing down, only a formatter. Requiring a specification everywhere would
+[controller](/cyber-truss/model/controller/): formatting has no intent worth writing down,
+only a formatter. Requiring a specification everywhere would
 manufacture ceremony in exactly the places the model exists to remove it from.
 
 **Connections connect at a level.** Two specifications are comparable when they sit at the
@@ -198,8 +198,8 @@ is outside the implementation workflow's span, a code change never asks it, and 
 fall back to being derived at the source by the controller that has already seen the change.
 Holding that rung is the whole reason the set exists.
 
-**No declared workflow may write it from the implementation.** The moment one does — a
-workflow that reads the code and regenerates the component spec — the set is revisable from
+**No declared workflow may write it from the implementation.** The moment one does (a
+workflow that reads the code and regenerates the component spec), the set is revisable from
 the side it constrains, and a change can bring it along instead of stopping against it. This
 is why the
 [component library example](/cyber-truss/examples/component-library-bug-fix/#status-holds)
@@ -237,8 +237,8 @@ They have three properties.
   keeps what it has no reason to touch. A refactor keeps all of them, because preserving
   behaviour is its intent. That is convention, not a guarantee, and it is what the existing
   artifacts contribute to a write: how, never what.
-- **Found by a break.** When a write breaks one, it returns as a change — a bug report, a
-  consumer's complaint — carrying a criterion no set states. That is
+- **Found by a break.** When a write breaks one, it returns as a change (a bug report, a
+  consumer's complaint) carrying a criterion no set states. That is
   [missing strain](/cyber-truss/model/connections/#missing), already in the model. Nothing
   new is needed to pick it up.
 - **Stated only if the team decides to.** Once surfaced, writing it into a specification is
@@ -263,13 +263,13 @@ relation and they stop being observed cases.
 | Strain | Shape in this vocabulary |
 | --- | --- |
 | Incompleteness | a specification and its implementation disagree, and both are in hand |
-| Obligation | a specification whose implementation is **elsewhere** — an ADR constrains modules it does not contain |
+| Obligation | a specification whose implementation is **elsewhere**: an ADR constrains modules it does not contain |
 | Nonconformance | criteria evaluated with no counterpart implementation in the delta at all |
 | Missing | an implementation meets criteria a change introduced, and its specification does not state them |
 
 Obligation strain is the interesting one. An accepted ADR is a specification with no local
 implementation; the artifacts that implement it are owned by other units of change. That
-is not a special case bolted onto the taxonomy — it is what the relation predicts when the
+is not a special case bolted onto the taxonomy. It is what the relation predicts when the
 two ends of an edge land in different commits.
 
 The first three read the relation from the specification's side. Missing reads it from the
@@ -285,7 +285,7 @@ One impossible problem is exchanged for many tractable ones.
 
 Comparing a Figma frame against a Rust module cannot be done. Comparing each against its
 own criteria can, and comparing two sets of criteria to each other can. The cost is that
-every artifact now has a second thing that can go stale — its specification can drift from
+every artifact now has a second thing that can go stale: its specification can drift from
 the implementation it constrains, and that drift is invisible to the controller holding
 either one.
 

@@ -1,6 +1,6 @@
 ---
 title: Artifact-sets
-description: The unit the model reasons about — two orthogonal axes, and the controllers that govern them
+description: The unit the model reasons about. Two orthogonal axes, and the controllers that govern them
 ---
 
 import SetDiagram from '../../../components/SetDiagram.astro'
@@ -11,20 +11,20 @@ Nothing described here is built. See [the model overview](/cyber-truss/model/).
 
 ## Artifact
 
-An **artifact** is one type of thing in a repository. Not one file, and not one line —
-a type.
+An **artifact** is one type of thing in a repository. Not one file, and not one line: a
+type.
 
 TypeScript files. CSS. Website content. Repository configuration. A skill. `AGENTS.md`.
 
 The choice of *type* rather than *instance* is load-bearing. This repository ships
 `plugin.json`, `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, and
-`.codex-plugin/plugin.json` — four files, one artifact. A rule keyed to files has to be
+`.codex-plugin/plugin.json`: four files, one artifact. A rule keyed to files has to be
 written four times and rewritten when a fifth vendor appears. A rule keyed to the artifact
 is written once.
 
 <SetDiagram variant="artifact">
-	Two levels, and the model only ever names the second. Four files are one artifact —
-	`plugin manifest` — and that artifact is one member of the set that has to move when a
+	Two levels, and the model only ever names the second. Four files are one artifact
+	(`plugin manifest`), and that artifact is one member of the set that has to move when a
 	skill is added. A rule written against the right-hand box survives a fifth vendor
 	appearing in the left-hand one.
 </SetDiagram>
@@ -57,8 +57,8 @@ Artifacts that the same criteria apply to.
 `{a skill, AGENTS.md}` is the canonical example: the same agent-instruction guidelines
 govern both, though neither obliges the other to change.
 
-This axis is **state-driven**. It needs no diff at all — a cold repository can be
-evaluated against it — and it asks: *does this conform to the criteria that govern it?*
+This axis is **state-driven**. It needs no diff at all (a cold repository can be evaluated
+against it), and it asks: *does this conform to the criteria that govern it?*
 
 ### Why they must stay separate
 
@@ -70,10 +70,10 @@ criteria governing a test differ from those governing the code it exercises.
 
 <SetDiagram variant="axes">
 	The two axes drawn over the same repository. Neither set contains the other and neither
-	is a refinement of the other — they cross. `skill` is the only artifact in both, and it
+	is a refinement of the other. They cross. `skill` is the only artifact in both, and it
 	is in them for unrelated reasons: it moves with the manifests, and it is judged by the
 	same criteria as `AGENTS.md`. Collapse the two ellipses into one and you get a set that
-	is wrong on both counts — it would demand `AGENTS.md` change with every new skill, and
+	is wrong on both counts: it would demand `AGENTS.md` change with every new skill, and
 	it would hold the manifests to guidelines written for prose.
 </SetDiagram>
 
@@ -90,7 +90,7 @@ a spectrum from agent definition to deterministic code.
 ## Lifting
 
 Git reports a change as lines in files. The model speaks in artifact-sets. Nothing can be
-matched until the delta is **lifted** — raised from a line diff into the set vocabulary.
+matched until the delta is **lifted**, raised from a line diff into the set vocabulary.
 
 Lifting is a distinct operation and, on current reading, a distinct subsystem. It is a
 prerequisite for everything downstream: an unlifted diff cannot be matched against a

@@ -20,9 +20,9 @@ branch on.
 
 | Code | Meaning |
 | --- | --- |
-| `0` | Success — including `--help` and `--version` |
+| `0` | Success, including `--help` and `--version` |
 | `1` | The command ran and failed |
-| `2` | Usage error — unknown flag or subcommand |
+| `2` | Usage error: unknown flag or subcommand |
 
 ## Commands
 

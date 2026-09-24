@@ -11,7 +11,7 @@ See [the model overview](/cyber-truss/model/).
 ## Free entry, canonical execution
 
 At **authoring** time no artifact-set is privileged. Touch the prototype, the spec, the
-implementation, or the docs — whichever the work actually starts from.
+implementation, or the docs, whichever the work actually starts from.
 
 At **execution** time the execution is canonical. Every entry point is normalized onto the
 same set of workflows, run from the same intent.
@@ -111,7 +111,7 @@ accepted at the [leash](/cyber-truss/model/workflow/#leash): a write that contra
 set's standing specification, the use cases and criteria it held before the run, needs
 approval unless the team has loosened that set's leash.
 
-It does not close the question below — criteria derived from a misread intent are wrong in
+It does not close the question below: criteria derived from a misread intent are wrong in
 the same direction as everything downstream of them. It replaces *hope that the comparison
 is honest* with a mechanism that can be inspected.
 
@@ -154,7 +154,7 @@ and the criteria derived above it are the independent check. Reconciliation is w
 prediction earns its place or is replaced. What survives is kept as it was written, so an
 ad-hoc change that meets the criteria is not normalized away.
 
-This is what makes ad-hoc entry safe. Ad-hoc output is never trusted — it is evidence.
+This is what makes ad-hoc entry safe. Ad-hoc output is never trusted: it is evidence.
 And it explains why the three approaches currently differ in quality: today, whichever
 artifact you touched first is simply *believed*.
 
@@ -173,8 +173,8 @@ backward lenses SDD already uses:
 The mechanism is not new either. SDD's implementation judge already re-derives each
 scenario's oracle independently rather than reading the producer's. This model
 generalizes independent derivation of the bar from *judging an implementation* to
-*normalizing any change*. Same mechanism, wider scope — which is the concrete content of the claim
-that this is SDD's next revision rather than a new system wearing its vocabulary.
+*normalizing any change*. Same mechanism, wider scope. That is the concrete content of the
+claim that this is SDD's next revision rather than a new system wearing its vocabulary.
 
 **Status: Settled** that the lens set is the right vocabulary for the comparison.
 
@@ -189,7 +189,7 @@ path-independence dies at this step instead of in the connections.
 
 That concentration is the point. A few hard places that can be evaluated beat many places
 that cannot, and the evaluation writes itself: feed one workflow several different
-expressions of one intent — a mockup, a prose description, a failing test — and check that
+expressions of one intent (a mockup, a prose description, a failing test) and check that
 the intents it states match. On current reading this is the single highest-value thing to
 evaluate in the whole system.
 
@@ -502,7 +502,7 @@ Canonicalization guarantees confluence *of the executed path*. It says nothing a
 whether that path is correct.
 
 If the defined workflow is wrong, every entry point now converges reliably on the same
-wrong place — and the ad-hoc changes that used to reveal the problem are being normalized
+wrong place, and the ad-hoc changes that used to reveal the problem are being normalized
 away before they can.
 
 The reconciliation report is the only protection, and it works only if disagreement is treated

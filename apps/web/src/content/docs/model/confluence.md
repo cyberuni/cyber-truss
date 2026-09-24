@@ -50,8 +50,7 @@ which is why the claim above is stated over criteria.
 ## What confluence is claimed over
 
 Not byte-identity. A prototype-first route and a spec-first route will produce different
-prose, different section order, different file organisation — and none of that is a
-failure.
+prose, different section order, different file organisation. None of that is a failure.
 
 The claim is over **topology**:
 
@@ -70,8 +69,8 @@ recorded rather than left to timing. See
 [Order is not controlled](/cyber-truss/model/canonical-execution/#order-is-not-controlled).
 
 This distinction is not a detail of how results are reported. It is **the statement of
-what the system guarantees**. Without it the guarantee is either unachievable — if you
-claim byte-identity — or undefined, if you claim nothing at all.
+what the system guarantees**. Without it the guarantee is unachievable if you claim
+byte-identity, and undefined if you claim nothing at all.
 
 **Status: Settled.**
 
@@ -88,15 +87,14 @@ did not, and the burden grows with the number of connections.
 
 **Confluence by canonicalization.** Do not require the property at all. Normalize every
 entry point onto one canonical execution, so the route in play does not depend on where
-the change arrived. This is
-the same construction as defining a normal form instead of proving that rewrite rules
-commute.
+the change arrived. This is the same construction as defining a normal form instead of
+proving that rewrite rules commute.
 
 The model takes the second. It is cheaper, more robust, and it scales to many
 artifact-sets where the first would need every pair independently proven. How it works is
 [Canonical execution](/cyber-truss/model/canonical-execution/).
 
-The risk does not vanish — it **concentrates**, in the step that normalizes. That
+The risk does not vanish: it **concentrates**, in the step that normalizes. That
 relocation is a benefit rather than a caveat: it moves the danger from many places nobody
 can check into one place that is directly evaluable.
 
@@ -111,7 +109,7 @@ written from inside any single artifact-set:
 > Run the same change from several entry points. Diff the resulting **topology**.
 
 If the topologies differ, the system is not delivering its central claim. Expensive to
-run, trivially falsifiable — the right combination for a system-level evaluation.
+run, trivially falsifiable: the right combination for a system-level evaluation.
 
 **Status: Settled** as the shape of the test. **Open:** what a topology diff is
 operationally.

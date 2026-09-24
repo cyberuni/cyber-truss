@@ -22,7 +22,7 @@ npx cyber-truss --version
 
 ## The CLI
 
-The binary is `truss`, bare — short enough to type many times a day, and unambiguous
+The binary is `truss`, bare: short enough to type many times a day, and unambiguous
 on its own.
 
 ```bash

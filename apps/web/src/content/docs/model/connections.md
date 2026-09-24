@@ -51,7 +51,7 @@ build-to-learn works both ends at once. Three traversals, one relation.
 Direction is a property of *where the delta landed*, and of
 [the workflow that restores the relation](/cyber-truss/model/workflow/#direction-lives-in-the-workflow),
 not of the connection. Writing direction into the connection bakes in one workflow and
-makes the others second-class — which is precisely the situation the model exists to fix.
+makes the others second-class. That is precisely the situation the model exists to fix.
 
 **Status: Settled.**
 
@@ -90,13 +90,13 @@ and it blocks.
 
 Between units of change. *An accepted ADR obliges the module it governs.*
 
-These are deliberately separate changes — decide now, implement later. The strain is not
+These are deliberately separate changes: decide now, implement later. The strain is not
 "you forgot," it is **"this change created a debt."** It does not block, but it must be
 tracked and discharged traceably.
 
 This kind was the last to be identified, and it explains an artifact already sitting in
 the repository: `docs/backlog.md` is a **hand-maintained obligation ledger**. Not all of
-it — some entries are genuinely new ideas — but the ADR-obliges-module chain and several
+it (some entries are genuinely new ideas), but the ADR-obliges-module chain and several
 others are debts created by earlier changes, recorded by hand because nothing generates
 them.
 
@@ -177,7 +177,7 @@ from a defect in this repository's own docs site.
 
 An element declared `top: 0rem` rendered 16px lower than intended. Starlight's markdown
 stylesheet gives every element following a sibling a 1rem top margin, and an absolutely
-positioned element offsets its **margin edge** — so the box sat 1rem down while
+positioned element offsets its **margin edge**, so the box sat 1rem down while
 `getComputedStyle` reported `top` as exactly `0px`, in perfect agreement with the source.
 
 Every static check passed. The value was wrong anyway.
@@ -190,4 +190,4 @@ measure*.
 This is why the controller spectrum has an agentic end, and why the plugin is not an
 optional convenience.
 
-**Status: Settled** — the case is verified against this repository's configuration.
+**Status: Settled.** The case is verified against this repository's configuration.

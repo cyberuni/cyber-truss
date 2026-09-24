@@ -1,6 +1,6 @@
 ---
 title: Glossary
-description: The model's vocabulary in one place — every term it defines, and the ones it deliberately avoids
+description: The model's vocabulary in one place. Every term it defines, and the ones it deliberately avoids
 ---
 
 :::caution[Design, not implementation]
@@ -15,9 +15,9 @@ and points at the definitions.
 
 ### Approver
 
-A person allowed to approve what the [leash](#leash) stops. Any approver may approve a stop in
-any workflow, or pre-approve the gates of a run. Approvers per workflow are deferred. SDD calls
-this role the Council. See
+A person allowed to approve what the [leash](#leash) stops. Any approver may approve a
+stop in any workflow, or pre-approve the gates of a run. Approvers per workflow are
+deferred. SDD calls this role the Council. See
 [Leash](/cyber-truss/model/workflow/#leash).
 
 ### Artifact
@@ -27,8 +27,8 @@ artifact. Defined in [Artifact-sets](/cyber-truss/model/artifact-sets/#artifact)
 
 ### Artifact-set
 
-A group of artifacts, grouped along one of [two orthogonal axes](/cyber-truss/model/artifact-sets/#two-axes)
-— unit of change or governance target. The unit the model reasons about, and the node in
+A group of artifacts, grouped along one of [two orthogonal axes](/cyber-truss/model/artifact-sets/#two-axes):
+unit of change or governance target. The unit the model reasons about, and the node in
 [the lattice graph](/cyber-truss/model/lattice/#a-graph-of-interconnected-nodes).
 
 ### Conflict
@@ -58,8 +58,8 @@ works within a set, where a [workflow](#workflow) works between sets. A controll
 
 ### Coordinates
 
-The properties that are free to differ between two runs of the same change — prose,
-section order, file organisation. The complement of [topology](#topology).
+The properties that are free to differ between two runs of the same change: prose, section
+order, file organisation. The complement of [topology](#topology).
 
 ### Criteria
 
@@ -77,8 +77,8 @@ a discharge point. One of the parameters a [workflow](#workflow) declares.
 Reducing an arriving change to its [intent](#intent), separated from the particular
 expression of it. Only a change is distilled, never an intent. Each workflow the change
 reaches distills it within its own span, and states what it is for, not whether it is
-right. A workflow that finds nothing abstains. Writes
-nothing, and produces no criteria: those come from each set's [controller](#controller).
+right. A workflow that finds nothing abstains. Distillation writes nothing and produces no
+criteria: those come from each set's [controller](#controller).
 Irreducibly agentic, and the step that carries the confluence guarantee. See
 [Canonical execution](/cyber-truss/model/canonical-execution/#distillation-carries-the-weight).
 
@@ -90,12 +90,12 @@ in the model. See [the catalog](/cyber-truss/model/workflows/).
 ### Governance target
 
 [Axis 2](/cyber-truss/model/artifact-sets/#axis-2--governance-target). Artifacts the same
-criteria apply to. State-driven — it needs no diff.
+criteria apply to. State-driven: it needs no diff.
 
 ### Implementation
 
 The role an artifact holds on an edge where something else constrains it. A blackbox: the
-model reasons about its outcome, not its internals. A role, not a kind of artifact — see
+model reasons about its outcome, not its internals. A role, not a kind of artifact. See
 [Specification](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer).
 
 ### Incompleteness strain
@@ -127,15 +127,16 @@ criteria flow, the join says how criteria reaching one place combine. See
 
 The concept the system is worked out from, in three readings: the crystal that settles
 back, the graph that redistributes load, and the order-theoretic structure whose join
-combines criteria.
-Used in prose, never as the wordmark. See [The lattice](/cyber-truss/model/lattice/).
+combines criteria. Used in prose, never as the wordmark. See
+[The lattice](/cyber-truss/model/lattice/).
 
 ### Leash
 
 Which writes an agent may make in a [workflow](#workflow) without an
-[approver](#approver)'s approval. Owned writes proceed when criteria pass and nothing in the set's
-[standing specification](#standing-specification) is removed or reversed. Output writes,
-writes that contradict the standing specification, and architect or oracle outcomes need
+[approver](#approver)'s approval. Owned writes proceed when criteria pass and nothing in
+the set's [standing specification](#standing-specification) is removed or reversed. Output
+writes, writes that contradict the standing specification, and architect or oracle outcomes
+need
 approval by default. Confidence only tightens it. See
 [Leash](/cyber-truss/model/workflow/#leash).
 
@@ -147,17 +148,18 @@ downstream, because an unlifted diff and a connection are written in different l
 ### Missing strain
 
 A controller above a change's [source](#source) answers that its set lacks a criterion the
-change's intent implies: the implementation meets something its specification does not state. Relative to a change,
-unlike the other kinds. See [kinds of strain](/cyber-truss/model/connections/#missing).
+change's intent implies: the implementation meets something its specification does not
+state. Relative to a change, unlike the other kinds. See
+[kinds of strain](/cyber-truss/model/connections/#missing).
 
 ### Nonconformance strain
 
-Criteria are unsatisfied with no counterpart implementation in the delta at all —
-evaluable on a cold repository, with no diff. The axis-2 strain.
+Criteria are unsatisfied with no counterpart implementation in the delta at all: evaluable
+on a cold repository, with no diff. The axis-2 strain.
 
 ### Obligation strain
 
-A specification whose implementation lives elsewhere — an accepted ADR constrains modules
+A specification whose implementation lives elsewhere: an accepted ADR constrains modules
 it does not contain. Does not block, must be tracked, and can be **declined**.
 
 ### Reconciliation
@@ -176,18 +178,19 @@ write. A Request to a controller above the source carries no expression of the c
 ### Run ledger
 
 The append-only record of a run: pending jobs, what each waits on, criteria versions,
-resolutions, and decisions. It collects the contributions addressed to each set, with their
-provenance, and never merges them. Its ready frontier is the jobs whose inputs have no pending
-writer. It schedules to reduce rework and never makes a run correct. See
+resolutions, and decisions. It collects the contributions addressed to each set, with
+their provenance, and never merges them. Its ready frontier is the jobs whose inputs have
+no pending writer. It schedules to reduce rework and never makes a run correct. See
 [The run ledger schedules](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide).
 
 ### Selection
 
 Finding the workflows a change needs: every workflow whose declared roles include a changed
-set, filtered by what the controllers above the [source](#source) answer, and every owner of
-an affected input, each triggered by a routed job carrying the root intent. A workflow that
-starts at the changed set runs forward from it; one that derives the set asks upward first. An affected set no declared workflow can write is raised as an obligation. Extended as replays produce changes of their
-own. See
+set, filtered by what the controllers above the [source](#source) answer, and every owner
+of an affected input, each triggered by a routed job carrying the root intent. A workflow
+that starts at the changed set runs forward from it; one that derives the set asks upward
+first. An affected set no declared workflow can write is raised as an obligation. Extended
+as replays produce changes of their own. See
 [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
 
 ### Source
@@ -199,7 +202,7 @@ above it derive criteria without seeing the change, and its own controller
 ### Specification
 
 [Intent](#intent) and [criteria](#criteria) together. Also the role an artifact holds on an
-edge where it constrains something else — per-edge, so one artifact is a specification on
+edge where it constrains something else: per-edge, so one artifact is a specification on
 one edge and an implementation on another. See
 [Specification](/cyber-truss/model/specification/).
 
@@ -224,14 +227,13 @@ one of the four, never a score on each.
 ### Topology
 
 What the criteria constrain, and so what must converge across entry points. Usually
-scenarios, actors, and edges. The
-thing [confluence](#confluence) is claimed over, and the thing the model's acceptance test
-diffs.
+scenarios, actors, and edges. The thing [confluence](#confluence) is claimed over, and the
+thing the model's acceptance test diffs.
 
 ### Unit of change
 
 [Axis 1](/cyber-truss/model/artifact-sets/#axis-1--unit-of-change). Artifacts that must
-move together for a change to be complete — what belongs in one commit to be coherent.
+move together for a change to be complete: what belongs in one commit to be coherent.
 Delta-driven.
 
 ### Workflow
@@ -247,7 +249,7 @@ Recorded so they are not re-proposed.
 
 | Term | Why not |
 | --- | --- |
-| **Fabric** | A third near-synonym for lattice and topology makes all three fuzzy. What it reaches for — the subgraph a given change affects — needs an obviously different word, not an overlapping one. |
+| **Fabric** | A third near-synonym for lattice and topology makes all three fuzzy. What it reaches for (the subgraph a given change affects) needs an obviously different word, not an overlapping one. |
 | **Arrow**, **direction** on a connection | Direction is a property of where the delta landed, not of the relation. Writing it into the connection [bakes in one workflow](/cyber-truss/model/connections/#connections-are-undirected). |
 | **Handler**, **trigger** for a connection | A connection states a relation that must hold. Procedural framing needs one path per direction and [loses confluence immediately](/cyber-truss/model/connections/#declarative-never-procedural). |
 | **Truss** in prose | The wordmark, and the mental image behind it. The concept is *the lattice*. |

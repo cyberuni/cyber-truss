@@ -1,6 +1,6 @@
 ---
 title: Formal workflows
-description: A catalog of staged processes expressed in the model — four parameters, eight instances, and what each one tests
+description: A catalog of staged processes expressed in the model. Four parameters, eight instances, and what each one tests
 ---
 
 :::caution[Design, not implementation]
@@ -22,7 +22,7 @@ fifth parameter, each set's role as input or output, which the examples needed a
 catalog did not surface. The table below records the four it tested.
 
 Nothing else. A formal workflow introduces no mechanism the model does not already
-have — it is a *parameterisation* of artifact-sets, connections, discharge criteria, and
+have: it is a *parameterisation* of artifact-sets, connections, discharge criteria, and
 [the kinds of strain](/cyber-truss/model/connections/#kinds-of-strain).
 
 That is a falsifiable claim, and this page is the attempt to falsify it. The instances are
@@ -52,12 +52,12 @@ actually distinguishes these processes from one another.
 
 ### Trunk-based development
 
-The control case against waterfall — same field, same artifacts, opposite policy. Merge to
+The control case against waterfall (same field, same artifacts, opposite policy). Merge to
 trunk requires zero **incompleteness** strain (the change is whole) but tolerates carried
 **obligation** strain indefinitely: the follow-up ticket is the obligation, and the
 backlog is its ledger.
 
-*What it tests:* whether the strain kinds are genuinely independent. They are — two
+*What it tests:* whether the strain kinds are genuinely independent. They are: two
 workflows over one lattice differing only in which kinds they will carry.
 
 ### Safety certification — DO-178C, IEC 62304
@@ -67,7 +67,7 @@ requirement traced to design, code, and the tests exercising it, and every line 
 traced back. Certification is largely an audit of that trace.
 
 *What it tests:* the claim that connections are real objects rather than a modelling
-convenience. Here the regulator agrees — the edge set is a **deliverable**, maintained as
+convenience. Here the regulator agrees: the edge set is a **deliverable**, maintained as
 a traceability matrix, and maintained by hand at enormous cost. This is the model's
 "nobody owns the connections" thesis confirmed by an industry that priced the alternative
 and paid it.
@@ -78,7 +78,7 @@ A policy asserts a control exists; the control must be implemented; evidence mus
 operating. An auditor arrives with no diff at all and evaluates the current state.
 
 *What it tests:* [axis 2](/cyber-truss/model/artifact-sets/#axis-2--governance-target),
-the state-driven axis, in its purest form. Nothing here is delta-driven — this is
+the state-driven axis, in its purest form. Nothing here is delta-driven: this is
 nonconformance strain evaluated cold, on a repository nobody has just changed. A model with
 only a unit-of-change axis could not express an audit at all.
 
@@ -86,13 +86,13 @@ only a unit-of-change axis could not express an audit at all.
 
 A change to a manufactured part obliges the CAD model, the bill of materials, the process
 routing, supplier drawings, and often existing inventory. PLM systems formalise this as an
-ECO: raised against a part, enumerating every downstream artifact, tracked to closure —
+ECO: raised against a part, enumerating every downstream artifact, tracked to closure,
 and **rejectable**.
 
 *What it tests:* [obligation strain](/cyber-truss/model/connections/#obligation), the kind
 identified last and the one with the least software precedent. Manufacturing has run
 obligation ledgers with formal declining for decades. That the model needed the same
-construct — and that `docs/backlog.md` is a hand-rolled version of it — is convergent
+construct (and that `docs/backlog.md` is a hand-rolled version of it) is convergent
 evidence rather than borrowed vocabulary.
 
 ### Preregistered study
@@ -102,24 +102,24 @@ reports go further, granting in-principle acceptance on the protocol alone, befo
 exist.
 
 *What it tests:* the cost of path-dependence, measured in public. Deriving a hypothesis
-after seeing the data produces a different paper than deriving it before — same
-artifacts, same authors, different order, and the field named the resulting quality gap
-the replication crisis. Preregistration's fix is a gate that forbids the reverse
+after seeing the data produces a different paper than deriving it before. Same artifacts,
+same authors, different order, and the field named the resulting quality gap the
+replication crisis. Preregistration's fix is a gate that forbids the reverse
 traversal. It is the same problem this model exists to solve, at a scale where the damage
 was large enough to measure.
 
 ### Double-entry bookkeeping
 
 Every transaction lands in two accounts; assets equal liabilities plus equity, always. A
-discrepancy is restored by correcting whichever side is wrong — the equation names no
+discrepancy is restored by correcting whichever side is wrong: the equation names no
 preferred direction, and a trial balance says only *that* the relation is broken.
 
 *What it tests:*
 [declarative, never procedural](/cyber-truss/model/connections/#declarative-never-procedural),
 the model's most expensive commitment to reverse. Five centuries of practice on a
 connection stated as a relation that must hold, never as a handler that fires. It is also
-the smallest instance in the catalog — one relation, two sets, zero tolerance,
-continuously held — which makes it the cleanest thing to test an implementation against.
+the smallest instance in the catalog (one relation, two sets, zero tolerance,
+continuously held), which makes it the cleanest thing to test an implementation against.
 
 ## What the catalog shows
 
@@ -128,24 +128,24 @@ Three results, none of which survives a single instance alone.
 **The distinguishing parameter is strain tolerance.** Sets and shape are dictated by the
 field; a bookkeeper and an avionics engineer share nothing in either column. What they
 choose independently is which strains may be carried and for how long. Process
-disagreements — waterfall against agile, most loudly — are disagreements about one
+disagreements (waterfall against agile, most loudly) are disagreements about one
 parameter, over a lattice both sides agree on.
 
 **Every instance ships a hand-maintained connection registry.** Traceability matrices,
 ECO forms, evidence binders, backlog files. Different fields, no shared tooling, same
-artifact — invented independently each time because no system owns the relation. The
+artifact, invented independently each time because no system owns the relation. The
 [Connections](/cyber-truss/model/connections/) page argues this from four cases inside one
 repository; the catalog shows it is not a property of this repository.
 
 **Gates buy a property, and they are not the only way to buy it.** Every instance uses a
 gate, and every gate imposes the same cost: whoever discovers a problem downstream pays
-for it. That is the trade the waterfall page examines — a scheduling constraint on people
+for it. That is the trade the waterfall page examines: a scheduling constraint on people
 purchasing a property of artifacts. The catalog shows how universal the trade is, and
 therefore how much rests on
 [canonical execution](/cyber-truss/model/canonical-execution/) being able to hold the
 property without the constraint.
 
-**Status: Thesis** on all three, and load-bearing on none of them — the model does not
+**Status: Thesis** on all three, and load-bearing on none of them. The model does not
 depend on this catalog. It is evidence about whether the vocabulary generalises, which
 was the one thing running eight instances could establish.
 
@@ -160,14 +160,14 @@ pages.
 
 Waterfall changed it: the four-parameter definition at the top of this page came out of
 that exercise, along with the phases-are-not-sets distinction and the finding about entry
-restrictions. The remaining six confirm — each is evidence that the vocabulary reaches a
+restrictions. The remaining six confirm: each is evidence that the vocabulary reaches a
 field it was not derived from, and that evidence lives in the *comparison*. Split across
 pages, the strain-policy column can no longer be read down, which is where the first
-finding below actually comes from.
+finding below comes from.
 
 Two are the likeliest to be promoted if pushed further. **Safety certification** treats
 the edge set as a deliverable in its own right, which raises a question the model has not
-answered — whether a connection can itself be an artifact-set. **Double-entry
+answered: whether a connection can itself be an artifact-set. **Double-entry
 bookkeeping** is the smallest complete instance in the catalog, which makes it the
 natural first thing an implementation is tested against.
 
@@ -175,7 +175,7 @@ natural first thing an implementation is tested against.
 
 ## What has not been tested
 
-The instances here are all **staged** — they exist because someone wanted a gate. That is
+The instances here are all **staged**: they exist because someone wanted a gate. That is
 a biased sample, and it selects for exactly the processes the model handles well.
 
 Unstaged coupling is the harder case and the one this repository actually hit: the
