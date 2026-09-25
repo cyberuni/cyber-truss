@@ -1,0 +1,276 @@
+---
+title: Two workflows read one border
+description: A developer hard-codes a heavier border on the primary button. Two workflows read the same diff and derive intents that cannot both be satisfied.
+sidebar:
+  order: 8
+---
+
+import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+
+:::caution[Design, not implementation]
+Nothing described here is built. See [the model overview](/cyber-truss/model/).
+:::
+
+Every other example follows one change through workflows that want the same thing. This one
+is written to break that. Two workflows own the set the change lands in, read the same diff
+through different spans, and derive intents whose remedies exclude each other. It tests
+whether the model settles that by construction or by timing.
+
+## The system
+
+A product team with a design system its application draws from.
+
+| Artifact-set | Holds |
+| --- | --- |
+| `{design language}` | The written principles: what carries emphasis, what hierarchy means |
+| `{design tokens}` | The named values the product draws from, including one border width |
+| `{mockups}` | The screens as drawn, referencing tokens |
+| `{component code}` | The component implementations and their tests, one unit of change |
+
+Connections:
+
+- `{design language}` to `{design tokens}`
+- `{design language}` to `{mockups}`
+- `{design tokens}` to `{mockups}`
+- `{design tokens}` to `{component code}`
+- `{mockups}` to `{component code}`
+
+<ConnectionGraph
+	label="Four artifact-sets. {design language} connects to {design tokens} and {mockups}. {design tokens} connects to {mockups} and {component code}. {mockups} connects to {component code}."
+	nodes={[
+		{ id: "language", label: "{design language}", x: 0, y: 110 },
+		{ id: "tokens", label: "{design tokens}", x: 250, y: 20 },
+		{ id: "mockups", label: "{mockups}", x: 250, y: 200 },
+		{ id: "code", label: "{component code}", x: 520, y: 110 },
+	]}
+	edges={[["language", "tokens"], ["language", "mockups"], ["tokens", "mockups"], ["tokens", "code"], ["mockups", "code"]]}
+/>
+
+`{design tokens}` connects to `{component code}` directly because a component draws values
+the mockups never depict, such as the border of a state no screen was drawn for. On that
+edge the tokens are the
+[specification](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer) of
+the code.
+
+## Workflows
+
+| Workflow | Input | Owned | Output | Shape |
+| --- | --- | --- | --- | --- |
+| Design update | `{design language}` | `{mockups}` | none | one link |
+| Design implementation | `{mockups}` | `{component code}` | none | one link |
+| Token governance | `{design language}` | `{design tokens}`, `{component code}` | none | chain |
+
+Token governance is the design system team's own loop. It keeps the values the product draws
+and the values the product declares in one set, which is why it owns both the token set and
+the code: it revises a component to reference a token, and it names a token for a value the
+product has started to use. Two workflows therefore own `{component code}`, as
+[feature delivery and design implementation both own the code](/cyber-truss/examples/software-bug-fix/)
+in the pagination example.
+
+Every set is revisable in place, so every write is to an
+[owned](/cyber-truss/model/workflow/#three-roles) set and nothing is an output.
+
+Standing specifications, as they stand before the run:
+
+- `{design language}`: one primary action per screen, and it must be findable at a glance.
+  **Emphasis is carried by fill and by type weight, never by border weight.** Borders read as
+  containers, and a product that emphasises with them loses the distinction.
+- `{design tokens}`: every value the product draws is named here. Border width has one name,
+  `border-default`, at 1px, because the language gives border weight no work to do.
+- `{mockups}`: screens draw only token values.
+- `{component code}`: components reference tokens rather than literals, and they match the
+  mockups where a mockup depicts them.
+
+Every set keeps the default [leash](/cyber-truss/model/workflow/#leash). The approver for
+`{design language}` and `{design tokens}` is the design lead. Design update declares the
+default [strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares): owned writes
+proceed, and it does not wait on a pending writer of its input.
+
+## The change
+
+Support reports that the primary button gets lost on dense screens. A developer opens the
+component, sets `border-width: 2px` on it, and commits. One literal, one component, no token
+touched. The tests never covered border width.
+
+## Variant A: the language rules out border emphasis
+
+### Expected run
+
+1. **Lift.** The change touches `{component code}`, which is the source.
+2. **Look up the workflows.** Two workflows
+   [declare a role for the source](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up):
+   design implementation owns it and derives it from the mockups, and token governance owns
+   it and derives it from the tokens. Both pick the change up. No workflow reads
+   `{component code}` as an input, so nothing runs forward from it.
+3. **Distill.** Each
+   [reads the change within its own span](/cyber-truss/model/canonical-execution/#distillation-reads-within-one-workflow),
+   and the two intents are not the same statement.
+   - Design implementation reads it against `{mockups}`, where the primary button is drawn
+     on a sparse example screen. Intent: *the primary action has to hold its place on a
+     dense screen.*
+   - Token governance reads it against `{design tokens}`, where border width has one name.
+     Intent: *this control sets a border width as a value of its own.*
+
+   Neither abstains, and neither is wrong. This is
+   [selection step 2](/cyber-truss/model/workflow/#how-workflows-are-selected) working: the
+   intent belongs to the workflow, not to the change.
+4. **Ask the controllers above**, nearest first. Each
+   [answers for its own set](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets)
+   and never sees the diff.
+   - Design implementation asks the `{mockups}` controller. The intent implies that the
+     primary button is drawn so it stays findable against dense content. The screens were
+     drawn sparse and hold no such criterion, so the mockups are affected. They are design
+     implementation's input, so the job is routed to their owner, design update.
+   - Design update's job asks the `{design language}` controller. The intent implies that the
+     primary action stays findable at a glance, which the language already states, and the
+     language names the means: fill and type weight. It **holds**. Design update replays from
+     `{mockups}`.
+   - Token governance asks the `{design tokens}` controller. The intent implies that every
+     border width the product draws is named in the set. 2px is not named, so the set lacks a
+     criterion the intent implies, which is [missing](/cyber-truss/model/connections/#missing)
+     strain. The tokens are affected. Token governance asks the `{design language}` controller
+     above them, which derives *border width is an axis this product varies* and finds its set
+     states the opposite. Affected. Nothing sits above the language, so the highest affected
+     set is `{design language}`.
+5. **Schedule.** The
+   [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+   holds four jobs: token governance's replay at `{design language}`, design update's replay
+   at `{mockups}`, and a reconciliation at `{component code}` for each workflow. `{design
+   language}` is design update's input and now has a pending writer, so design update **may**
+   wait, as its strain policy says. It declares the default, so it does not.
+6. **The two replays run against each other.** Token governance
+   [replays from `{design language}`](/cyber-truss/model/workflow/#a-replay-starts-at-the-highest-affected-set).
+   Writing *border width is an emphasis axis* removes *never by border weight* from the
+   language's standing specification, which is a
+   [replacement rather than a join](/cyber-truss/model/join/#replacing-a-criterion-is-not-a-join),
+   so the leash stops it for the design lead. Design update does not wait. It redraws the
+   primary button with the stronger fill the language's stated means allow, which reverses no
+   criterion and proceeds.
+7. **Reconcile at the source.** Design implementation's reconciliation reads the redrawn
+   mockups and joins them with the developer's change. The drawing carries a stronger fill and
+   the default border, so reconciliation keeps the fill and drops the literal. Token
+   governance's reconciliation is still waiting on `{design tokens}`, which is waiting on the
+   stop at `{design language}`.
+8. **The stop is reached last.** The design lead is asked whether border weight becomes an
+   emphasis axis. By now the button is emphasised by fill, the literal is gone, and the value
+   the question is about is not in use anywhere. The lead refuses. `{design tokens}` is
+   unchanged, token governance's reconciliation finds the code already references tokens
+   only, and the run settles.
+
+### Settled state
+
+- `{design language}` is unchanged.
+- `{design tokens}` is unchanged.
+- `{mockups}` draw the primary button with a stronger fill.
+- `{component code}` matches the drawing and holds no literal.
+- One decision is recorded at `{design language}`: border weight was refused as an emphasis
+  axis.
+
+### The same run under the other strain policy
+
+Give design update the other policy, waiting on a pending writer of its input, and change
+nothing else.
+
+Design update holds. The stop at `{design language}` is now the first thing that happens, and
+the design lead is asked while the 2px is still in the code and the redraw is still pending in
+the ledger. The question is live rather than moot, and the lead may well accept it: the
+developer's instinct was not silly, and a heavier border is a defensible answer to a dense
+screen. On acceptance the language gains the axis, `{design tokens}` gains
+`border-emphasis: 2px`, design update redraws the primary button with the heavier border
+rather than the fill, and `{component code}` keeps the developer's value behind a token name.
+
+### Status: Unresolved
+
+Two settled states. Different mockups, different tokens, a different design language, and
+different criteria met. Nothing distinguishes them except a
+[strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) that reads like a
+scheduling preference, and the default is the one that decides the question by removing it.
+
+The join is not what failed. Criteria
+[combine by union](/cyber-truss/model/join/#what-the-join-combines) and the union does not
+depend on order, and the two intents were never compared to each other, which is correct:
+nothing in the model takes two intents and reconciles them. They were only ever going to meet
+as criteria, at the source's controller.
+
+What failed is that they never got there together. **A stop is not a join.** The run turns on
+one person's answer, and what that person is told depends on which jobs have already run.
+The ledger's readiness rule holds a *write* until no pending job can still contribute to it,
+and nothing holds an *approval* to the same bar. So the model has the shape of the fix
+already: a stop at a set should not be put to a person while a pending job could change
+whether the stop is needed. That is proposed here, not settled, and it costs something real,
+because it makes every approval wait for the slowest branch of the run.
+
+This is the failure the
+[most load-bearing open question](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows)
+is about, and it locates it more precisely than the question does. Selection contributed
+nothing: both workflows were found by a lookup over declarations, and each asked upward along
+its own declared span. The divergence is entirely in the second half, whether the results
+converge, and the answer here is that they do not.
+
+## Variant B: the language says nothing about emphasis
+
+The language states that the primary action must be findable at a glance and names no means.
+Everything else is unchanged.
+
+### Expected run
+
+Steps 1 to 3 are the same. From step 4 the answers differ.
+
+- Design update's job asks the `{design language}` controller, which holds the findability
+  criterion and states no means. It holds, and design update replays from `{mockups}`. With
+  nothing stated above it, the means is the mockups' controller's own judgement, and it
+  draws a stronger fill.
+- Token governance asks the `{design tokens}` controller, which is missing a name for 2px and
+  is affected, then asks the `{design language}` controller. *Border width is an axis this
+  product varies* is a criterion the language does not hold and does not contradict, so it is
+  affected by [missing](/cyber-truss/model/connections/#missing) strain. The replay writes the
+  axis into the language, which **adds** and reverses nothing, so no stop is reached.
+  `{design tokens}` gains `border-emphasis: 2px`, and reconciliation at the source keeps the
+  developer's value behind that name.
+- Design implementation's reconciliation keeps the fill from the redrawn mockups.
+
+### Settled state
+
+The primary button carries a stronger fill **and** a heavier border. Both writes met their
+criteria, no criterion was reversed, nobody was asked anything, and the button is emphasised
+twice for one report.
+
+### Status: Unresolved
+
+The run settles and every order settles the same way, so this variant does not fail
+confluence. It fails something the model does not currently name: two intents answered one
+need, and nothing in the run could see that, because each was judged against its own set's
+criteria and both passed.
+
+The variant matters because it shows what carried variant A. There, the language's *never by
+border weight* was the only thing that turned a second remedy into a contradiction, and a
+contradiction is the only way the model notices duplication at all. Where the specification
+above happens to be silent, the run over-answers and reports nothing.
+
+## What it tests
+
+- [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected),
+  step 2. Two workflows derive different intents from one diff, and the difference is
+  their spans rather than a disagreement about the change.
+- The [join](/cyber-truss/model/join/) against a stop. The join at the source is
+  order-independent and does not fail. The approval above it is order-dependent and decides
+  the run.
+- [The run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+  and the claim that it never makes a run correct. In variant A it decides the outcome
+  through a strain policy, which is the claim failing rather than holding.
+- [Strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) as a confluence
+  parameter. It was introduced to say how much strain may be carried across a crossing, and
+  here it selects which of two settled states the run reaches.
+- [Missing strain](/cyber-truss/model/connections/#missing) reached from below in both
+  variants, and the difference between a set that lacks a criterion and a set that states its
+  opposite. Only the second raises a stop, and the
+  [contradiction question](/cyber-truss/model/open-questions/#which-strain-does-an-implementation-that-contradicts-its-specification-leave)
+  is the same one.
+- [The leash](/cyber-truss/model/workflow/#leash) against a
+  [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases)
+  frozen before the run. The verdict on token governance's write is the same whenever it
+  runs, which is why the order-dependence is in the question's timing rather than in the
+  leash.
+- [Confluence tested by entry point](/cyber-truss/model/confluence/#how-the-claim-is-tested),
+  inverted. Here one entry point reaches two topologies, which is the same failure the
+  acceptance test looks for and a cheaper way to find it.

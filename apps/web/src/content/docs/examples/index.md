@@ -58,6 +58,7 @@ An example can have variants, and each variant gets its own status.
 | [Ad rewritten mid-campaign](/cyber-truss/examples/marketing-campaign-headline/) | marketing | A: Holds. B: Unresolved |
 | [Insulin double check narrowed](/cyber-truss/examples/insulin-double-check/) | hospital medication safety | A: Unresolved. B: Gap. C: Holds |
 | [Blade limit found on the night shift](/cyber-truss/examples/aviation-blade-limit/) | aviation maintenance | A: Unresolved. B: Holds. C: Holds |
+| [Two workflows read one border](/cyber-truss/examples/design-token-border/) | product design system | A: Unresolved. B: Unresolved |
 
 ## Adding an example
 
