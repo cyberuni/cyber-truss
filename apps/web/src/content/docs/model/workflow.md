@@ -96,7 +96,7 @@ default and that contracts live at outputs.
 
 ## Every workflow over the set picks the change up
 
-A change lands in a set. Every workflow whose declared roles include that set picks it up. It
+A change lands in a set. Every workflow that declares a role for that set picks it up. It
 reads the change within its own span, induces the intent, and runs under that intent. The
 lookup is over declarations, and it is not a judgement.
 
@@ -152,15 +152,21 @@ protect it by deriving the criteria without the change.
 Selection yields every workflow that applies. There is no single global workflow with one
 starting point, and a change rarely needs only one.
 
-1. **Look up the workflows.** Every workflow whose declared roles include a changed set. A
-   lookup.
-2. **Distill.** Each of them states what the change is for within its span, or abstains.
-3. **Ask upward.** A workflow that derives the changed set asks the controllers above it,
-   nearest first, whether their sets hold the criteria the intent implies. A set too coarse
-   to hold them passes the question up. Asking stops at the first set that holds. A workflow
-   for which every set asked holds, and whose changed set meets its criteria at
-   reconciliation, has nothing to replay. A workflow that starts at the changed set runs
-   forward from it and asks nothing.
+1. **Look up the workflows.** A change lands in one or more artifact-sets. Selection takes
+   every workflow that declares a role for any set the change touched, whatever that role
+   is. The declarations answer it. Nothing here is a judgement, and nothing is filtered yet.
+2. **Distill.** Each selected workflow states what the change is for within its own span, or
+   abstains. The intent belongs to the workflow, not to the change. A border width altered
+   in the code yields no intent to a delivery workflow that reads the change as cosmetic,
+   and yields *bring this control's emphasis into line* to a design workflow whose span
+   reaches the mockups. Two workflows stating different intents over one change is the
+   mechanism working, not a disagreement to settle.
+3. **Ask upward.** A workflow that starts at the source runs forward from it and asks
+   nothing. A workflow that derives the source asks the controllers above it, nearest first,
+   whether their sets hold the criteria its intent implies. A set too coarse to hold them
+   passes the question up, and asking stops at the first set that holds. A workflow for
+   which every set asked holds, and whose source meets its criteria at reconciliation, has
+   nothing to replay.
 4. **Route what the workflow cannot write.** An affected set that is the workflow's input is
    routed to every workflow that owns or outputs it, carrying the root intent unchanged and
    references to the affected set's criteria. Each reads them within its span, then asks upward in its own
@@ -169,7 +175,7 @@ starting point, and a change rarely needs only one.
    [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide),
    which collects the intents addressed to each set and hands them to its controller together.
    A job whose input has a pending writer may wait, as the workflow's strain policy says.
-   The changed set counts as settled, so a job that reads it never waits on the
+   The source counts as settled, so a job that reads it never waits on the
    reconciliation at it.
 6. **Raise what nothing can restore.** An affected set that no declared workflow owns or
    outputs cannot be cleared by any run. It is raised as an obligation against that set. It

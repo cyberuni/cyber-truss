@@ -185,11 +185,11 @@ no pending writer. It schedules to reduce rework and never makes a run correct. 
 
 ### Selection
 
-Finding the workflows a change needs: every workflow whose declared roles include a changed
-set, filtered by what the controllers above the [source](#source) answer, and every owner
-of an affected input, each triggered by a routed job carrying the root intent. A workflow
-that starts at the changed set runs forward from it; one that derives the set asks upward
-first. An affected set no declared workflow can write is raised as an obligation. Extended
+Finding the workflows a change needs: every workflow that declares a role for a set the
+change touched, filtered by what the controllers above the [source](#source) answer, and
+every owner of an affected input, each triggered by a routed job carrying the root intent. A
+workflow that starts at the source runs forward from it; one that derives the source asks
+upward first. An affected set no declared workflow can write is raised as an obligation. Extended
 as replays produce changes of their own. See
 [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected).
 

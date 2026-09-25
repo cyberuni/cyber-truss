@@ -27,7 +27,7 @@ out what the change is for, finds the highest set that must move, and replays fr
 back to the source, where the change is reconciled.
 
 1. **Lift** the raw diff from lines into artifact-set vocabulary.
-2. **Look up the workflows**: every workflow whose declared roles include the source. A
+2. **Look up the workflows**: every workflow that declares a role for the source. A
    lookup. See
    [Every workflow over the set picks the change up](/cyber-truss/model/workflow/#every-workflow-over-the-set-picks-the-change-up).
 3. **Distill, per workflow.** Each of them reads the change
