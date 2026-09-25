@@ -7,11 +7,15 @@ function minimalRun(steps: RunSpec['steps']): RunSpec {
 		sets: [
 			{ id: 'spec', label: '{spec}', x: 0, y: 0 },
 			{ id: 'code', label: '{code, test}', x: 200, y: 0 },
+			{ id: 'user', label: '{user docs}', x: 0, y: 200 },
 		],
-		connections: [['spec', 'code']],
+		connections: [
+			['spec', 'code'],
+			['spec', 'user'],
+		],
 		workflows: [
 			{ id: 'delivery', label: 'Feature delivery', roles: { spec: 'owned', code: 'owned' } },
-			{ id: 'docs', label: 'Docs update', roles: { spec: 'input' } },
+			{ id: 'docs', label: 'Docs update', roles: { spec: 'input', user: 'owned' } },
 		],
 		steps,
 	}
@@ -450,5 +454,77 @@ describe('focus', () => {
 
 		expect(frames[2].focus).toEqual({ sets: ['spec'], workflows: ['delivery'], connections: [['spec', 'code']] })
 		expect(frames[3].focus).toEqual({ sets: [], workflows: [], connections: [] })
+	})
+})
+
+describe('routing', () => {
+	it('lets a workflow reached by routing ask upward, though the lookup never selected it', () => {
+		const frames = buildFrames(
+			minimalRun([
+				...opening,
+				{
+					title: 'Route',
+					narration: '',
+					events: [{ kind: 'job', workflow: 'docs', set: 'user', routedFrom: 'delivery' }],
+				},
+				{
+					title: 'Ask',
+					narration: '',
+					events: [{ kind: 'ask', workflow: 'docs', set: 'spec', answer: 'affected', note: '' }],
+				},
+			]),
+		)
+
+		expect(frames[1].workflows.docs.state).toBe('idle')
+		expect(frames[2].workflows.docs.state).toBe('routed')
+		expect(frames[3].sets.spec.state).toBe('affected')
+	})
+})
+
+describe('what a workflow is doing', () => {
+	it('shows a workflow as writing while it writes, whether or not the lookup selected it', () => {
+		const frames = buildFrames(
+			minimalRun([
+				...opening,
+				{
+					title: 'Propagate',
+					narration: '',
+					events: [{ kind: 'write', workflow: 'docs', set: 'user', leash: 'proceeds', note: '' }],
+				},
+			]),
+		)
+
+		expect(frames[2].workflows.docs.state).toBe('writing')
+	})
+
+	it('lets a pre-approved write proceed, and says the leash was not what let it through', () => {
+		const frames = buildFrames(
+			minimalRun([
+				...opening,
+				{
+					title: 'Strain',
+					narration: '',
+					events: [{ kind: 'strain', between: ['spec', 'user'], strain: 'open', note: '' }],
+				},
+				{
+					title: 'Propagate',
+					narration: '',
+					events: [
+						{
+							kind: 'write',
+							workflow: 'docs',
+							set: 'user',
+							leash: 'pre-approved',
+							note: '',
+							restores: [['spec', 'user']],
+						},
+					],
+				},
+			]),
+		)
+
+		expect(frames[3].awaitingApproval).toEqual([])
+		expect(frames[3].connections[1].strain).toBeUndefined()
+		expect(frames[3].sets.user.leash).toBe('pre-approved')
 	})
 })

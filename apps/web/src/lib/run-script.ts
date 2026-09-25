@@ -80,7 +80,11 @@ export interface RunSpec {
  */
 export type ControllerAnswer = 'holds' | 'affected' | 'too coarse'
 
-export type Leash = 'proceeds' | 'stops'
+/**
+ * What the leash did with a write: let it through, stopped it for an approver, or let it
+ * through on an approver's pre-approval given earlier in the run.
+ */
+export type Leash = 'proceeds' | 'stops' | 'pre-approved'
 
 /** The three backward lenses a reconciliation report is classified through. */
 export type Outcome = 'builder' | 'architect' | 'oracle'
@@ -110,6 +114,8 @@ export interface SetFrameState {
 	state: SetState
 	/** What the last event to touch this set said about it, shown beside the node. */
 	note?: string
+	/** What the leash did with the write this set last took. */
+	leash?: Leash
 }
 
 export interface Strain {
@@ -123,7 +129,7 @@ export interface ConnectionFrameState {
 	strain?: Strain
 }
 
-export type WorkflowState = 'idle' | 'selected' | 'distilled' | 'abstained'
+export type WorkflowState = 'idle' | 'selected' | 'routed' | 'distilled' | 'abstained' | 'writing'
 
 export interface WorkflowFrameState {
 	state: WorkflowState
@@ -233,6 +239,9 @@ export function buildFrames(run: RunSpec): Frame[] {
 			}
 			if (event.kind === 'job') {
 				mustWrite(event.workflow, event.set)
+				// A routed job reaches a workflow the lookup never selected, and that
+				// workflow then asks upward in its own shape.
+				if (event.routedFrom && workflows[event.workflow].state === 'idle') workflows[event.workflow].state = 'routed'
 				jobs = [
 					...jobs,
 					{
@@ -259,11 +268,12 @@ export function buildFrames(run: RunSpec): Frame[] {
 			if (event.kind === 'write') {
 				mustWrite(event.workflow, event.set)
 				jobs = jobs.filter((job) => !(job.workflow === event.workflow && job.set === event.set))
+				workflows[event.workflow].state = 'writing'
 				if (event.leash === 'stops') {
-					sets[event.set] = { state: 'stopped', note: event.note }
+					sets[event.set] = { state: 'stopped', note: event.note, leash: event.leash }
 					held.set(event.set, [...(event.restores ?? [])])
 				} else {
-					sets[event.set] = { state: 'written', note: event.note }
+					sets[event.set] = { state: 'written', note: event.note, leash: event.leash }
 					for (const between of event.restores ?? []) connectionAt(between).strain = undefined
 				}
 			}
@@ -283,9 +293,11 @@ export function buildFrames(run: RunSpec): Frame[] {
 					)
 				}
 				jobs = jobs.filter((job) => !(job.workflow === event.workflow && job.set === source))
+				workflows[event.workflow].state = 'writing'
 				sets[source] = {
 					state: 'reconciled',
 					note: `kept ${event.kept}, changed ${event.changed}, added ${event.added}`,
+					leash: event.leash,
 				}
 				reconciliation = {
 					set: source,
