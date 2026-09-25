@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import ConnectionGraph from '../../../components/ConnectionGraph.astro'
+import RunPlayer from '../../../components/RunPlayer.astro'
 
 :::caution[Design, not implementation]
 Nothing described here is built. See [the model overview](/cyber-truss/model/).
@@ -37,11 +38,11 @@ Connections:
 <ConnectionGraph
 	label="Five artifact-sets. {PRD} connects to {spec}. {spec} connects to {user docs}, {mockups}, and {code, test}. {mockups} also connects to {code, test}."
 	nodes={[
-		{ id: "prd", label: "{PRD}", x: 0, y: 110 },
-		{ id: "spec", label: "{spec}", x: 220, y: 110 },
-		{ id: "docs", label: "{user docs}", x: 440, y: 20 },
-		{ id: "mockups", label: "{mockups}", x: 440, y: 200 },
-		{ id: "code", label: "{code, test}", x: 660, y: 110 },
+		{ id: "prd", label: "{PRD}", x: 50, y: 30 },
+		{ id: "spec", label: "{spec}", x: 50, y: 150 },
+		{ id: "docs", label: "{user docs}", x: 250, y: 40 },
+		{ id: "mockups", label: "{mockups}", x: 250, y: 230 },
+		{ id: "code", label: "{code, test}", x: 440, y: 135 },
 	]}
 	edges={[["prd", "spec"], ["spec", "code"], ["spec", "docs"], ["spec", "mockups"], ["mockups", "code"]]}
 />
@@ -94,6 +95,17 @@ how the bug shipped.
 
 The spec's criteria say the page count is the item count divided by the page size, rounded
 down, plus one. That rule is the bug.
+
+Step through the run below, or read it worked in full underneath.
+
+<RunPlayer>
+	Variant A, one step at a time. Each step says what moved and why: which workflows the
+	lookup finds, what each controller above the source answers, where the replay starts,
+	which connections are under strain at that moment, and what the run ledger is holding.
+	The connections are undirected throughout, so nothing in the picture is an arrow; where
+	a set is read and where it is written is the workflow's roles, in the rail beside the
+	graph.
+</RunPlayer>
 
 ### Expected run
 

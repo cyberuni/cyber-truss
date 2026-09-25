@@ -1,0 +1,591 @@
+---
+/**
+ * A run of the model, stepped. The graph is the same drawing `ConnectionGraph.astro`
+ * makes, in the same visual language, with the state of each artifact-set, connection
+ * and workflow laid over it one step at a time.
+ *
+ * All the behaviour lives in `src/lib/run-script.ts`, which turns the authored run in
+ * `src/lib/pagination-run.ts` into one frame per step. This file draws a frame and wires
+ * the buttons. It renders every step's text on the server as well, so the run is
+ * readable with no JavaScript and by a screen reader in one pass.
+ */
+import { layoutGraph } from '../lib/connection-graph.js'
+import { paginationRun } from '../lib/pagination-run.js'
+import { buildFrames, type Role } from '../lib/run-script.js'
+
+const run = paginationRun
+// biome-ignore lint/correctness/noUnusedVariables: read in the template, which Biome does not lint
+const frames = buildFrames(run)
+// biome-ignore lint/correctness/noUnusedVariables: read in the template, which Biome does not lint
+const { nodes, edges, viewBox } = layoutGraph(run.sets, run.connections)
+/** Room under the lowest box for its badge, which sits outside the laid-out geometry. */
+// biome-ignore lint/correctness/noUnusedVariables: read in the template, which Biome does not lint
+const BADGE_ROOM = 14
+const setLabel = new Map(run.sets.map((s) => [s.id, s.label]))
+
+/** The roles a workflow declares, grouped so a rail row reads as one sentence. */
+// biome-ignore lint/correctness/noUnusedVariables: read in the template, which Biome does not lint
+function spans(roles: Record<string, Role>) {
+	const of = (role: Role) =>
+		Object.entries(roles)
+			.filter(([, r]) => r === role)
+			.map(([id]) => setLabel.get(id) ?? id)
+	return { input: of('input'), owned: of('owned'), output: of('output') }
+}
+---
+
+{/* `not-content` opts the figure's children out of Starlight's markdown spacing,
+    which otherwise lands a 1rem margin on every element that follows a sibling. */}
+<figure class="runplayer not-content" data-run-player>
+	<div class="stage">
+		<div class="graph">
+		<svg
+			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height + BADGE_ROOM}`}
+			aria-hidden="true"
+			focusable="false"
+		>
+			{
+				edges.map((e, i) => {
+					const [from, to] = run.connections[i]
+					return (
+						<g class="edge" data-edge={`${from}|${to}`}>
+							<line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} />
+							<line class="strain" x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} />
+						</g>
+					)
+				})
+			}
+			{
+				nodes.map((n) => (
+					<g class="node" data-set={n.id} data-state="idle">
+						<rect x={n.x - n.width / 2} y={n.y - n.height / 2} width={n.width} height={n.height} rx="8" />
+						<text class="name" x={n.x} y={n.y}>
+							{n.label}
+						</text>
+						<text class="badge" x={n.x} y={n.y + n.height / 2 + 13} data-badge></text>
+					</g>
+				))
+			}
+		</svg>
+		</div>
+		<ol class="rail" aria-hidden="true">
+			{
+				run.workflows.map((w) => {
+					const { input, owned, output } = spans(w.roles)
+					return (
+						<li data-workflow={w.id} data-state="idle">
+							<span class="wf-name">{w.label}</span>
+							<span class="wf-roles">
+								{input.length > 0 && <span class="role role-input">reads {input.join(' ')}</span>}
+								{owned.length > 0 && <span class="role role-owned">owns {owned.join(' ')}</span>}
+								{output.length > 0 && <span class="role role-output">outputs {output.join(' ')}</span>}
+							</span>
+							<span class="wf-state" data-workflow-state></span>
+						</li>
+					)
+				})
+			}
+		</ol>
+	</div>
+
+	<div class="caption">
+		<div class="controls">
+			<button type="button" data-run-prev disabled>Back</button>
+			<button type="button" data-run-play>Play</button>
+			<button type="button" data-run-next>Next</button>
+			<span class="counter" data-run-counter>Step 1 of {frames.length}</span>
+		</div>
+		<div class="frame" aria-live="polite">
+			<h4 data-run-title>{frames[0].title}</h4>
+			<p data-run-narration>{frames[0].narration}</p>
+			<ul class="strains" data-run-strains></ul>
+			<ul class="jobs" data-run-jobs></ul>
+		</div>
+		<p class="legend" aria-hidden="true">
+			<span class="key k-source"></span> source
+			<span class="key k-affected"></span> affected
+			<span class="key k-stopped"></span> stopped for an approver
+			<span class="key k-written"></span> written
+			<span class="key k-strain"></span> strained connection
+		</p>
+		<details class="full">
+			<summary>The whole run as text</summary>
+			<ol>
+				{
+					frames.map((frame) => (
+						<li>
+							<strong>{frame.title}.</strong> {frame.narration}
+						</li>
+					))
+				}
+			</ol>
+		</details>
+	</div>
+	<figcaption>
+		<slot />
+	</figcaption>
+</figure>
+
+<style>
+	.runplayer {
+		margin: 1.5rem 0;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: var(--sl-color-black);
+	}
+
+	/*
+	 * The graph takes the full width and the workflow rail sits under it. Starlight's
+	 * content column is narrower than the window, so a side-by-side rail would squeeze
+	 * the graph to a few hundred pixels on a laptop, let alone a phone.
+	 */
+	.stage {
+		padding: 0.75rem;
+	}
+
+	/* Below this the labels stop being legible, so the graph scrolls inside the figure
+	   rather than shrinking further or pushing the page sideways. */
+	.graph {
+		overflow-x: auto;
+	}
+
+	.runplayer svg {
+		min-width: 22rem;
+	}
+
+	.runplayer svg {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.edge line {
+		stroke: var(--sl-color-gray-4);
+		stroke-width: 1.5;
+	}
+
+	/* The strained state is a second line over the first, so only its opacity moves. */
+	.edge line.strain {
+		stroke: var(--sl-color-red);
+		stroke-width: 3;
+		stroke-dasharray: 7 6;
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+
+	.edge[data-strained] line.strain {
+		opacity: 1;
+		animation: crawl 1.4s linear infinite;
+	}
+
+	@keyframes crawl {
+		to {
+			stroke-dashoffset: -26;
+		}
+	}
+
+	/* An artifact-set: dashed, because membership is declared rather than physical. */
+	.node rect {
+		fill: var(--sl-color-gray-6);
+		stroke: var(--sl-color-gray-3);
+		stroke-width: 1.5;
+		stroke-dasharray: 6 5;
+		transition: fill 0.25s, stroke 0.25s;
+	}
+
+	.node text {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		text-anchor: middle;
+		dominant-baseline: central;
+	}
+
+	.node .name {
+		fill: var(--sl-color-white);
+		font-size: 13px;
+	}
+
+	.node .badge {
+		fill: var(--sl-color-gray-3);
+		font-size: 10.5px;
+		letter-spacing: 0.02em;
+	}
+
+	.node[data-state='source'] rect {
+		stroke: var(--sl-color-accent);
+		fill: var(--sl-color-accent-low);
+	}
+	.node[data-state='affected'] rect {
+		stroke: var(--sl-color-orange);
+	}
+	.node[data-state='stopped'] rect {
+		stroke: var(--sl-color-red);
+		fill: var(--sl-color-red-low);
+	}
+	.node[data-state='written'] rect,
+	.node[data-state='reconciled'] rect {
+		stroke: var(--sl-color-green);
+		fill: var(--sl-color-green-low);
+	}
+	.node[data-state='affected'] .badge {
+		fill: var(--sl-color-orange-high);
+	}
+	.node[data-state='stopped'] .badge {
+		fill: var(--sl-color-red-high);
+	}
+	.node[data-state='written'] .badge,
+	.node[data-state='reconciled'] .badge {
+		fill: var(--sl-color-green-high);
+	}
+	.node[data-focus] rect {
+		stroke-width: 2.5;
+	}
+
+	.rail {
+		list-style: none;
+		margin: 0.6rem 0 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 0.4rem;
+		font-size: 0.75rem;
+		line-height: 1.35;
+	}
+
+	.rail li {
+		padding: 0.4rem 0.5rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-left: 3px solid var(--sl-color-gray-5);
+		border-radius: 0.25rem;
+		color: var(--sl-color-gray-3);
+		transition: border-color 0.25s, color 0.25s;
+	}
+
+	.rail li[data-state='selected'],
+	.rail li[data-state='routed'],
+	.rail li[data-state='distilled'] {
+		border-left-color: var(--sl-color-accent);
+		color: var(--sl-color-white);
+	}
+
+	.rail li[data-state='writing'] {
+		border-left-color: var(--sl-color-green);
+		color: var(--sl-color-white);
+	}
+
+	.rail li[data-focus] {
+		background: var(--sl-color-gray-6);
+	}
+
+	.wf-name {
+		display: block;
+		font-weight: 600;
+	}
+
+	.wf-roles {
+		display: block;
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 0.68rem;
+	}
+
+	.role {
+		display: block;
+	}
+
+	.wf-state:not(:empty) {
+		display: block;
+		margin-top: 0.15rem;
+		font-style: italic;
+	}
+
+	.caption {
+		padding: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+	}
+
+	.controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem;
+		margin-bottom: 0.6rem;
+	}
+
+	.controls button {
+		padding: 0.25rem 0.7rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.25rem;
+		background: var(--sl-color-black);
+		color: var(--sl-color-white);
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.controls button:hover:not(:disabled),
+	.controls button:focus-visible {
+		border-color: var(--sl-color-accent);
+	}
+
+	.controls button:disabled {
+		opacity: 0.45;
+		cursor: default;
+	}
+
+	.counter {
+		margin-left: auto;
+		font-variant-numeric: tabular-nums;
+		color: var(--sl-color-gray-3);
+	}
+
+	.frame h4 {
+		margin: 0 0 0.25rem;
+		font-size: var(--sl-text-base);
+		color: var(--sl-color-white);
+	}
+
+	.frame p {
+		margin: 0;
+	}
+
+	.strains,
+	.jobs {
+		list-style: none;
+		margin: 0.5rem 0 0;
+		padding: 0;
+		font-size: 0.8rem;
+	}
+
+	.strains li,
+	.jobs li {
+		padding: 0.15rem 0 0.15rem 0.6rem;
+		border-left: 2px solid var(--sl-color-gray-5);
+	}
+
+	.strains li {
+		border-left-color: var(--sl-color-red);
+	}
+
+	.strains code,
+	.jobs code {
+		font-size: 0.75rem;
+	}
+
+	.legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.15rem 0.9rem;
+		margin: 0.75rem 0 0;
+		font-size: 0.72rem;
+		color: var(--sl-color-gray-3);
+	}
+
+	.key {
+		display: inline-block;
+		width: 0.65rem;
+		height: 0.65rem;
+		margin-right: 0.15rem;
+		border: 1.5px solid var(--sl-color-gray-3);
+		border-radius: 0.15rem;
+		vertical-align: -1px;
+	}
+
+	.k-source {
+		border-color: var(--sl-color-accent);
+		background: var(--sl-color-accent-low);
+	}
+	.k-affected {
+		border-color: var(--sl-color-orange);
+	}
+	.k-stopped {
+		border-color: var(--sl-color-red);
+		background: var(--sl-color-red-low);
+	}
+	.k-written {
+		border-color: var(--sl-color-green);
+		background: var(--sl-color-green-low);
+	}
+	.k-strain {
+		height: 0;
+		border: 0;
+		border-top: 3px dashed var(--sl-color-red);
+		border-radius: 0;
+		vertical-align: 3px;
+	}
+
+	.full {
+		margin-top: 0.75rem;
+		font-size: 0.8rem;
+	}
+
+	.full summary {
+		cursor: pointer;
+		color: var(--sl-color-gray-3);
+	}
+
+	.full ol {
+		margin: 0.5rem 0 0;
+		padding-left: 1.2rem;
+	}
+
+	.full li + li {
+		margin-top: 0.4rem;
+	}
+
+	.runplayer figcaption {
+		padding: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.edge line.strain,
+		.node rect {
+			transition: none;
+		}
+
+		.edge[data-strained] line.strain {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	import { paginationRun } from '../lib/pagination-run.js'
+	import { buildFrames, type Frame } from '../lib/run-script.js'
+
+	/** How long one step is held while playing. Long enough to read the narration. */
+	const STEP_MS = 6500
+
+	const frames = buildFrames(paginationRun)
+	const label = new Map(paginationRun.sets.map((s) => [s.id, s.label]))
+	const workflowLabel = new Map(paginationRun.workflows.map((w) => [w.id, w.label]))
+
+	/** What each set state is called beside its node. The words are the model's. */
+	const badges: Record<string, string> = {
+		idle: '',
+		source: 'source',
+		holds: 'holds',
+		affected: 'affected',
+		'too coarse': 'too coarse',
+		stopped: 'stopped',
+		written: 'written',
+		reconciled: 'reconciled',
+	}
+
+	const states: Record<string, string> = {
+		idle: '',
+		selected: 'picked the change up',
+		routed: 'reached by a routed job',
+		distilled: 'intent stated',
+		abstained: 'abstained',
+		writing: 'writing',
+	}
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-run-player]')) player(root)
+
+	function player(root: HTMLElement) {
+		const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+		const title = root.querySelector('[data-run-title]') as HTMLElement
+		const narration = root.querySelector('[data-run-narration]') as HTMLElement
+		const counter = root.querySelector('[data-run-counter]') as HTMLElement
+		const strainList = root.querySelector('[data-run-strains]') as HTMLElement
+		const jobList = root.querySelector('[data-run-jobs]') as HTMLElement
+		const prev = root.querySelector('[data-run-prev]') as HTMLButtonElement
+		const next = root.querySelector('[data-run-next]') as HTMLButtonElement
+		const play = root.querySelector('[data-run-play]') as HTMLButtonElement
+
+		let index = 0
+		let timer: ReturnType<typeof setInterval> | undefined
+
+		function draw(frame: Frame) {
+			for (const node of root.querySelectorAll<SVGGElement>('[data-set]')) {
+				const id = node.dataset.set ?? ''
+				const state = frame.sets[id]
+				node.dataset.state = state.state
+				node.toggleAttribute('data-focus', frame.focus.sets.includes(id))
+				const badge = node.querySelector('[data-badge]')
+				if (badge) badge.textContent = badges[state.state] ?? ''
+			}
+
+			for (const edge of root.querySelectorAll<SVGGElement>('[data-edge]')) {
+				const [from, to] = (edge.dataset.edge ?? '').split('|')
+				const connection = frame.connections.find((c) => c.between[0] === from && c.between[1] === to)
+				edge.toggleAttribute('data-strained', Boolean(connection?.strain))
+			}
+
+			for (const row of root.querySelectorAll<HTMLElement>('[data-workflow]')) {
+				const id = row.dataset.workflow ?? ''
+				const state = frame.workflows[id]
+				row.dataset.state = state.state
+				row.toggleAttribute('data-focus', frame.focus.workflows.includes(id))
+				const slot = row.querySelector('[data-workflow-state]')
+				if (slot) slot.textContent = state.intent ? `intent: ${state.intent}` : (states[state.state] ?? '')
+			}
+
+			title.textContent = frame.title
+			narration.textContent = frame.narration
+			counter.textContent = `Step ${frame.index + 1} of ${frames.length}`
+
+			strainList.replaceChildren(
+				...frame.connections
+					.filter((c) => c.strain)
+					.map((c) => {
+						const item = document.createElement('li')
+						const ends = `${label.get(c.between[0])} to ${label.get(c.between[1])}`
+						const kind = c.strain?.kind === 'open' ? 'strained, kind open' : `${c.strain?.kind} strain`
+						item.textContent = `${ends}: ${kind}. ${c.strain?.note ?? ''}`
+						return item
+					}),
+			)
+
+			jobList.replaceChildren(
+				...frame.jobs.map((job) => {
+					const item = document.createElement('li')
+					const routed = job.routedFrom ? `, routed from ${workflowLabel.get(job.routedFrom)}` : ''
+					const waits = job.waitsOn ? `, waits on ${job.waitsOn}` : ''
+					item.textContent = `Ledger: ${workflowLabel.get(job.workflow)} at ${label.get(job.set)}${routed}${waits}`
+					return item
+				}),
+			)
+
+			prev.disabled = frame.index === 0
+			next.disabled = frame.index === frames.length - 1
+		}
+
+		function go(to: number) {
+			index = Math.min(Math.max(to, 0), frames.length - 1)
+			draw(frames[index])
+			if (index === frames.length - 1) stop()
+		}
+
+		function stop() {
+			if (timer) clearInterval(timer)
+			timer = undefined
+			play.textContent = index === frames.length - 1 ? 'Replay' : 'Play'
+		}
+
+		function start() {
+			// Reduced motion takes the synchronous path: the settled frame, with no steps
+			// animating past on the way.
+			if (reduced.matches) return go(frames.length - 1)
+			if (index === frames.length - 1) go(0)
+			timer = setInterval(() => go(index + 1), STEP_MS)
+			play.textContent = 'Pause'
+		}
+
+		prev.addEventListener('click', () => {
+			stop()
+			go(index - 1)
+		})
+		next.addEventListener('click', () => {
+			stop()
+			go(index + 1)
+		})
+		play.addEventListener('click', () => (timer ? stop() : start()))
+
+		go(0)
+	}
+</script>

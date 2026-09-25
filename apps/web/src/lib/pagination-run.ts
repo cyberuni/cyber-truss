@@ -15,11 +15,11 @@ const CONTRADICTION = 'The code contradicts a rule {spec} states. Which kind of 
 
 export const paginationRun: RunSpec = {
 	sets: [
-		{ id: 'prd', label: '{PRD}', x: 0, y: 110 },
-		{ id: 'spec', label: '{spec}', x: 220, y: 110 },
-		{ id: 'docs', label: '{user docs}', x: 440, y: 20 },
-		{ id: 'mockups', label: '{mockups}', x: 440, y: 200 },
-		{ id: 'code', label: '{code, test}', x: 660, y: 110 },
+		{ id: 'prd', label: '{PRD}', x: 50, y: 30 },
+		{ id: 'spec', label: '{spec}', x: 50, y: 150 },
+		{ id: 'docs', label: '{user docs}', x: 250, y: 40 },
+		{ id: 'mockups', label: '{mockups}', x: 250, y: 230 },
+		{ id: 'code', label: '{code, test}', x: 440, y: 135 },
 	],
 	connections: [
 		['prd', 'spec'],
