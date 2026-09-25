@@ -47,6 +47,9 @@ back to the source, where the change is reconciled.
 The criteria are an *independent derivation*. No controller above the source sees how the
 change was expressed, so the bar the change is reconciled against was not written from it.
 
+The [bug-fix example](/cyber-truss/examples/software-bug-fix/#variant-a-the-spec-states-the-wrong-rule)
+runs these seven steps over five artifact-sets and four workflows, one step at a time.
+
 **Status: Thesis.** Flagged by its author as needing further design and analysis. The
 loop's shape is agreed; several of its parts are not.
 
