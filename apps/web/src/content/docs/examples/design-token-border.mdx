@@ -195,7 +195,9 @@ as criteria, at the source's controller.
 What failed is that they never got there together. **A stop is not a join.** The run turns on
 one person's answer, and what that person is told depends on which jobs have already run.
 The ledger's readiness rule holds a *write* until no pending job can still contribute to it,
-and nothing holds an *approval* to the same bar. So the model has the shape of the fix
+and nothing holds an *approval* to the same bar. It is now an open question of its own,
+[when a stop may be put to a person](/cyber-truss/model/open-questions/#when-may-a-stop-be-put-to-a-person).
+The model has the shape of the fix
 already: a stop at a set should not be put to a person while a pending job could change
 whether the stop is needed. That is proposed here, not settled, and it costs something real,
 because it makes every approval wait for the slowest branch of the run.
@@ -238,9 +240,10 @@ twice for one report.
 ### Status: Unresolved
 
 The run settles and every order settles the same way, so this variant does not fail
-confluence. It fails something the model does not currently name: two intents answered one
-need, and nothing in the run could see that, because each was judged against its own set's
-criteria and both passed.
+confluence. It fails something else, now named as
+[what notices two intents answering one need](/cyber-truss/model/open-questions/#what-notices-two-intents-answering-one-need):
+two intents answered one need, and nothing in the run could see that, because each was judged
+against its own set's criteria and both passed.
 
 The variant matters because it shows what carried variant A. There, the language's *never by
 border weight* was the only thing that turned a second remedy into a contradiction, and a

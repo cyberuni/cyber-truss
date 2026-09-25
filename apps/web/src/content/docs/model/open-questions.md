@@ -37,6 +37,10 @@ choice between states is recorded. The cycles must also come to rest.
 with no person in it, and they depend on the specification controller catching a reversal
 renamed as a new criterion.
 
+[Two workflows read one border](/cyber-truss/examples/design-token-border/) is the first
+example where they do not converge, and it locates the failure in a run that has a person in
+it. The next question is that failure stated on its own.
+
 **What breaks if it resolves badly:** the whole confluence construction. If the set is not
 unique, or its results do not converge, path-independence needs a different mechanism than
 canonicalization. The likeliest fallback is per-relation confluence, with the proof burden
@@ -106,6 +110,36 @@ obligations accumulate, and the branch cannot retire while topology is strained.
 Coordinates never block. Transient inconsistency becomes designed, with a stated window,
 rather than accidental.
 
+## When may a stop be put to a person?
+
+The [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+holds a write until no pending job can still contribute to it. Nothing holds an *approval* to
+that bar. A stop is put to an approver when the branch that raised it arrives, and what the
+approver is shown is whatever the other branches happen to have done by then.
+
+[Two workflows read one border](/cyber-truss/examples/design-token-border/) turns on exactly
+that. Under the default [strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares)
+the other branch redraws the mockups first, so by the time the design lead is asked whether
+border weight becomes an emphasis axis, the button is already emphasised by fill and the value
+the question is about is in use nowhere. The lead refuses. Under the policy that waits on a
+pending writer, the same lead is asked the same question while the change is still live, and
+may well accept. Two settled states, differing in the design language itself, separated by
+what reads as a scheduling preference.
+
+The [join](/cyber-truss/model/join/#what-the-join-combines) is not what failed: criteria
+combine by union and the union does not depend on order. **A stop is not a join.** A person's
+answer does depend on order, and nothing in the model says when the question may be asked.
+
+**Proposed, not settled:** a stop at a set is not put to a person while a pending job could
+still change whether the stop is needed, which is the readiness rule the ledger already
+applies to writes. The cost is real and is why it is not settled: every approval then waits
+for the slowest branch of the run, and *work proceeds uninterrupted* weakens at the one point
+where a person is in the loop.
+
+**What breaks if it resolves badly:** strain policy, declared as how much strain may be
+carried across a crossing, becomes the parameter that selects which settled state a run
+reaches, and the ledger's claim that it never makes a run correct is false as written.
+
 ## What bounds retries across runs?
 
 The [rules that make cycles come to rest](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest)
@@ -138,6 +172,33 @@ so that neither party to the comparison authored the bar it is judged against. T
 real mechanism where there was previously only a requirement, but it relocates the exposure
 rather than removing it: criteria derived from a misread intent are wrong in the same
 direction as everything downstream of them. Whether the relocation is enough is unresolved.
+
+## What notices two intents answering one need?
+
+Two workflows can distill one change into two intents, each defensible within its own span,
+whose remedies answer the same need. Nothing in a run compares intents to each other. They
+meet only as criteria at the source's controller, and there they join cleanly whenever neither
+excludes the other.
+
+[Variant B of the border example](/cyber-truss/examples/design-token-border/#variant-b-the-language-says-nothing-about-emphasis)
+settles that way and settles the same way in every order, so it does not fail confluence. The
+primary button ends up carrying a stronger fill **and** a heavier border for one support
+report. Both writes met their criteria, no criterion was reversed, and nobody was asked
+anything.
+
+What made variant A visible was the language stating *never by border weight*, which turned
+the second remedy into a contradiction and raised a stop. So duplication is noticed only where
+a specification above happens to state the opposite of one remedy. Where it is silent, the run
+over-answers and reports nothing.
+
+[Reconciliation at the source](/cyber-truss/model/canonical-execution/#reconciling-at-the-source)
+is the only place both remedies are in one hand, which makes it the candidate site for a
+check. It reads them as criteria on its own set rather than as remedies of one need, so it
+would need something it is not currently given.
+
+**What breaks if it resolves badly:** the loop's product accumulates answers nobody asked
+for, each one defensible against the criteria it was judged by, and the only reports that
+would name the surplus are the ones the run never produces.
 
 ## Which strain does an implementation that contradicts its specification leave?
 
