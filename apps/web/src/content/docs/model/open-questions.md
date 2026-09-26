@@ -37,9 +37,13 @@ choice between states is recorded. The cycles must also come to rest.
 with no person in it, and they depend on the specification controller catching a reversal
 renamed as a new criterion.
 
-[Two workflows read one border](/cyber-truss/examples/design-token-border/) is the first
-example where they do not converge, and it locates the failure in a run that has a person in
-it. The next question is that failure stated on its own.
+[Two workflows read one border](/cyber-truss/examples/design-token-border/) was read as the
+first example where they do not converge, because a stop in one branch appeared to be answered
+differently depending on what the other branch had already done. It is not.
+[Branches resolve at different speeds](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds)
+and an approver answers for one set, so the run settles on its final resolution. What the
+example does leave open is
+[what notices two intents answering one need](#what-notices-two-intents-answering-one-need).
 
 **What breaks if it resolves badly:** the whole confluence construction. If the set is not
 unique, or its results do not converge, path-independence needs a different mechanism than
@@ -97,6 +101,12 @@ a git-tracked, append-only graph of pending jobs and what each waits on, which a
 the termination record. It survives sessions and is a team artifact rather than a session
 artifact, but it is not the only option.
 
+The vehicle carries more than scheduling.
+[Confluence is claimed over a run's final resolution](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds),
+so a run with a person in one branch stays open for as long as that person takes, and the
+answer has to re-enter it when it arrives. Whatever holds pending jobs is what makes that
+true.
+
 **Related risk, and it is the documented failure mode of every system in this shape:**
 deferred non-blocking obligations rot. This repository's own `docs/backlog.md` has
 entries open since the day they were written. If the runtime is a pile nobody discharges,
@@ -109,36 +119,6 @@ blocking at a boundary, realistically the merge to trunk. Work proceeds uninterr
 obligations accumulate, and the branch cannot retire while topology is strained.
 Coordinates never block. Transient inconsistency becomes designed, with a stated window,
 rather than accidental.
-
-## When may a stop be put to a person?
-
-The [run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
-holds a write until no pending job can still contribute to it. Nothing holds an *approval* to
-that bar. A stop is put to an approver when the branch that raised it arrives, and what the
-approver is shown is whatever the other branches happen to have done by then.
-
-[Two workflows read one border](/cyber-truss/examples/design-token-border/) turns on exactly
-that. Under the default [strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares)
-the other branch redraws the mockups first, so by the time the design lead is asked whether
-border weight becomes an emphasis axis, the button is already emphasised by fill and the value
-the question is about is in use nowhere. The lead refuses. Under the policy that waits on a
-pending writer, the same lead is asked the same question while the change is still live, and
-may well accept. Two settled states, differing in the design language itself, separated by
-what reads as a scheduling preference.
-
-The [join](/cyber-truss/model/join/#what-the-join-combines) is not what failed: criteria
-combine by union and the union does not depend on order. **A stop is not a join.** A person's
-answer does depend on order, and nothing in the model says when the question may be asked.
-
-**Proposed, not settled:** a stop at a set is not put to a person while a pending job could
-still change whether the stop is needed, which is the readiness rule the ledger already
-applies to writes. The cost is real and is why it is not settled: every approval then waits
-for the slowest branch of the run, and *work proceeds uninterrupted* weakens at the one point
-where a person is in the loop.
-
-**What breaks if it resolves badly:** strain policy, declared as how much strain may be
-carried across a crossing, becomes the parameter that selects which settled state a run
-reaches, and the ledger's claim that it never makes a run correct is false as written.
 
 ## What bounds retries across runs?
 

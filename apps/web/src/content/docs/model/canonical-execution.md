@@ -362,6 +362,40 @@ and that a run may settle in any state that meets its criteria provided choices 
 states are recorded. **Open:** whether work a human adds during a replay, beyond what the
 criteria asked for, carries the original intent or is distilled as a new one.
 
+### Branches resolve at different speeds
+
+The branches of one run are not alike. A controller with no person in it writes in seconds.
+A branch that reaches a [stop](/cyber-truss/model/workflow/#leash) takes as long as the
+approver takes, and in the
+[blade limit example](/cyber-truss/examples/aviation-blade-limit/) that approver is a
+regulator and the unit is weeks. The airline revises its own order and card in the same run
+and does not wait, because [owned writes proceed](#the-run-ledger-schedules-it-does-not-decide)
+and the join of the two sets of criteria has a state meeting both. A rule that held the fast
+branches until the slow one answered would keep the aircraft on the ground for a decision
+about a document that binds every operator of the engine type. **A stop does not freeze the
+run.**
+
+So a run is not settled while a stop is pending, and **confluence is claimed over the final
+resolution**, not over the state the fast branches reach first. An approver's answer is a
+write to the approver's set inside the same run, under the same root intent. It propagates
+like any other write, and the branches that already ran are picked up again by it.
+
+This rests on what an approver is asked. The question is whether a write to one set may
+remove part of [that set's standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases),
+and it is derived from the intent and the set, the same way a
+[controller answers for its own set](#controllers-answer-for-their-own-sets). What other
+sets have reached by then is not an input to it. Were the answer to vary with the state of
+the rest of the run, order would choose between criteria rather than between settled states,
+and [the claim](/cyber-truss/model/confluence/#the-claim) would fail at a stop. In
+[the border example](/cyber-truss/examples/design-token-border/) the design lead is asked
+whether border weight becomes an emphasis axis, and the redraw pending in the other branch
+does not change that question.
+
+**Status: Settled** that branches are not held for each other, that confluence is claimed over
+the final resolution, and that an approver answers for one set. **Assumed, and empirical like
+[distillation](#distillation-carries-the-weight):** that a person asked the same question at
+two points in a run gives the same answer.
+
 ### The run ledger schedules, it does not decide
 
 A run has pending work: a workflow triggered by a change or by a routed job, the set its

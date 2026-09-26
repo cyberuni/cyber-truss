@@ -151,63 +151,65 @@ touched. The tests never covered border width.
    the default border, so reconciliation keeps the fill and drops the literal. Token
    governance's reconciliation is still waiting on `{design tokens}`, which is waiting on the
    stop at `{design language}`.
-8. **The stop is reached last.** The design lead is asked whether border weight becomes an
-   emphasis axis. By now the button is emphasised by fill, the literal is gone, and the value
-   the question is about is not in use anywhere. The lead refuses. `{design tokens}` is
-   unchanged, token governance's reconciliation finds the code already references tokens
-   only, and the run settles.
+8. **The stop is answered in its own time.** The design lead is asked whether border weight
+   becomes an emphasis axis. The question is about `{design language}` and its standing
+   specification, so the redraw that has already happened is
+   [not an input to it](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds).
+   The branch takes as long as the lead takes, and nothing else in the run waits. The answer
+   is a write inside the same run, so the run settles on it whenever it arrives.
 
 ### Settled state
 
-- `{design language}` is unchanged.
-- `{design tokens}` is unchanged.
-- `{mockups}` draw the primary button with a stronger fill.
-- `{component code}` matches the drawing and holds no literal.
-- One decision is recorded at `{design language}`: border weight was refused as an emphasis
-  axis.
+The lead's answer decides it, and both answers settle.
+
+**Refused.** `{design language}` and `{design tokens}` are unchanged. `{mockups}` draw the
+primary button with a stronger fill. `{component code}` matches the drawing and holds no
+literal. The refusal is recorded at `{design language}`.
+
+**Accepted.** `{design language}` gains border weight as an emphasis axis and `{design tokens}`
+gains `border-emphasis: 2px`. That write is a change like any other and propagates: design
+update picks it up, and the mockups it already redrew meet findability through the fill. The
+product ends with a stronger fill, an emphasis axis, and a token the drawings do not use, for
+one support report.
 
 ### The same run under the other strain policy
 
 Give design update the other policy, waiting on a pending writer of its input, and change
 nothing else.
 
-Design update holds. The stop at `{design language}` is now the first thing that happens, and
-the design lead is asked while the 2px is still in the code and the redraw is still pending in
-the ledger. The question is live rather than moot, and the lead may well accept it: the
-developer's instinct was not silly, and a heavier border is a defensible answer to a dense
-screen. On acceptance the language gains the axis, `{design tokens}` gains
-`border-emphasis: 2px`, design update redraws the primary button with the heavier border
-rather than the fill, and `{component code}` keeps the developer's value behind a token name.
+Design update holds, so the stop at `{design language}` is the first thing that happens rather
+than the last. It is the same question, put to the same lead, against the same standing
+specification, and the redraw is pending rather than done. On a refusal the run reaches the
+state above exactly: design update then redraws with the fill. On an acceptance it reaches the
+axis and the token, and design update draws the heavier border rather than the fill, so
+`{component code}` keeps the developer's value behind a token name.
+
+The strain policy changes when the question is asked and how much strain the run carries while
+it is open. It does not change which criteria the run settles under.
 
 ### Status: Unresolved
 
-Two settled states. Different mockups, different tokens, a different design language, and
-different criteria met. Nothing distinguishes them except a
-[strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) that reads like a
-scheduling preference, and the default is the one that decides the question by removing it.
+This was first written as a confluence failure, on the reading that the lead refuses a
+question the other branch has already made moot. That reading gave the run's order a say over
+which criteria it settled under, which would be the
+[most load-bearing open question](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows)
+answered badly. It is the wrong reading. An approver is asked about a write to one set,
+[branches resolve at different speeds](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds),
+and a run is not settled while a stop is pending. Take the answer as the lead's judgement on
+the design language and both orders settle under the same criteria. Where they differ in state
+is the difference [order is allowed to make](/cyber-truss/model/canonical-execution/#order-is-not-controlled).
 
-The join is not what failed. Criteria
+The join never failed either. Criteria
 [combine by union](/cyber-truss/model/join/#what-the-join-combines) and the union does not
 depend on order, and the two intents were never compared to each other, which is correct:
 nothing in the model takes two intents and reconciles them. They were only ever going to meet
 as criteria, at the source's controller.
 
-What failed is that they never got there together. **A stop is not a join.** The run turns on
-one person's answer, and what that person is told depends on which jobs have already run.
-The ledger's readiness rule holds a *write* until no pending job can still contribute to it,
-and nothing holds an *approval* to the same bar. It is now an open question of its own,
-[when a stop may be put to a person](/cyber-truss/model/open-questions/#when-may-a-stop-be-put-to-a-person).
-The model has the shape of the fix
-already: a stop at a set should not be put to a person while a pending job could change
-whether the stop is needed. That is proposed here, not settled, and it costs something real,
-because it makes every approval wait for the slowest branch of the run.
-
-This is the failure the
-[most load-bearing open question](/cyber-truss/model/open-questions/#does-an-intent-determine-one-set-of-workflows)
-is about, and it locates it more precisely than the question does. Selection contributed
-nothing: both workflows were found by a lookup over declarations, and each asked upward along
-its own declared span. The divergence is entirely in the second half, whether the results
-converge, and the answer here is that they do not.
+What survives is on the acceptance branch, and it is
+[what notices two intents answering one need](/cyber-truss/model/open-questions/#what-notices-two-intents-answering-one-need).
+One report about one button produces a stronger fill, a new axis in the design language, and a
+token nothing draws. Every write met its criteria. Variant B reaches the same finding without a
+stop at all, which is why the question belongs to the pair rather than to this run's order.
 
 ## Variant B: the language says nothing about emphasis
 
@@ -255,15 +257,15 @@ above happens to be silent, the run over-answers and reports nothing.
 - [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected),
   step 2. Two workflows derive different intents from one diff, and the difference is
   their spans rather than a disagreement about the change.
-- The [join](/cyber-truss/model/join/) against a stop. The join at the source is
-  order-independent and does not fail. The approval above it is order-dependent and decides
-  the run.
+- [Branches that resolve at different speeds](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds).
+  One branch reaches a person and the other does not, and the run settles on its final
+  resolution rather than on what the fast branch reached first.
 - [The run ledger](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
-  and the claim that it never makes a run correct. In variant A it decides the outcome
-  through a strain policy, which is the claim failing rather than holding.
-- [Strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) as a confluence
-  parameter. It was introduced to say how much strain may be carried across a crossing, and
-  here it selects which of two settled states the run reaches.
+  and the claim that it never makes a run correct. Here it holds the run open across a stop
+  without choosing the criteria the run settles under.
+- [Strain policy](/cyber-truss/model/workflow/#what-a-workflow-declares) at a stop. It moves
+  the question to the front or the back of the run and decides how much strain is carried
+  meanwhile. Both orders settle under the same criteria.
 - [Missing strain](/cyber-truss/model/connections/#missing) reached from below in both
   variants, and the difference between a set that lacks a criterion and a set that states its
   opposite. Only the second raises a stop, and the
