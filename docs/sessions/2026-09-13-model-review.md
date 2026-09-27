@@ -116,13 +116,15 @@ re-graded to that cause. Variant B's duplication has the same origin.
 
 Proposed, argued, and **not** written, in the order they need testing:
 
-- **The attachment rule.** An intent is admissible if it names a need some specification in the
+- **The attachment rule** (**rejected** on the fiction run; see the round below). An
+  intent is admissible if it names a need some specification in the
   workflow's span states, or proposes a new use case (an addition, so it passes the leash).
   A use case has a consequent, which is the near-formal discriminator: *the product needs 2px
   as a value of its own, so that...* does not complete. The risk to measure is an agent
   manufacturing the consequent.
-- **A workflow whose span contains no use-case-authoring set can only yield.** A lookup over a
-  declared topology, and what makes completeness affordable below.
+- **A workflow whose span contains no use-case-authoring set can only yield** (inert on
+  fiction and on the border; only marketing can test it). A lookup over a declared topology,
+  and what makes completeness affordable below.
 - **The intent obligation.** Every workflow over the source is heard or recesses; answers are
   `agree`, `disagree`, `uncontested/yield`, `request-recess`; recess is for a peer that is
   affected but has not distilled yet; a peer needing a person to distill yields. Objection is
@@ -140,10 +142,67 @@ Proposed, argued, and **not** written, in the order they need testing:
   provenance; the decision still lands in the run record, which is where a later reader looks.
   An objected intent has value past its run, which loads the pending-work question further.
 
-Next step, before any of that is written: run the attachment rule over the **fiction example**,
-the largest electorate in the corpus with three workflows owning the outline, then the marketing
-example, where `{campaign results}` has no reader in any declared span and the rule should fail
-loudly rather than quietly.
+## Update 2026-09-27, second round: the attachment rule fails on the fiction run
+
+Ran the attachment rule over the fiction example, as the sequencing asked. It is **rejected**;
+the argument is in `docs/backlog.md`. Which of the two predicted outcomes happened: the
+**over-fire**, four times, and not three yields.
+
+- **Over-fire in variant A.** All four workflows over `{manuscript}` distill *the person who
+  betrayed Ilse's family is the person she trusts most, Maren*, and for all four the first
+  branch fails. The only set stating that need as a goal is `{premise}`, which lies in
+  plotting's span alone, and plotting holds a routed job, which carries the root intent and
+  does not distill. The one workflow that could attach the intent is never asked the question.
+  All four fall to the second branch, where the agent writes the consequent unchecked. It does
+  not rest on the example omitting the outline's use cases: grant the outline an articulated
+  *a reveal must surprise and still feel earned* and the intent attaches, which makes the
+  verdict a measure of use-case coverage beside the source rather than of the intent.
+- **Under-fire on the border example**, the case the rule was written for. `{design tokens}`
+  states *every value the product draws is named here*, which is a need in token governance's
+  span, so the rule admits *this control sets a border width as a value of its own*.
+- **The verdict follows the decomposition.** In variant B, with no `{outline}`, `{premise}` is
+  drafting's input and the same intent attaches. Inserting one set between the premise and the
+  manuscript decides admissibility for the same change against the same need.
+
+The walk repair fails too, on one hop: carrying the attachment question upward the way the ask
+already passes *too coarse* upward reaches `{premise}` in fiction, and in the border reaches
+`{design tokens}` first, which states the need the promoted criterion names.
+
+**The electorate figure in the round above is wrong.** The obligation's electorate is every
+workflow over the *source*, which is four at `{manuscript}`. The three workflows owning
+`{outline}` are routing's fan-out, and a routed job does not distill, so those three have no
+intent of their own to answer for. Worth carrying into the obligation when it is written: of
+the three, the one yield is plotting, whose input `{premise}` holds and which contributes
+nothing — so the only member of the fan-out that can read the need is the one that abstains,
+and the two that contribute cannot see it.
+
+Tested and dead on the way, recorded so they are not retried: the **revert test** (an intent
+must be falsified by reverting the change) rejects the border's admissible intent, since the
+primary button was already getting lost before the change, which is what support reported.
+And no surface-form test can work, because the fiction intent has the *same* form as the
+rejected border statement — an indicative fact about the source's content — and the model
+accepts one and refuses the other.
+
+What separates them, on all three statements in the two examples, is whether another branch's
+remedy meeting its own criteria would falsify the intent. That has teeth and it is not local:
+it can only be evaluated where two branches are in one hand, which is reconciliation at the
+source, and by then the border run has already put a question to the design lead. The difference the
+test is detecting is whether a fact of the diff is what the change was *for* or a by-product of
+how it was made, and that is knowable to whoever made the change, not from the artifacts.
+
+**Recommendation, to test before writing:** stop gating the intent layer at intake and make
+attachment a **disclosure carried by the stop** — which need the intent names, where that need
+is stated, and that it names none where it names none. The leash already stops the border write;
+what the design lead was never told is that the intent driving it serves no need `{design
+language}` states. This does not collide with the payload withdrawn on 2026-09-26, which was
+the run's pending jobs; this is provenance of the intent, and other branches' state is still not
+an input. It also gives the unwritten *accepting the intent* item its reason: the source's owner
+is the only party who can say whether a fact of the diff is the purpose or the by-product.
+
+Next: the marketing example, which is now a test of the **yield rule** (`{campaign results}` has
+no reader in any declared span; fiction and the border are both inert for it), and of the
+disclosure above against an approver who is outside the team. Then aviation, where the approver
+is a regulator.
 
 ## Positioning (settled)
 

@@ -162,6 +162,77 @@ is not re-litigated.
   writes a suite covering every permutation, or one for each dependency they install.
   Implicit criteria are stated only when a team decides to, and the model says so on the
   specification page.
+- **The attachment rule as an intake test on intent** (rejected 2026-09-27). Proposed as: an
+  intent is admissible if it names a need some specification in the distilling workflow's span
+  states, or proposes a new use case, with the consequent (*...so that*) as the discriminator.
+  Run over the fiction example it fails in three ways, and the third is fatal on its own.
+  - **It over-fires on fiction variant A.** Four workflows distill *the person who betrayed
+    Ilse's family is the person she trusts most, Maren*. The only set that states that need as
+    a goal is `{premise}` — *must decide whether revenge is worth becoming what she hates* —
+    and `{premise}` lies in plotting's span alone. Plotting holds a routed job, which carries
+    the root intent and does not distill, so the one workflow that could attach the intent is
+    never asked the question. What the four distillers can see in span are the outline's and
+    the bible's criteria, which are plot facts, and one of them the intent contradicts. All
+    four fall through to the second branch, where the consequent is written by the agent and
+    checked by nothing.
+  - **It under-fires on the border example.** Token governance's span holds `{design tokens}`,
+    whose standing specification states *every value the product draws is named here*. *This
+    control sets a border width as a value of its own* names that need and completes the
+    consequent, so the rule admits the statement it was written to refuse. The example's own
+    step 4 confirms the reading: the tokens' controller answers that the intent implies every
+    border width the product draws is named in the set.
+  - **Its verdict follows the decomposition, not the intent.** Fiction variant B has no
+    `{outline}`, so `{premise}` is drafting's input and the same intent attaches for the same
+    reason it failed to in A. Inserting one set between the premise and the manuscript makes
+    the same intent inadmissible for the same change against the same need. A test whose
+    verdict flips when a topology is decomposed differently is not a test about intent.
+
+  The over-fire survives the obvious objection. The specification page says an outline's criteria
+  are bound to use cases, so `{outline}` authors some and the example simply never writes them.
+  Grant it *a reveal must surprise and still feel earned* and drafting's intent attaches — but
+  then admissibility turns on whether a set beside the source happened to articulate a need the
+  premise states anyway, which measures use-case coverage around the source rather than the
+  intent. Either reading condemns the rule: on what the corpus writes it refuses the corpus's
+  clearest intent, and on the generous reading its verdict is decided by how thoroughly the
+  neighbouring set was written up.
+
+  The mechanism behind the first two: attachment inside a span rewards proximity to the source,
+  and the sets beside the source are the ones whose subject matter the diff touches. A
+  statement that restates the diff attaches most easily, while an intent stating what the
+  change is *for* attaches to a need stated further away. In the two examples the rule was
+  written from, its polarity is inverted.
+
+  One further consequence of the same test, worth not rediscovering: where a pair of workflows
+  with opposite roles makes the source a use-case author (canon update writes the bible to
+  agree with the draft, so `{manuscript}` is the specification on that edge), branch 1 can
+  attach an intent to the set the change just landed in. Restricting it to the *standing*
+  specification keeps the change's own content out, but what remains there is behavior, and
+  reading a fact of the draft as a need is the layer violation the rule exists to catch.
+- **Answering admissibility on the way up** (rejected 2026-09-27, same round). The obvious
+  repair is to let the ask walk carry the attachment question, passing it up wherever a set
+  does not state the need, exactly as it already passes up *too coarse*. It fixes fiction A,
+  where the walk reaches `{premise}`, and it does not fix the border, because the first set
+  above the source on that walk is `{design tokens}`, which states the need the promoted
+  criterion names. One hop is enough, and it is the hop no walk can skip.
+- **Local form tests on the intent statement** (rejected 2026-09-27, same round). Two were
+  tried after the attachment rule fell. The **revert test** — an intent must be falsified by
+  reverting the change — rejects the border example's admissible intent, *the primary action has
+  to hold its place on a dense screen*, which was already true before the change, since it is
+  what support reported. Any **surface-form** test fails for a sharper reason: the fiction
+  intent has the same form as the refused border statement, an indicative fact about the
+  source's content, and the model accepts one and refuses the other. What separates all three
+  statements in the two examples is whether another branch's remedy meeting its own criteria
+  would falsify the intent, which is not local: it can be evaluated only where two branches are
+  in one hand, and by then the border run has put a question to the design lead. The difference
+  being detected is whether a fact of the diff is what the change was *for* or a by-product of
+  how it was made, which is knowable to whoever made the change and not from the artifacts.
+- **A span-level yield rule is inert on fiction and on the border** (noted 2026-09-27). *A
+  workflow whose span contains no use-case-authoring set can only yield* fires in neither. In
+  fiction every set authors use cases, because every set is upstream in some declared workflow:
+  the pairs with opposite roles make `{manuscript}` the specification of the outline and of the
+  bible on those edges. In the border example token governance's span holds `{design language}`.
+  The marketing example, where `{campaign results}` has no reader in any declared span, is the
+  only place in the corpus that can test it.
 
 ## A. Docs site
 
