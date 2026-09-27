@@ -93,6 +93,58 @@ should, which splits into fetch-time failure, answered by composing a pack at bi
 dilution, answered by the gate. An ACED comparison of fetch-time, birth-time, and split
 configurations would settle it with evidence.
 
+## Update 2026-09-27: three layers, and where the claim sits
+
+The session began by testing the stop-timing rule the border example proposed against the three
+examples that contain stops. Both deterministic forms of it failed (see `docs/backlog.md`), and
+the question dissolved instead (user-directed): **an approver answers a write to one set**, so
+what other branches have reached is not an input, **branches resolve at different speeds**, and
+**confluence is claimed over a run's final resolution**. A stop does not freeze the run. The
+answer re-enters the run as a write, which puts more load on whatever holds pending jobs.
+Commit `fa43505`; the open question was deleted rather than answered.
+
+Then the layering (user-directed): the model moves **intent, criteria and behavior**, the four
+named operations are the transitions between them, and the claim sits in the middle layer.
+States below it may differ; intents above it may not contradict. **Intent's standing home is
+the specification, as its use cases**, so a distilled intent is a claim about a need already
+stated somewhere. New page `model/layers.md`, commits `6b3ad00` and `f2497d7`.
+
+That re-diagnosed the border example. Token governance's statement was never an intent: it is a
+criterion of `{design tokens}`, true of whatever the settled state draws, promoted to the top
+layer where it drove a run toward a condition the other branch was removing. Both variants are
+re-graded to that cause. Variant B's duplication has the same origin.
+
+Proposed, argued, and **not** written, in the order they need testing:
+
+- **The attachment rule.** An intent is admissible if it names a need some specification in the
+  workflow's span states, or proposes a new use case (an addition, so it passes the leash).
+  A use case has a consequent, which is the near-formal discriminator: *the product needs 2px
+  as a value of its own, so that...* does not complete. The risk to measure is an agent
+  manufacturing the consequent.
+- **A workflow whose span contains no use-case-authoring set can only yield.** A lookup over a
+  declared topology, and what makes completeness affordable below.
+- **The intent obligation.** Every workflow over the source is heard or recesses; answers are
+  `agree`, `disagree`, `uncontested/yield`, `request-recess`; recess is for a peer that is
+  affected but has not distilled yet; a peer needing a person to distill yields. Objection is
+  monotone: further work under that intent stops, nothing written is undone. Mutual objection
+  goes to a person. The electorate is a lookup, since routed jobs carry the root intent and do
+  not distill, and it is small and local in every example.
+- **Mechanism stays out of the model** (user-directed), as the pod-and-ship sketch does. A peer
+  broadcast, an arbitrator that summons peers into a cyber-net channel, or a person convening a
+  meeting all discharge it. The one part that is *not* transport: broadcast with silence as
+  consent fails open, while an arbitrator that can wake a peer can claim completeness, so the
+  model must say which it requires. An arbitrator has no span and therefore may not adjudicate:
+  convene, carry answers, hold the wait, record, escalate. The aviation example is why the
+  obligation must not be written in terms of channels, because there the peer is a regulator.
+- **Where an intent-layer outcome is recorded.** cyber-net is durable, so the transcript is
+  provenance; the decision still lands in the run record, which is where a later reader looks.
+  An objected intent has value past its run, which loads the pending-work question further.
+
+Next step, before any of that is written: run the attachment rule over the **fiction example**,
+the largest electorate in the corpus with three workflows owning the outline, then the marketing
+example, where `{campaign results}` has no reader in any declared span and the rule should fail
+loudly rather than quietly.
+
 ## Positioning (settled)
 
 - cyber-truss **makes a system self-converging**. Not a "layer", not scoped to

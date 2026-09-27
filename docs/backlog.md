@@ -136,6 +136,26 @@ is not re-litigated.
   implementation files, and that rung is its own set. What a downstream set reads besides the
   criteria from above is workflow governance and the existing artifacts, and the latter
   supply *how*, never *what*.
+- **Holding a stop until the rest of the run is quiet** (rejected 2026-09-26). The
+  border example proposed that a stop not be put to a person while a pending job could change
+  whether the stop is needed. Its only deterministic form, since the ledger may not judge, is
+  to wait until every job not blocked by the stop has run, and which jobs those are is decided
+  by strain policy, so it reproduces the two outcomes it was meant to separate. It also asks
+  the broadest-scope question last, after the narrowest work has settled the instance that
+  raised it.
+- **Holding every branch that could remedy one intent until a stop is answered** (rejected
+  2026-09-26). The inverse rule makes the question live rather than moot. Aviation variant A
+  refutes it: the airline can already meet a limit stricter than the AD, and freezing its order
+  and card until the regulator answers keeps the aircraft on the ground for weeks.
+- **A stop carrying the pending jobs addressed to its intent** (withdrawn 2026-09-26). Offered
+  as a payload in place of a schedule, so that an approver answers the intent rather than the
+  instance. Unnecessary: an approver is asked whether a write may remove part of one set's
+  standing specification, and the state of other sets is not an input to that question.
+- **A staleness report at reconciliation** (withdrawn 2026-09-27). Reconciliation at the source
+  would report a criterion whose trigger the reconciled state no longer holds, which is how the
+  unused `border-emphasis` token would have been caught. Not needed once the statement behind
+  it is read as a criterion promoted to the intent layer: as a criterion it applies to whatever
+  the settled state draws, and nothing drives a run toward it.
 - **Backfilling every criterion that turns up in context** (rejected 2026-09-23,
   user-directed). The first form of the rule above said that a rule found in the existing
   artifacts should be written into a specification. Not practical, and not desirable: nobody
