@@ -155,10 +155,15 @@ direction as everything downstream of them. Whether the relocation is enough is 
 
 ## What notices two intents answering one need?
 
-Two workflows can distill one change into two intents, each defensible within its own span,
-whose remedies answer the same need. Nothing in a run compares intents to each other. They
-meet only as criteria at the source's controller, and there they join cleanly whenever neither
-excludes the other.
+Two workflows can distill one change into two statements whose remedies answer the same need.
+Nothing in a run compares them to each other. They meet only as criteria at the source's
+controller, and there they join cleanly whenever neither excludes the other.
+
+In the border example one of the two is not an intent at all but a
+[criterion promoted to the intent layer](/cyber-truss/model/layers/#a-criterion-promoted-to-intent),
+so part of this question is really *what makes an intent admissible*. The rest of it survives
+that: two admissible intents, each serving a need some specification states, can still answer
+one need twice.
 
 [Variant B of the border example](/cyber-truss/examples/design-token-border/#variant-b-the-language-says-nothing-about-emphasis)
 settles that way and settles the same way in every order, so it does not fail confluence. The

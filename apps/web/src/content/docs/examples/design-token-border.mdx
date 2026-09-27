@@ -111,9 +111,12 @@ touched. The tests never covered border width.
    - Token governance reads it against `{design tokens}`, where border width has one name.
      Intent: *this control sets a border width as a value of its own.*
 
-   Neither abstains, and neither is wrong. This is
-   [selection step 2](/cyber-truss/model/workflow/#how-workflows-are-selected) working: the
-   intent belongs to the workflow, not to the change.
+   Neither abstains. Design implementation's statement is an intent: it says what the change
+   is for and it holds however the change is expressed. Token governance's is not. It states
+   a fact about the diff, and it is a
+   [criterion of `{design tokens}`](/cyber-truss/model/layers/#a-criterion-promoted-to-intent)
+   wearing intent's label, true of whatever the settled state turns out to draw. Nothing in
+   the model refuses it, so the run below is what follows from admitting it.
 4. **Ask the controllers above**, nearest first. Each
    [answers for its own set](/cyber-truss/model/canonical-execution/#controllers-answer-for-their-own-sets)
    and never sees the diff.
@@ -205,11 +208,17 @@ depend on order, and the two intents were never compared to each other, which is
 nothing in the model takes two intents and reconciles them. They were only ever going to meet
 as criteria, at the source's controller.
 
-What survives is on the acceptance branch, and it is
+What survives is a [layer violation](/cyber-truss/model/layers/#a-criterion-promoted-to-intent)
+at step 3, and everything the run does after it follows correctly from admitting it. A
+criterion of `{design tokens}` was promoted to an intent, so the run pursued a condition that
+the other branch was in the middle of removing. On the acceptance branch one report about one
+button produces a stronger fill, a new axis in the design language, and a token nothing draws,
+and every write met its criteria on the way.
+
+The model has no bar on what a workflow may return as an intent, which is why this passes.
+Abstention is the answer the model already has for a workflow with nothing to distill, and the
+open part is what makes a statement admissible in the first place. See
 [what notices two intents answering one need](/cyber-truss/model/open-questions/#what-notices-two-intents-answering-one-need).
-One report about one button produces a stronger fill, a new axis in the design language, and a
-token nothing draws. Every write met its criteria. Variant B reaches the same finding without a
-stop at all, which is why the question belongs to the pair rather than to this run's order.
 
 ## Variant B: the language says nothing about emphasis
 
@@ -242,21 +251,29 @@ twice for one report.
 ### Status: Unresolved
 
 The run settles and every order settles the same way, so this variant does not fail
-confluence. It fails something else, now named as
-[what notices two intents answering one need](/cyber-truss/model/open-questions/#what-notices-two-intents-answering-one-need):
-two intents answered one need, and nothing in the run could see that, because each was judged
-against its own set's criteria and both passed.
+confluence. The button carries two remedies for one report, and the cause is the same
+[promoted criterion](/cyber-truss/model/layers/#a-criterion-promoted-to-intent) as in variant
+A. Had token governance abstained, nothing here would have proposed a border at all: the fill
+is the only remedy, the literal is dropped at reconciliation, and `{design tokens}` has
+nothing to name.
 
-The variant matters because it shows what carried variant A. There, the language's *never by
-border weight* was the only thing that turned a second remedy into a contradiction, and a
-contradiction is the only way the model notices duplication at all. Where the specification
-above happens to be silent, the run over-answers and reports nothing.
+What the variant adds is the reason variant A looked like a different failure. There, the
+language's *never by border weight* turned the second remedy into a contradiction and raised a
+stop. Here the language is silent, so nothing objects. That difference is worth keeping in
+view, because it means a specification's silence is the whole of the model's tolerance for
+duplication, and two intents that were both admissible would meet the same silence. Nothing in
+the run would notice. Whether that is a defect or the
+[implicit-criteria limit](/cyber-truss/model/specification/#some-criteria-are-never-stated)
+the model already accepts is the part this example cannot settle on its own.
 
 ## What it tests
 
 - [How workflows are selected](/cyber-truss/model/workflow/#how-workflows-are-selected),
   step 2. Two workflows derive different intents from one diff, and the difference is
   their spans rather than a disagreement about the change.
+- [The intent layer](/cyber-truss/model/layers/#where-the-guarantee-sits) with no bar on it.
+  One of the two statements at step 3 is a criterion of the workflow's own set, and the model
+  admits it as an intent.
 - [Branches that resolve at different speeds](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds).
   One branch reaches a person and the other does not, and the run settles on its final
   resolution rather than on what the fast branch reached first.
