@@ -132,13 +132,13 @@ Proposed, argued, and **not** written, in the order they need testing:
   goes to a person. The electorate is a lookup, since routed jobs carry the root intent and do
   not distill, and it is small and local in every example.
 - **Mechanism stays out of the model** (user-directed), as the pod-and-ship sketch does. A peer
-  broadcast, an arbitrator that summons peers into a cyber-net channel, or a person convening a
+  broadcast, an arbitrator that summons peers into a cynapse stream, or a person convening a
   meeting all discharge it. The one part that is *not* transport: broadcast with silence as
   consent fails open, while an arbitrator that can wake a peer can claim completeness, so the
   model must say which it requires. An arbitrator has no span and therefore may not adjudicate:
   convene, carry answers, hold the wait, record, escalate. The aviation example is why the
   obligation must not be written in terms of channels, because there the peer is a regulator.
-- **Where an intent-layer outcome is recorded.** cyber-net is durable, so the transcript is
+- **Where an intent-layer outcome is recorded.** cynapse is durable, so the transcript is
   provenance; the decision still lands in the run record, which is where a later reader looks.
   An objected intent has value past its run, which loads the pending-work question further.
 
