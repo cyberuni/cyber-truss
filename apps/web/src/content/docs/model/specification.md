@@ -49,6 +49,10 @@ This is orthogonal to what a specification *contains*, below. One decomposition 
 vertical and per-edge; the other is internal to a single specification. Conflating them is
 the failure mode this section exists to prevent.
 
+The layers the model does have are not artifacts at all. They are the three kinds of thing
+it moves, and one artifact-set holds content in more than one of them. See
+[Three layers](/cyber-truss/model/layers/).
+
 **Status: Settled.**
 
 ## A specification is intent plus criteria
@@ -57,7 +61,10 @@ Two distinct things travel under the one word, and the imprecision is load-beari
 to cost something.
 
 **Intent** states what the thing is for and which direction it should move in. It is
-argued with, not evaluated.
+argued with, not evaluated. Its standing, articulated form is the set's
+[use cases](#criteria-are-authored-through-use-cases), which is what gives a need a home
+between runs and makes the specification
+[where intent stands](/cyber-truss/model/layers/#intent-stands-in-the-specification).
 
 **Criteria** state what must be true of the outcome. They are evaluable against a
 blackbox, without reading it.

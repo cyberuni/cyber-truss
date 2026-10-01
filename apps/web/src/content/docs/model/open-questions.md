@@ -37,6 +37,14 @@ choice between states is recorded. The cycles must also come to rest.
 with no person in it, and they depend on the specification controller catching a reversal
 renamed as a new criterion.
 
+[Two workflows read one border](/cyber-truss/examples/design-token-border/) was read as the
+first example where they do not converge, because a stop in one branch appeared to be answered
+differently depending on what the other branch had already done. It is not.
+[Branches resolve at different speeds](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds)
+and an approver answers for one set, so the run settles on its final resolution. What the
+example does leave open is
+[what notices two intents answering one need](#what-notices-two-intents-answering-one-need).
+
 **What breaks if it resolves badly:** the whole confluence construction. If the set is not
 unique, or its results do not converge, path-independence needs a different mechanism than
 canonicalization. The likeliest fallback is per-relation confluence, with the proof burden
@@ -93,6 +101,12 @@ a git-tracked, append-only graph of pending jobs and what each waits on, which a
 the termination record. It survives sessions and is a team artifact rather than a session
 artifact, but it is not the only option.
 
+The vehicle carries more than scheduling.
+[Confluence is claimed over a run's final resolution](/cyber-truss/model/canonical-execution/#branches-resolve-at-different-speeds),
+so a run with a person in one branch stays open for as long as that person takes, and the
+answer has to re-enter it when it arrives. Whatever holds pending jobs is what makes that
+true.
+
 **Related risk, and it is the documented failure mode of every system in this shape:**
 deferred non-blocking obligations rot. This repository's own `docs/backlog.md` has
 entries open since the day they were written. If the runtime is a pile nobody discharges,
@@ -138,6 +152,38 @@ so that neither party to the comparison authored the bar it is judged against. T
 real mechanism where there was previously only a requirement, but it relocates the exposure
 rather than removing it: criteria derived from a misread intent are wrong in the same
 direction as everything downstream of them. Whether the relocation is enough is unresolved.
+
+## What notices two intents answering one need?
+
+Two workflows can distill one change into two statements whose remedies answer the same need.
+Nothing in a run compares them to each other. They meet only as criteria at the source's
+controller, and there they join cleanly whenever neither excludes the other.
+
+In the border example one of the two is not an intent at all but a
+[criterion promoted to the intent layer](/cyber-truss/model/layers/#a-criterion-promoted-to-intent),
+so part of this question is really *what makes an intent admissible*. The rest of it survives
+that: two admissible intents, each serving a need some specification states, can still answer
+one need twice.
+
+[Variant B of the border example](/cyber-truss/examples/design-token-border/#variant-b-the-language-says-nothing-about-emphasis)
+settles that way and settles the same way in every order, so it does not fail confluence. The
+primary button ends up carrying a stronger fill **and** a heavier border for one support
+report. Both writes met their criteria, no criterion was reversed, and nobody was asked
+anything.
+
+What made variant A visible was the language stating *never by border weight*, which turned
+the second remedy into a contradiction and raised a stop. So duplication is noticed only where
+a specification above happens to state the opposite of one remedy. Where it is silent, the run
+over-answers and reports nothing.
+
+[Reconciliation at the source](/cyber-truss/model/canonical-execution/#reconciling-at-the-source)
+is the only place both remedies are in one hand, which makes it the candidate site for a
+check. It reads them as criteria on its own set rather than as remedies of one need, so it
+would need something it is not currently given.
+
+**What breaks if it resolves badly:** the loop's product accumulates answers nobody asked
+for, each one defensible against the criteria it was judged by, and the only reports that
+would name the surplus are the ones the run never produces.
 
 ## Which strain does an implementation that contradicts its specification leave?
 

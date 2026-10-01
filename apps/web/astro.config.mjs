@@ -30,6 +30,7 @@ export default defineConfig({
 						{ label: 'Controller', link: '/model/controller/' },
 						{ label: 'Confluence', link: '/model/confluence/' },
 						{ label: 'Canonical execution', link: '/model/canonical-execution/' },
+						{ label: 'Three layers', link: '/model/layers/' },
 						{ label: 'Relationship to SDD', link: '/model/relationship-to-sdd/' },
 						{
 							label: 'Formal workflows',

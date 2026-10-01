@@ -115,6 +115,7 @@ connection has none. See [Three roles](/cyber-truss/model/workflow/#three-roles)
 The half of a [specification](#specification) stating what the thing is for and which
 direction it should move in. Argued with, not evaluated. An arriving change carries intent
 too, and [distillation](#distillation) is what separates it from the change's expression.
+Intent stands in a specification, as its [use cases](#specification).
 
 ### Join
 
@@ -122,6 +123,14 @@ The operation that combines sets of [criteria](#criteria): their union, the same
 order. Taken over criteria, not over states. Where a [connection](#connection) says where
 criteria flow, the join says how criteria reaching one place combine. See
 [Join](/cyber-truss/model/join/).
+
+### Layer
+
+One of the three kinds of thing the model moves: [intent](#intent), [criteria](#criteria),
+and behavior. Not a stratum of artifacts, which the
+[specification page rejects](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer);
+one artifact-set holds content in more than one layer. See
+[Three layers](/cyber-truss/model/layers/).
 
 ### Lattice
 
