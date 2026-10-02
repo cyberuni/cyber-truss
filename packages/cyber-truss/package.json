@@ -1,6 +1,6 @@
 {
 	"name": "cyber-truss",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "The convergence layer — holds a repository in its settled state across every change",
 	"repository": {
 		"type": "git",
