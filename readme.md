@@ -7,6 +7,8 @@ The convergence layer. It holds a repository in its settled state across every c
 > The CLI is a shell today: global options, usage errors, and exit codes. No domain
 > commands have shipped yet.
 
+Part of [cyber-civitas](https://cyber-civitas.github.io), a self-contained system for running AI coding agents. This package is its process layer.
+
 ## Why
 
 SDD is a **mission engine**: it runs from a change request to a handoff, then retires.
