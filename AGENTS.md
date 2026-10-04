@@ -56,6 +56,12 @@ challenged on specifics, and that is the process working.
 Rejected proposals are recorded with their reasons in `docs/backlog.md` under
 *Settled — do not re-derive*. Read it before re-proposing anything in that list.
 
+## System context
+
+This repo is one package of [cyber-arcology](https://cyber-arcology.github.io), the system its sibling packages compose into. The [layer architecture](https://cyber-arcology.github.io/architecture/layers/) and the [cross-package decisions](https://cyber-arcology.github.io/decisions/) are recorded there; a decision inside this repo cites them rather than restating them.
+
+- The process layer must not depend on the fleet: a sortie is the fleet's view of a run, not something this package knows about.
+
 ## What This Repo Is
 
 `cyber-truss` — an npm package that ships the convergence layer as:
