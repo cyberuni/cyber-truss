@@ -58,7 +58,7 @@ Rejected proposals are recorded with their reasons in `docs/backlog.md` under
 
 ## System context
 
-This repo is one package of [cyber-arcology](https://cyber-arcology.github.io), the system its sibling packages compose into. The [layer architecture](https://cyber-arcology.github.io/architecture/layers/) and the [cross-package decisions](https://cyber-arcology.github.io/decisions/) are recorded there; a decision inside this repo cites them rather than restating them.
+This repo is one package of [cyber-civitas](https://cyber-civitas.github.io), the system its sibling packages compose into. The [layer architecture](https://cyber-civitas.github.io/architecture/layers/) and the [cross-package decisions](https://cyber-civitas.github.io/decisions/) are recorded there; a decision inside this repo cites them rather than restating them.
 
 - The process layer must not depend on the fleet: a sortie is the fleet's view of a run, not something this package knows about.
 
