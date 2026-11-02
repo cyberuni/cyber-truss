@@ -89,9 +89,14 @@ User decisions, 2026-11-02:
 - P3, P4, P6, and P7 are accepted.
 - For P5, ranking the settled states goes to a research issue: [#61](https://github.com/cyberuni/cyber-truss/issues/61)
 - P2 and P8 are accepted.
-- Q4 is ruled: criteria versions follow semver within a run (see `raw/q4-model-findings.md`).
-- References are to individual criteria (leaf nodes).
-- P9–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
+- Q4 is ruled: criteria versions follow semver within a run, used only for its
+  breaking-change signal. Adding criteria is minor and non-breaking. Any change to an
+  existing criterion, a rewording included, is major and breaking. There is no patch tier
+  (see `raw/q4-model-findings.md`).
+- References are to individual criteria.
+- P9 is accepted as restated: a criterion's identity is its self-contained text, with no
+  minted ID (see `raw/criteria-structure.md`).
+- P10–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
 
 - **P1. A monotone-derivation contract on the controller's Ask call.** If the criteria
   referred to a controller grow, the criteria it derives must not shrink. **Within one

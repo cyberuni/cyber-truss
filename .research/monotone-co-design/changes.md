@@ -82,3 +82,19 @@
 - Why: it resolves Q4 and the inconsistency between rule 4 and the leash's version wording.
 - Conclusion changed materially: yes. Q4 is closed.
 - Triggering evidence: F1–F5 in `raw/q4-model-findings.md`.
+
+## 2026-11-02 (P9 ruling)
+
+- What changed:
+  - The semver ruling is narrowed to its breaking-change signal, and the patch tier is
+    dropped. A rewording is a replacement, so it is major. Only adding criteria is minor.
+  - A breaking bump re-judges affected writes against the current criteria before redoing
+    any, so a harmless rewording stays cheap.
+  - P9 is accepted as restated: identity is the criterion's self-contained text, not a leaf
+    node or a minted ID. The criteria-structure table's identity row is corrected, and P13
+    is flagged for a recheck.
+- Why: the user pointed out that the judge reads a criterion's text, so a rewording can
+  change a verdict. With no patch tier, withdrawal is a set difference over texts, and an
+  ID has no remaining job.
+- Conclusion changed materially: yes. P9 is restated and the semver ruling is narrowed.
+- Triggering evidence: the user's review; P3 (rewording is not inflationary).

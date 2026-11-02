@@ -100,34 +100,46 @@ non-monotone points.
 LVars' *freeze* (quasi-determinism, where a write after freeze is an error) is the nearest
 match for a version that has been decided. That is inference.
 
-## Ruling (user, 2026-11-02): criteria versions follow semver
+## Ruling (user, 2026-11-02): criteria versions follow semver, for its breaking-change signal
 
-Adopted. This supersedes the F3 wording.
+Adopted. This supersedes the F3 wording. Semver is borrowed for one distinction: a major bump
+is breaking, and a minor bump is not. There is no patch tier (revised the same day, see
+below).
 
 | Semver | Change to criteria | Run version | Writes already made |
 | --- | --- | --- | --- |
-| Patch | A leaf is reworded, keeping its identity and giving the same verdicts | No bump | Untouched |
-| Minor | A person adds criteria during the run | Minor bump | Untouched; the new criteria join the old |
-| Major | A criterion is removed or replaced | Major bump | Writes that reference the removed leaves are withdrawn and redone (P13) |
+| Minor (non-breaking) | A person adds criteria during the run | Minor bump | Untouched; the new criteria join the old |
+| Major (breaking) | An existing criterion is changed in any way: reworded, replaced, removed, or refused | Major bump | Writes judged against a criterion that is no longer in the version are re-judged, and the ones that fail are withdrawn and redone |
 
+- **No patch tier.** The first form of this ruling had one: a rewording that keeps identity
+  and verdicts. It was dropped because the judge reads a criterion's text, so a rewording
+  can change a verdict, and nothing at authoring time proves it does not. A rewording is a
+  replacement: the old text leaves the set and a new one arrives, which is not inflationary
+  (P3). Only adding criteria is monotone. (User, 2026-11-02.)
+- **Re-judge before redoing.** A breaking bump does not redo every affected write. Each one
+  is re-judged against the current criteria, and only the ones that fail are withdrawn.
+  Confluence is claimed over criteria, so a write that meets the current version is a valid
+  state whichever wording it was made under. This keeps a harmless rewording cheap.
 - Criteria that agents derive within a run cause no bump. They compute the version; they do
   not change it.
 - There are two version lines. The **standing specification** carries across runs, and
   approving a replacement is a major bump to it, recorded in the append-only history. The
   **run's criteria** apply within one run. An approval does not bump them, because version 1
   already holds the new criterion. A refusal is a major bump to the run.
-- Breakage is computed, not declared. With per-leaf references (P9), a removal breaks
-  exactly the writes that reference the removed leaves. A removal nobody references is
-  still major, with nothing to withdraw.
+- Breakage is computed, not declared. With per-criterion references (P9), a major bump
+  affects exactly the writes that reference a criterion the new version no longer holds: a
+  set difference over criteria texts. A change nobody references is still major, with
+  nothing to re-judge.
 - Rule 3 compares full versions. Re-strain after a minor bump is legitimate. Re-strain at
   the same version is oscillation.
 
 ### Doc changes this implies (for a separate session)
 
-- **Canonical execution, rules 1 and 4.** Restate version creation as minor (a person adds
-  criteria) and major (removal, replacement, refusal, a settled conflict that drops a
-  criterion). "Creates the next version" in rule 4 applies only to decisions that change
-  criteria.
+- **Canonical execution, rules 1 and 4.** Restate version creation as minor, non-breaking (a
+  person adds criteria), and major, breaking (any change to an existing criterion: rewording,
+  replacement, removal, refusal, a settled conflict that drops a criterion). Use "semver"
+  only for that distinction, and say there is no patch tier. "Creates the next version" in
+  rule 4 applies only to decisions that change criteria.
 - **Leash.** "Rule 4 applies to it" is narrowed to the record and to reversal by a person.
   An approval bumps the standing specification, not the run.
 - **Join, "Within a run" and "Append-only history".** Name the two version lines.

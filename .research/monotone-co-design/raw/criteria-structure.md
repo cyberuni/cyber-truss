@@ -14,7 +14,7 @@ all three, and the use-case graph restores them.
 | The theorem needs | A loose criterion breaks it because | The leaf node restores it because |
 | --- | --- | --- |
 | Each step is a function: same input, same output | Its verdict on an unchanged state can flip between evaluations or controllers. Strain then flips with nothing changed, and rule 3 reads that as oscillation | A leaf is one path in the graph, specific enough to evaluate to one verdict |
-| The join is idempotent: a criterion arriving twice counts once | Two phrasings of one rule count as two criteria, or two rules merge into one. Identity is not decidable | The leaf has a position in the graph, which gives it an identity separate from its prose |
+| The join is idempotent: a criterion arriving twice counts once | A criterion whose text leans on context it does not carry has no decidable identity: the same text can mean two things | Identity is the criterion's self-contained text (P9, as ruled), so the join counts it once by construction. The graph's part is the first row: it makes each text specific enough to carry its own conditions |
 | A finite set of criteria (for termination) | Prose is open-ended, so criteria can be restated without end | Version 1 fixes the set of leaves, and agents cannot add a version (rule 1) |
 
 This also explains the model's Open "grain" item on the Specification page. A criterion
@@ -22,9 +22,22 @@ whose coverage turns on an undefined term breaks the first row.
 
 ## Proposals (continuing the numbering)
 
-- **P9. A criterion's identity is its leaf node, not its prose.** References, the join's
-  "counts once", replacement (which node was swapped), and retraction (F5) all key on it.
-  *Load-bearing:* every cross-set reference carries it.
+- **P9. A criterion's identity is its self-contained text.** *(Ruled by the user,
+  2026-11-02, as restated. The first form said the leaf node, not the prose, is the
+  identity.)*
+  - References, the join's "counts once", and retraction (F5) all key on the text, or a hash
+    of it where a reference needs to be short. No minted ID is needed.
+  - Why the leaf node fell: the judge reads a criterion's text, so a rewording can change a
+    verdict. Any change to a criterion is therefore breaking (see the semver ruling in
+    `q4-model-findings.md`), and withdrawal only needs the set difference between the
+    criteria a write was judged against and the current version. Nothing needs to know which
+    new criterion replaced an old one, which was the only job an ID had that text could not do.
+  - *Load-bearing condition:* the text must be self-contained. The judge reads the criterion
+    and nothing else, so any context it depends on (the path, the use case) has to be written
+    into it. SDD's Given/When/Then scenarios meet this. A row of a messaging table may not.
+  - Sets with no graph use the same rule. No other identity scheme is needed. What they lack
+    is the graph's check for two criteria on one path; that is an authoring defect, left to
+    P10.
 - **P10. Bracket a leaf when it is written, an import from MCDT's interval uncertainty
   (Censi 2017).** MCDT brackets an uncertain design problem between an optimistic and a
   pessimistic version and solves both.
@@ -55,6 +68,9 @@ whose coverage turns on an undefined term breaks the first row.
 - **P13. Retraction scope follows the graph.** Replacing a node retracts its subtree's
   leaves, and then, transitively, every write that references them (F5 at leaf grain). The
   graph is the justification structure a TMS needs, already authored.
+  - *To recheck after P9's ruling:* with self-contained texts, a changed path changes its
+    leaves' texts, so the set difference may already cover the subtree. The transitive part
+    (writes resting on withdrawn writes) is unaffected.
 
 ## What the theory predicts will still fail
 
@@ -63,5 +79,5 @@ whose coverage turns on an undefined term breaks the first row.
   structure alone. P10 flags them, and the options are to split them, to accept the stop, or
   to route them to a person as in-the-loop criteria.
 - **Sets with no graph** (an outline, a messaging table). Their criteria are bound to use
-  cases alone, so identity rests on the use case plus the criterion's wording. P9 and P12 are
-  weaker there.
+  cases alone. Under P9 as ruled, identity is the text here too. What is weaker is the
+  check for duplicates (two wordings of one rule), and whether each text is self-contained.
