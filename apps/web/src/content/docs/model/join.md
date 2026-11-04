@@ -75,7 +75,8 @@ a reversal under a new name, and the same controller makes it: the
 
 A replacement removes a criterion from the set's
 [standing specification](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases),
-so the write that makes it contradicts that specification, and the
+not from the run's criteria, which were derived with the new criterion already in them (see
+[Within a run](#within-a-run)). The write that makes it contradicts that specification, and the
 [leash](/cyber-truss/model/workflow/#leash) decides whether it needs approval. By default it
 does. A fix to a stated rule and a deliberate change of direction look the same from inside
 the set, and nothing in the run can tell them apart without judging the intent, so the
@@ -100,24 +101,46 @@ The strain appears on connections, but its cause is in the join, so no workflow 
 restore it. Whatever the code does, one of the two connections stays strained, and running
 the workflows again only moves the strain from one to the other. A conflict needs a
 [recorded decision](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest). The
-decision settles which criterion stands and creates the next version of the criteria.
+decision settles which criterion stands. It drops the other, so it is a major bump to the
+run's criteria.
 
 This is also how the join bounds a run. Oscillation between two workflows is often what
 an unresolved conflict looks like from outside, and conflicts are finite: each pair of
 contradicting criteria is decided once.
 
-**Status: Settled** that a conflict is resolved by decision, not by replay.
+Settling the criteria cannot show that no conflict remains. Each controller can hold
+criteria its own set can meet while no state meets them all. In constraint propagation this
+is the gap between local and global consistency: neither implies the other (Apt,
+[*The Essence of Constraint Propagation*](https://arxiv.org/abs/cs/9811024)). A conflict
+that runs around a cycle of connections, each pair of sets agreeing, shows up only when the
+controllers write. So the join can surface a conflict between two criteria that reach one
+set, but a run with no conflict at the join can still meet one at write time.
+
+**Status: Settled** that a conflict is resolved by decision, not by replay, and that
+settling the criteria cannot prove a conflict absent.
 
 ## Within a run
 
-The join holds within a run. There the run's criteria are frozen as a version, and a new
-version comes only from a person adding criteria or from a recorded decision. Criteria the
-specifications held before the run take part only where a replacement the leash let through
-does not remove them.
+Criteria have two version lines, and the join belongs to one of them.
 
-Between runs a specification changes freely. Criteria are rewritten and removed, and the
-next run starts from whatever the specification then says. Holding criteria to
-append-only across runs would be too restrictive. What is append-only is the record of how
-each version replaced the last.
+- **The standing specification** is what a set states across runs: its use cases and
+  criteria as they stood before the run. It changes between runs, and freely. Criteria are
+  rewritten and removed, and the next run starts from whatever the specification then says.
+- **The run's criteria** are what one run is held to. Step 4 derives version 1, and a new
+  version comes only from a person or a recorded decision:
+  [minor](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) when a person
+  adds criteria, major when an existing criterion changes.
+
+The join holds within a run, over the run's criteria. Criteria of the standing
+specification take part only where a replacement the leash let through does not remove
+them.
+
+The two lines move separately. In the bug-fix example, version 1 already holds *round up*,
+so approving the replacement leaves the run at version 1 and is a major bump to the spec's
+standing specification. Refusing it would keep *round down, plus one*, which version 1
+replaced, so a refusal is a major bump to the run.
+
+Holding criteria to append-only across runs would be too restrictive. What is append-only is
+the record of how each version, on either line, replaced the last.
 
 **Status: Settled.**
