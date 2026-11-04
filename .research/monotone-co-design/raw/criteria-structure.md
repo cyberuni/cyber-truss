@@ -38,17 +38,59 @@ whose coverage turns on an undefined term breaks the first row.
   - Sets with no graph use the same rule. No other identity scheme is needed. What they lack
     is the graph's check for two criteria on one path; that is an authoring defect, left to
     P10.
-- **P10. Bracket a leaf when it is written, an import from MCDT's interval uncertainty
-  (Censi 2017).** MCDT brackets an uncertain design problem between an optimistic and a
-  pessimistic version and solves both.
-  - Applied here: when the chain writes a leaf, the controller states its strictest and its
-    most lenient reasonable reading.
-  - If the two readings agree on the cases the use case names, the leaf is crisp.
-  - If they disagree, the leaf has a grain defect, which is strain in its own set before any
-    run uses it.
-  - This makes the Open "grain" check operational at authoring time, where the
-    Specification page says it belongs.
+- **P10. Bracket a criterion when it is written, an import from MCDT's interval uncertainty
+  (Censi 2017).** *(Ruled by the user, 2026-11-04, with amendments A6–A10 and Q5 below.)*
+  MCDT brackets an uncertain design problem between an optimistic and a pessimistic version
+  and solves both.
+  - Applied here: when the chain writes a criterion, the controller states its strictest and
+    its most lenient reasonable reading.
+  - If the two readings agree on the cases the use case names, the criterion is crisp.
+  - If they disagree, the first question is placement (A6), not tightening. Tightening a
+    design spec in prose is how it fills with implementation detail: cyber-agentkit PR #135's
+    first use case reached 19 extensions over four review rounds before its trim.
+  - It also carries the duplicate check that sets with no graph lack (P9).
   - *Moderate cost:* it is a step in the chain, not a change to the model.
+
+  Amendments, all accepted (user, 2026-11-04). The engineering names (design spec,
+  functional spec, code and test) are examples; the rules are stated for any set.
+  - **A6. Hold the outcome, vary the encoding.** *Thesis.* An outcome is what the actor gets
+    or can tell apart. An encoding is how it is spelled or carried: names, literal values and
+    codes, exit numbers, output fields and formats, flag syntax, message wording, the order of
+    checks when every order gives the same kind of outcome. If the actor reaches the goal
+    under any encoding that is stable and keeps distinct outcomes distinct, the encoding
+    belongs to the lower rung. The set keeps the outcome and the property the actor needs
+    ("distinct per cause", "stable"). A program actor reads encodings but needs no
+    particular one, so it is judged the same way. Only a case whose outcome differs between
+    the two readings is a grain defect in this set.
+    - The first form asked "does the actor reach the goal under both readings?". It failed
+      the check below: for a program actor it keeps everything the program reads.
+    - In fiction: which reveal happens is outcome; the words of the scene are encoding.
+  - **A7. The three sets are rungs the model already has.** Design spec, functional spec,
+    and code and test are an instance of the Specification page's "A lower rung is its own
+    artifact-set". Framing only; no new terms.
+  - **A8. Writes from the implementation may add to the lower rung, never change it.**
+    *Load-bearing.* Adding a criterion to the lower rung from the code and tests is minor: it
+    records a decision the build made. Changing an existing one is major and stops at the
+    leash. This relaxes the Specification page's "no declared workflow may write it from the
+    implementation", and it is what lets the three sets work in parallel. Tested on the
+    component-library break: removing `totalPages` would change the existing criterion, so
+    it stops and reaches the maintainer, as the example's re-run does. The rejected API
+    contract failed because its edge had no difference between adding and changing. A team
+    that loosens the leash on that set loses the guard.
+  - **A9. Decide in prose only what building cannot settle.** SDD's build-to-learn, stated
+    as placement. A prose rung holds what must be judged: which goal and which outcome are
+    wanted. What writing and running the code settles goes to the rung that runs it, where
+    a deterministic test is a function by construction (the theorem's first precondition).
+    Agent-interpreted Gherkin is not, which is the churn SDD v1 paid for.
+  - **A10. Churn measures misplacement after the fact.** A design-spec case revised in two
+    or more review rounds that ends up as a test was misplaced. Computable from history.
+  - **Q5 (answered yes).** Within a run, lower-rung text the run added may be revised before
+    the run ends. It becomes standing when the run ends; P4 governs the criteria controllers
+    derive, not a set's text.
+
+  The check behind A6 and A10 is in `p10-placement-check.md`: on PR #135, revised A6 agrees
+  with the trim on about 80% of cases, as a fit rather than a prediction. A held-out spec is
+  still needed to validate it.
 - **P11. Give rule 3 a diagnosis.** When a connection strains again under the same version,
   check whether the state changed between the two resolutions.
   - Unchanged state with a flipped verdict means the leaf is loose (P10's defect, found at

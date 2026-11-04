@@ -98,3 +98,26 @@
   ID has no remaining job.
 - Conclusion changed materially: yes. P9 is restated and the semver ruling is narrowed.
 - Triggering evidence: the user's review; P3 (rewording is not inflationary).
+
+## 2026-11-04 (P10 ruling)
+
+- What changed:
+  - P10 is accepted with amendments A6–A10 and Q5, folding in the split between a design
+    spec, a functional spec, and code and test (engineering names used as examples).
+  - A6 is a placement test: hold the outcome, vary the encoding.
+  - A8 relaxes the Specification page's rule on lower rungs: writes from the implementation
+    may add, never change.
+  - A9: prose decides only what building cannot settle.
+  - A10: churn measures misplacement.
+  - Added `raw/p10-placement-check.md`.
+- Why: the user observed that use cases written at design time drift into implementation
+  detail, and pointed to cyber-agentkit PR #135, whose design spec was trimmed after four
+  review rounds.
+- Conclusion changed materially: yes. New proposals were ruled, and one Thesis on the
+  Specification page is to be relaxed.
+- Triggering evidence:
+  - PR #135 and its ADR 0003.
+  - A blind classification of the 312 pre-trim cases: the first A6 failed, the revised A6
+    fit about 80%.
+  - The churn counts.
+  - The component-library `totalPages` example.

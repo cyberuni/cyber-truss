@@ -96,7 +96,15 @@ User decisions, 2026-11-02:
 - References are to individual criteria.
 - P9 is accepted as restated: a criterion's identity is its self-contained text, with no
   minted ID (see `raw/criteria-structure.md`).
-- P10–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
+- P10 is accepted with A6–A10 and Q5 (see `raw/criteria-structure.md`):
+  - A placement test: hold the outcome, vary the encoding.
+  - Writes from the implementation may add to a lower rung but not change it.
+  - Prose decides only what building cannot settle.
+  - Churn measures misplacement.
+
+  The check on cyber-agentkit PR #135 is in `raw/p10-placement-check.md`; a held-out
+  validation is still to do.
+- P11–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
 
 - **P1. A monotone-derivation contract on the controller's Ask call.** If the criteria
   referred to a controller grow, the criteria it derives must not shrink. **Within one
