@@ -104,7 +104,11 @@ User decisions, 2026-11-02:
 
   The check on cyber-agentkit PR #135 is in `raw/p10-placement-check.md`; a held-out
   validation is still to do.
-- P11–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
+- P11 is accepted with B1 and B2 (see `raw/criteria-structure.md`):
+  - Rule 2 also records the state hash and the verdict.
+  - At a rule-3 stop, an unchanged state goes to the set's controller as strain, after one
+    re-judge to rule out variance. A changed state goes to a decision, as today.
+- P12–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
 
 - **P1. A monotone-derivation contract on the controller's Ask call.** If the criteria
   referred to a controller grow, the criteria it derives must not shrink. **Within one

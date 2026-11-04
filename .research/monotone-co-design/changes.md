@@ -121,3 +121,16 @@
     fit about 80%.
   - The churn counts.
   - The component-library `totalPages` example.
+
+## 2026-11-04 (P11 ruling)
+
+- What changed:
+  - P11 is accepted with B1 and B2.
+  - B1: a flip on an unchanged state has two causes, a loose criterion or judge variance, so
+    the pair is judged once more before routing to the controller.
+  - B2: rule 2 must also record the state hash and the verdict, so the diagnosis is a lookup
+    over new fields, not over the existing record.
+- Why: P9 and P10 as ruled narrow the cause of a flip to an agent-judged prose criterion, and
+  rule 3 in `canonical-execution.md` records only a connection and a version.
+- Conclusion changed materially: yes. Rule 2 is to gain two recorded fields.
+- Triggering evidence: the user's ruling; rules 2 and 3 of "Cycles must come to rest".

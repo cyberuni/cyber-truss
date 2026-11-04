@@ -91,14 +91,25 @@ whose coverage turns on an undefined term breaks the first row.
   The check behind A6 and A10 is in `p10-placement-check.md`: on PR #135, revised A6 agrees
   with the trim on about 80% of cases, as a fit rather than a prediction. A held-out spec is
   still needed to validate it.
-- **P11. Give rule 3 a diagnosis.** When a connection strains again under the same version,
-  check whether the state changed between the two resolutions.
-  - Unchanged state with a flipped verdict means the leaf is loose (P10's defect, found at
-    run time), and it is routed to that set's controller as strain.
+- **P11. Give rule 3 a diagnosis.** *(Ruled by the user, 2026-11-04, as amended below.)*
+  When a connection strains again under the same version, check whether the state changed
+  between the two resolutions.
+  - Unchanged state with a flipped verdict means the judge's reading of the criterion is not
+    stable. Under P9 and P10 it can only come from a prose criterion judged by an agent, since
+    deterministic tests are functions (A9). It is routed to that set's controller as strain,
+    not to a decision.
   - Changed state means two workflows are undoing each other, a conflict that needs a
-    decision.
-  - Today rule 3 stops both the same way. *Cheap:* it is a lookup over the record the rules
-    already keep.
+    decision, as rule 3 stops it today.
+  - *Amendment B1: the flip has two causes.* A loose criterion (P10's defect, found at run
+    time, for the cases the bracket missed) or judge variance on a crisp one. Before routing,
+    judge the same pair once more. Agreement means variance, and the verdict stands. A second
+    flip means the criterion is loose, and the remedy is placement first (A6), then
+    tightening, which is a major bump.
+  - *Amendment B2: not free.* Rule 2 records a connection and a criteria version only. P11
+    needs two more fields per resolution: a hash of the state judged (the written artifact
+    plus the criterion text, since the judge reads nothing else) and the verdict. The check
+    is still a lookup. *Load-bearing:* every later rule reads the recorded fields, so they are
+    settled first. The routing is cheap to unwind.
 - **P12. Represent a criteria set by its most specific nodes: MCDT's antichain, moved from
   resources to criteria.**
   - In a graph a leaf refines its parent, so criteria are ordered by refinement as well as
