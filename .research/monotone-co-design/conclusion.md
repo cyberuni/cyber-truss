@@ -104,11 +104,15 @@ User decisions, 2026-11-02:
 
   The check on cyber-agentkit PR #135 is in `raw/p10-placement-check.md`; a held-out
   validation is still to do.
-- P11 is accepted with B1 and B2 (see `raw/criteria-structure.md`):
-  - Rule 2 also records the state hash and the verdict.
-  - At a rule-3 stop, an unchanged state goes to the set's controller as strain, after one
-    re-judge to rule out variance. A changed state goes to a decision, as today.
-- P12–P13 are proposed in `raw/criteria-structure.md` and not yet ruled.
+- P11 is accepted, rejudged the same day (see `raw/criteria-structure.md`):
+  - An unchanged-state flip means the criterion is not a function under its judge (B3).
+  - The routing follows the criterion's origin: a criterion in the version still needs a
+    decision, with the diagnosis attached; lower-rung text the run added may be revised by its
+    controller, once (B4).
+  - Rule 2 also records a hash of everything the judge read (B2, narrowed). B1 is withdrawn.
+- P12 is rejected. In its place, a note for the topology-diff open question: criteria sets
+  match by mutual entailment judged over k runs, identical texts matched first.
+- P13 is proposed in `raw/criteria-structure.md` and not yet ruled.
 
 - **P1. A monotone-derivation contract on the controller's Ask call.** If the criteria
   referred to a controller grow, the criteria it derives must not shrink. **Within one

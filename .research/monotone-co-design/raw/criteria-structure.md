@@ -91,33 +91,50 @@ whose coverage turns on an undefined term breaks the first row.
   The check behind A6 and A10 is in `p10-placement-check.md`: on PR #135, revised A6 agrees
   with the trim on about 80% of cases, as a fit rather than a prediction. A held-out spec is
   still needed to validate it.
-- **P11. Give rule 3 a diagnosis.** *(Ruled by the user, 2026-11-04, as amended below.)*
-  When a connection strains again under the same version, check whether the state changed
-  between the two resolutions.
-  - Unchanged state with a flipped verdict means the judge's reading of the criterion is not
-    stable. Under P9 and P10 it can only come from a prose criterion judged by an agent, since
-    deterministic tests are functions (A9). It is routed to that set's controller as strain,
-    not to a decision.
+- **P11. Give rule 3 a diagnosis.** *(Ruled by the user, 2026-11-04, and rejudged the same
+  day: B1 withdrawn, B2 narrowed, B3 and B4 added.)* When a connection strains again under the
+  same version, check whether the state the judge read changed between the two resolutions.
+  - **B3. Unchanged state with a flipped verdict means the criterion is not a function under
+    its judge.** The cause may be a prose criterion read two ways, a flaky deterministic test
+    (A9's "functions by construction" is the ideal, not a guarantee), or judge noise. The
+    remedy is the same, so the diagnosis does not split them. "Crisp" is defined only relative
+    to the judge that reads the text.
   - Changed state means two workflows are undoing each other, a conflict that needs a
     decision, as rule 3 stops it today.
-  - *Amendment B1: the flip has two causes.* A loose criterion (P10's defect, found at run
-    time, for the cases the bracket missed) or judge variance on a crisp one. Before routing,
-    judge the same pair once more. Agreement means variance, and the verdict stands. A second
-    flip means the criterion is loose, and the remedy is placement first (A6), then
-    tightening, which is a major bump.
-  - *Amendment B2: not free.* Rule 2 records a connection and a criteria version only. P11
-    needs two more fields per resolution: a hash of the state judged (the written artifact
-    plus the criterion text, since the judge reads nothing else) and the verdict. The check
-    is still a lookup. *Load-bearing:* every later rule reads the recorded fields, so they are
-    settled first. The routing is cheap to unwind.
+  - **B4. The routing follows the criterion's origin.** *Load-bearing.* Fixing a loose
+    criterion changes an existing one, which is a major bump, and rule 1 lets only a person
+    or a recorded decision create a version.
+    - A criterion in the version (frozen at step 4, or added by a person): the stop still
+      needs a decision. The diagnosis travels with the stop and says which decision is
+      needed: revise this criterion (the set's controller drafts it, placement under A6
+      first), or choose between two workflows. Rule 4's bound is unchanged.
+    - Lower-rung text the run added (Q5): the controller may revise it with no bump. Rule 3
+      still bounds this: a revised criterion that strains again at the same version stops the
+      run, so the revision gets one attempt.
+  - **B2 (narrowed). Rule 2 records one more field: a hash of everything the judge read.**
+    The verdict needs no field, since a recorded resolution passed and a strain failed. The
+    criterion text stays in the hash, because under Q5 it can change without a version bump.
+    *Load-bearing condition:* the hash covers every input the judge reads; if the judge reads
+    beyond the connection's two sides, an unchanged hash can hide a changed input and pass a
+    conflict off as a loose criterion.
+  - *Withdrawn:* B1, one re-judge before routing to separate a loose criterion from judge
+    variance. Two verdicts on one state already disagree, and one more sample cannot tell a
+    50/50 split from a 1-in-10 error. The distinction it served is not real (B3).
 - **P12. Represent a criteria set by its most specific nodes: MCDT's antichain, moved from
-  resources to criteria.**
-  - In a graph a leaf refines its parent, so criteria are ordered by refinement as well as
-    inclusion.
-  - Keeping only the nodes nothing else refines gives each criteria set one canonical form.
-  - That makes the Confluence page's acceptance test ("diff the resulting topology", Open:
-    what a topology diff is operationally) computable: compare the sets of leaf IDs.
-  - *Cheap,* but it needs testing on an example.
+  resources to criteria.** *(Rejected by the user, 2026-11-04.)*
+  - Why it fell, first step: the only criteria in a use-case graph are its leaves, and the
+    graph's edges never order leaves against each other, in a tree or a DAG. Keeping the most
+    specific nodes returns every leaf. Where a set holds a referred criterion and a leaf that
+    refines it, the antichain would drop the general one, which is what still checks a
+    replacement leaf.
+  - Why it fell, second step: P9 removed leaf IDs. A diff over criteria texts counts a
+    paraphrase as divergence, and an antichain removes redundancy, not paraphrase.
+  - *Recorded in its place, for the topology-diff open question (criteria part only):* two
+    criteria sets match when each criterion in one is entailed by the other set, judged from
+    the texts alone. Identical text is sufficient, not necessary. Match identical texts first
+    and judge only the rest. The judgement is an agent's, so the diff takes the majority over
+    k runs. Sampling decides here because this is an evaluation, not the run loop, where
+    termination is at stake (B1's withdrawal).
 - **P13. Retraction scope follows the graph.** Replacing a node retracts its subtree's
   leaves, and then, transitively, every write that references them (F5 at leaf grain). The
   graph is the justification structure a TMS needs, already authored.

@@ -134,3 +134,19 @@
   rule 3 in `canonical-execution.md` records only a connection and a version.
 - Conclusion changed materially: yes. Rule 2 is to gain two recorded fields.
 - Triggering evidence: the user's ruling; rules 2 and 3 of "Cycles must come to rest".
+
+## 2026-11-04 (P11 rejudged, P12 ruling)
+
+- What changed:
+  - P11 rejudged: B1 withdrawn; B3 (an unchanged-state flip means the criterion is not a
+    function under its judge, whatever the cause) and B4 (routing follows the criterion's
+    origin) added; B2 narrowed to one field, a hash of everything the judge read.
+  - P12 rejected. A mutual-entailment note for the topology diff is recorded in its place.
+- Why: the user asked for a rejudge. One extra sample cannot separate a loose criterion from
+  judge noise; fixing a criterion in the version is a major bump that rule 1 reserves for a
+  person or a decision; the verdict field was implied by the record. P12's antichain is
+  trivial over graph leaves, and leaf IDs no longer exist after P9.
+- Conclusion changed materially: yes. P11's routing now goes through a decision for criteria
+  in the version.
+- Triggering evidence: rules 1–4 of "Cycles must come to rest"; the semver ruling in
+  `raw/q4-model-findings.md`; Q5.
