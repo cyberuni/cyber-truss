@@ -456,19 +456,48 @@ limit has both weaknesses.
 
 Four rules make the constraint.
 
-1. **Criteria are versioned and frozen for a run.** The criteria derived in step 4 are
-   version 1. During a run only two events create a new version: a person adds criteria,
-   or a disagreement is settled by a recorded decision. An agent cannot create a version
-   by adding criteria. This is SDD's frozen `.feature` suite, extended from one gate to a
-   whole run.
+1. **Criteria are versioned within a run, and each version is frozen.** The criteria
+   derived in step 4 are version 1. Criteria that agents derive inside the run compute the
+   version; they do not change it, so an agent cannot create a version. A new version
+   comes only from a person or a recorded decision, and it is one of two kinds. The
+   numbering borrows semver for its breaking-change signal and nothing else.
+   - **Minor, not breaking:** a person adds criteria. Writes already made stand, because
+     the new criteria join the old ones.
+   - **Major, breaking:** an existing criterion changes in any way. It is reworded,
+     replaced, removed, or refused, or a decision that settles a conflict drops it. Writes
+     judged against a criterion the new version no longer holds are judged again, and the
+     ones that fail are withdrawn.
+
+   There is no patch tier. The judge reads a criterion's text, so a rewording can change a
+   verdict, and nothing at authoring time shows that it does not. This is SDD's frozen
+   `.feature` suite, extended from one gate to a whole run.
 2. **Each resolution is recorded** as a connection paired with the criteria version it was
-   brought into agreement with.
+   brought into agreement with, and a hash of everything the judge read, the criterion's
+   text included. The text is in the hash because some text can change within one
+   version: see rule 4. The hash is only as good as its coverage. If the judge reads
+   anything the hash leaves out, an unchanged hash can hide a changed input.
 3. **A cycle may only resolve pairs not already recorded.** A connection resolved under
-   version *v* and strained again under *v* means one workflow undid another's work. That
-   is oscillation, and the run stops.
-4. **A stop needs a decision to continue.** The decision settles the conflict and creates
-   the next version. An agent may decide a given conflict once. Reversing a decision needs
-   a person.
+   version *v* and strained again under *v* stops the run. The comparison is between full
+   versions: strain again after a minor bump is legitimate, because the new criteria were
+   not there before. The two hashes say what kind of stop it is.
+   - **The hash is unchanged and the verdict flipped.** The judge read the same state twice
+     and answered differently, so the criterion is not a function under its judge. The
+     cause may be prose that reads two ways, a flaky test, or judge noise. The remedy is
+     the same for all three, so the diagnosis does not split them.
+   - **The hash changed.** One workflow undid another's work. That is oscillation.
+4. **A stop needs a decision to continue.** The diagnosis from rule 3 travels with the
+   stop and names the decision needed: revise the criterion, or choose between the two
+   workflows. A revision is drafted by the controller of the criterion's set, which first
+   asks whether the criterion is
+   [placed in the right set](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
+   A decision that changes criteria creates the next version, major or minor by rule 1. A
+   decision that changes no criterion creates none. An agent may decide a given conflict
+   once. Reversing a decision needs a person.
+
+   One case needs no decision. Text that the run itself added to a lower rung is not yet
+   standing, and its controller may revise it with no bump. Rule 3 still holds: if the
+   revised text strains again at the same version, the run stops, so a revision gets one
+   attempt.
 
 At one version there are finitely many connections to resolve. Versions grow only through
 decisions and people, and each conflict takes at most one agent decision. So a run with no
@@ -482,8 +511,10 @@ following an instruction.
 
 ### A reversal renamed as a new criterion
 
-Rule 1 depends on a judgement: whether a proposed criterion is new, or a reversal of a
-decision under a new name. An agent could route a reversal through that door.
+Rule 1 depends on a judgement: whether a proposed criterion is new, which is a minor bump,
+or a reversal of a decision under a new name, which changes an existing criterion and is
+major. An agent could route a reversal through the minor door, where nothing already
+written is judged again.
 
 The [controller](/cyber-truss/model/controller/) of the specification set
 is placed to catch it. Its job is to hold the set's intent and criteria consistent and
@@ -501,11 +532,14 @@ out, is caught only if the controller judges balance as well as consistency.
 The record the rules read is append-only. Each version, resolution, and decision is added
 and never edited, the way an ADR is superseded rather than rewritten. The criteria
 themselves are not append-only. Between runs a specification changes freely, and criteria
-are rewritten and removed. Holding criteria to append-only would be too restrictive. They
-are frozen within a run, free between runs, and the history of how each version replaced
-the last is what cannot change.
+are rewritten and removed. Holding criteria to append-only would be too restrictive. Within
+a run they change only through the versions rule 1 allows, between runs they change
+freely, and the history of how each version replaced the last is what cannot change.
 
-**Status: Thesis.** The rules bound a run with no person in it. **Open:** whether the
+**Status: Settled** that versions within a run are minor or major by whether they break an
+existing criterion, with no patch tier, and that the stop carries a diagnosis read from the
+recorded hashes. **Thesis:** that the rules bound a run with no person in it, and that a
+hash can cover everything a judge reads. **Open:** whether the
 specification controller catches erosion as well as contradiction, and what holds the
 record. See
 [What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
