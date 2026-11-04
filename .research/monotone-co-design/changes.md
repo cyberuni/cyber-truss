@@ -150,3 +150,18 @@
   in the version.
 - Triggering evidence: rules 1–4 of "Cycles must come to rest"; the semver ruling in
   `raw/q4-model-findings.md`; Q5.
+
+## 2026-11-04 (P13 ruling)
+
+- What changed:
+  - P13 is rejected.
+  - C3 is ruled as a principle: the graph is an authoring instrument, and the run never
+    reads it.
+  - C2 states how withdrawal's transitive step works: iterated set difference over derived
+    criteria, with propagation for artifacts.
+  - C1 records why subtree withdrawal fails, including as a backstop.
+- Why: under P9, the set difference already covers changed leaves, and unchanged ones still
+  hold. The user asked what the graph is for, and the answer explained why P9's first form,
+  P12, and P13 all fell.
+- Conclusion changed materially: yes. A load-bearing principle is added.
+- Triggering evidence: F5 in `raw/q4-model-findings.md`; the semver ruling's re-judge step.

@@ -135,12 +135,36 @@ whose coverage turns on an undefined term breaks the first row.
     and judge only the rest. The judgement is an agent's, so the diff takes the majority over
     k runs. Sampling decides here because this is an evaluation, not the run loop, where
     termination is at stake (B1's withdrawal).
-- **P13. Retraction scope follows the graph.** Replacing a node retracts its subtree's
-  leaves, and then, transitively, every write that references them (F5 at leaf grain). The
-  graph is the justification structure a TMS needs, already authored.
-  - *To recheck after P9's ruling:* with self-contained texts, a changed path changes its
-    leaves' texts, so the set difference may already cover the subtree. The transitive part
-    (writes resting on withdrawn writes) is unaffected.
+- **P13. Retraction scope follows the graph.** *(Rejected by the user, 2026-11-04.)* The
+  proposal: replacing a node retracts its subtree's leaves, then, transitively, every write
+  that references them, with the graph as the TMS's justification structure.
+  - **C3. The graph is an authoring instrument.** *(Ruled by the user, 2026-11-04.
+    Load-bearing: later proposals are tested against it.)* It exists to make each criterion a
+    function: it splits a use case into paths until each leaf covers one case and gives one
+    verdict, covering every path once. It serves the design in three places, all at
+    authoring time: a leaf's self-contained text is its output (P9); its paths are the cases
+    P10 brackets against; and a leaf found not to be a function at run time (P11, B3) is
+    fixed by splitting its path, which is authoring started by a run. The run itself keys
+    on criteria texts and the references writes record, never on the graph. P9's first form,
+    P12, and P13 each gave the graph a run-time job, and each fell for this reason.
+  - **C1. The subtree half over-withdraws, and its backstop catches nothing.** A replaced
+    node's leaves are derived again. The changed ones leave the set and the set difference
+    finds them. The unchanged ones still hold, since the judge reads only the text, so
+    withdrawing them is F5's over-delete at subtree grain. As a backstop for a leaf that is
+    not self-contained, it fails: the re-judge before withdrawal reads the same unchanged
+    text and passes the write again. That defect is caught only where the text is written
+    (P9's condition, P10's bracket).
+  - **C2. The transitive half is iterated set difference, not graph traversal.** The graph
+    records how criteria are authored inside one set; F5's justifications are the
+    per-write references to criteria, which cross sets.
+    - Through criteria: a withdrawn write takes the criteria it derived out of the version
+      (Reconcile returns them with provenance), and the next round's set difference finds
+      the writes that rested on them. Each round re-judges before withdrawing.
+    - Through artifacts: a write that rested on a withdrawn write's artifact is reached by
+      ordinary propagation when the redone write lands, as F5 says.
+    - It terminates: each round withdraws at least one write or stops, over finitely many
+      writes. *Load-bearing:* derived criteria stay attributed to the write that derived
+      them.
 
 ## What the theory predicts will still fail
 

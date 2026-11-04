@@ -112,7 +112,10 @@ User decisions, 2026-11-02:
   - Rule 2 also records a hash of everything the judge read (B2, narrowed). B1 is withdrawn.
 - P12 is rejected. In its place, a note for the topology-diff open question: criteria sets
   match by mutual entailment judged over k runs, identical texts matched first.
-- P13 is proposed in `raw/criteria-structure.md` and not yet ruled.
+- P13 is rejected on C3: the graph is an authoring instrument, and the run keys on criteria
+  texts and recorded references, never on the graph. Withdrawal's transitive step is iterated
+  set difference over derived criteria, plus propagation for artifacts (C2). See
+  `raw/criteria-structure.md`.
 
 - **P1. A monotone-derivation contract on the controller's Ask call.** If the criteria
   referred to a controller grow, the criteria it derives must not shrink. **Within one
