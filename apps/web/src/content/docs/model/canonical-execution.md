@@ -510,6 +510,14 @@ The check in rule 3 is a lookup, which puts it at the deterministic end of the
 record a cycle that resolves nothing new, so the bound does not depend on an agent
 following an instruction.
 
+A second check is a lookup too. Within one version the criteria never shrink: every step
+that derives criteria keeps the ones it was given, which is the condition
+[confluence within a version](/cyber-truss/model/confluence/#confluence-within-a-criteria-version)
+rests on. `truss` can refuse a step that leaves the version with fewer criteria than it had.
+That catches a step that drops a criterion, such as a replacement that slipped past the
+leash. It cannot catch a derivation that is wrong but only adds, because a wrong addition
+grows the set like a right one.
+
 ### A major bump withdraws what rested on the old criterion
 
 A major bump can arrive after writes have proceeded. A write that only adds passes the
