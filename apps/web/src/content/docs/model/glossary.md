@@ -67,6 +67,16 @@ The half of a [specification](#specification) stating what must be true of the o
 Evaluable against the implementation as a blackbox, which is what makes criteria survive a
 change of representation.
 
+### Criteria version
+
+A numbered state of a run's [criteria](#criteria). Step 4 derives version 1, and each
+version is frozen. A person adding criteria makes a minor version, which breaks nothing. Any
+change to an existing criterion makes a major version, which starts
+[withdrawal](#withdrawal). There is no patch tier. Criteria agents derive inside a run
+compute the version and never change it. Distinct from the
+[standing specification](#standing-specification), which versions across runs. See
+[Cycles must come to rest](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest).
+
 ### Discharge
 
 Where a workflow requires strain on a crossing to be resolved. SDD's implementation gate is
@@ -218,7 +228,9 @@ one edge and an implementation on another. See
 ### Standing specification
 
 A set's use cases, decision graph where it has one, and criteria as they stood before a run.
-The leash compares a write against it. See
+The leash compares a write against it. It has its own version line, across runs: approving a
+replacement is a major bump to it and leaves the run's [criteria version](#criteria-version)
+unchanged. See
 [Criteria are authored through use cases](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
 
 ### Staleness
@@ -244,6 +256,14 @@ thing the model's acceptance test diffs.
 [Axis 1](/cyber-truss/model/artifact-sets/#axis-1-unit-of-change). Artifacts that must
 move together for a change to be complete: what belongs in one commit to be coherent.
 Delta-driven.
+
+### Withdrawal
+
+What a major [criteria version](#criteria-version) does to the writes made before it. The
+affected writes are those that reference a criterion the new version no longer holds. Each
+is judged again, the ones that fail are withdrawn, and withdrawal moves outward through the
+criteria they derived. Withdrawn writes are redone by propagation. See
+[A major bump withdraws what rested on the old criterion](/cyber-truss/model/canonical-execution/#a-major-bump-withdraws-what-rested-on-the-old-criterion).
 
 ### Workflow
 
