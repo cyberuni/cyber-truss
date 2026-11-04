@@ -466,7 +466,8 @@ Four rules make the constraint.
    - **Major, breaking:** an existing criterion changes in any way. It is reworded,
      replaced, removed, or refused, or a decision that settles a conflict drops it. Writes
      judged against a criterion the new version no longer holds are judged again, and the
-     ones that fail are withdrawn.
+     ones that fail are
+     [withdrawn](#a-major-bump-withdraws-what-rested-on-the-old-criterion).
 
    There is no patch tier. The judge reads a criterion's text, so a rewording can change a
    verdict, and nothing at authoring time shows that it does not. This is SDD's frozen
@@ -509,6 +510,57 @@ The check in rule 3 is a lookup, which puts it at the deterministic end of the
 record a cycle that resolves nothing new, so the bound does not depend on an agent
 following an instruction.
 
+### A major bump withdraws what rested on the old criterion
+
+A major bump can arrive after writes have proceeded. A write that only adds passes the
+[leash](/cyber-truss/model/workflow/#leash), so a refusal can land after downstream sets were
+already written to meet the criterion it refuses. In the
+[bug-fix example](/cyber-truss/examples/software-bug-fix/#variant-a-the-spec-states-the-wrong-rule),
+reconciliation at `{code, test}` adds a test that an exact multiple produces no empty page,
+derived from *round up*. If the product owner refused the replacement instead of approving
+it, that test would contradict the rule the spec kept. Nothing would remove it, and every
+later run would meet a strained connection whose cause is a leftover from a refused version.
+
+Withdrawal removes it. It works from what each write records.
+
+1. **Each write records the criteria it was judged against**, one by one, by their text or
+   a hash of it. A reference to a set's criteria as a whole would make every write against
+   that set look affected.
+2. **The affected writes are a set difference.** On a major bump they are the writes that
+   reference a criterion the new version no longer holds. Breakage is computed, not
+   declared. A change that no write referenced is still major, with nothing to judge again.
+3. **Each affected write is judged again before anything is withdrawn.** It is judged
+   against the current criteria, and kept if it passes. Confluence is claimed over criteria,
+   so a write that meets the current version is valid whichever wording it was made under.
+   This keeps a harmless rewording cheap.
+4. **The ones that fail are withdrawn, and withdrawal moves outward.** A withdrawn write
+   takes the criteria it derived out of the version, so the next round's set difference
+   finds the writes that rested on them, and judges each again. A write that rested on a
+   withdrawn write's artifact is reached by ordinary propagation once the redone write
+   lands. Each round withdraws at least one write or ends, and a run has finitely many
+   writes, so withdrawal ends. Supports are not counted, because counting breaks on cycles.
+5. **Withdrawn writes are redone by propagation.** A redone write is a change like any
+   other. If it produces the same artifact as before, propagation stops there, the early
+   cutoff of [*Build Systems à la Carte*](https://doi.org/10.1145/3236774). A write to an
+   output cannot be withdrawn: it is superseded, as in
+   [Reconciling at the source](#reconciling-at-the-source).
+
+The recorded references are what a truth maintenance system calls justifications: *this
+write rests on these criteria.* The model does not use the other common method,
+over-deleting and then deriving again, because it asks whether a fact has another support
+by rerunning derivations. Here an agent does the deriving, so that is expensive, and its
+correctness theorem assumes derivation is deterministic, which an agent's is not.
+
+Two conditions carry the mechanism.
+
+- **A criterion's text is self-contained.** The judge reads the criterion and nothing else,
+  so the context it depends on must be written into it. If the text leans on context it
+  does not carry, the re-judge in step 3 reads the same text, passes the write again, and
+  the defect survives. It can only be caught where the text is written. See
+  [Criteria are authored through use cases](/cyber-truss/model/specification/#criteria-are-authored-through-use-cases).
+- **Derived criteria stay attributed to the write that derived them.** Step 4 finds the
+  next round through that attribution.
+
 ### A reversal renamed as a new criterion
 
 Rule 1 depends on a judgement: whether a proposed criterion is new, which is a minor bump,
@@ -538,8 +590,10 @@ freely, and the history of how each version replaced the last is what cannot cha
 
 **Status: Settled** that versions within a run are minor or major by whether they break an
 existing criterion, with no patch tier, and that the stop carries a diagnosis read from the
-recorded hashes. **Thesis:** that the rules bound a run with no person in it, and that a
-hash can cover everything a judge reads. **Open:** whether the
+recorded hashes. **Settled** that writes reference individual criteria, and that a major
+bump judges the affected writes again before withdrawing any. **Thesis:** that the rules
+bound a run with no person in it, that a hash can cover everything a judge reads, and that
+withdrawal's outward rounds find every write that rested on a withdrawn one. **Open:** whether the
 specification controller catches erosion as well as contradiction, and what holds the
 record. See
 [What vehicle holds pending Requests?](/cyber-truss/model/open-questions/#what-vehicle-holds-pending-requests)
