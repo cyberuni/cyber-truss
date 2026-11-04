@@ -267,12 +267,21 @@ is also the person who made the change, and that is accepted.
 
 A team may also loosen a default per set for every run, for example letting an agent emit to
 a staging channel. Pre-approval is the narrower tool: it widens the leash for one run, so a
-set whose stop is sometimes the only check keeps it by default. An approval is a decision, and it is recorded like one, so
-[rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) applies to it.
+set whose stop is sometimes the only check keeps it by default.
+
+An approval is a decision. It is recorded like one, and like any decision only a person can
+reverse it ([rule 4](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest)).
+It creates no version of the run's criteria. The run derived the approved criterion into
+version 1 from the intent, so the approval confirms what the run already holds. What it
+changes is the standing specification: approving a replacement is a major bump there,
+recorded in the append-only history. A refusal is not symmetric with it. It keeps the
+criterion that version 1 replaced, which changes the run's criteria, so it is a major bump
+to the run, and writes already judged against the refused criterion are judged again.
 
 **Status: Thesis** on the defaults, and the contradiction default is expensive to change: it
 is the line between autonomy and ceremony for every set. **Settled** that confidence only
-tightens. **Deferred:** a different approver per workflow. The leash sees only what the declared connections
+tightens, and that an approval bumps the standing specification while a refusal bumps the
+run. **Deferred:** a different approver per workflow. The leash sees only what the declared connections
 bring to a set; a missing connection is found
 [outside the run](/cyber-truss/model/connections/#a-missing-connection-is-found-outside-the-run).
 
