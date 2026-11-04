@@ -258,6 +258,15 @@ set the defaults.
   confidence, so an agent unsure of a write still asks. SDD sets the same thing at run start
   as its run-level leash, from none to all gates.
 
+The stops do not all stop for one reason. The ones at the criteria, a replacement, a
+removal, or a conflict between workflows, are the steps that take a criterion away. While
+criteria only grow, a run reaches the same criteria whatever order its steps run in (see
+[Confluence within a criteria version](/cyber-truss/model/confluence/#confluence-within-a-criteria-version)).
+Taking one away breaks that, so a person or a recorded decision settles each of those
+points. An output write stops because it is permanent, and the architect
+and oracle floor stops because the comparison found something a passing criterion does not
+cover. Those stops would stand even if every step were monotone.
+
 Approval comes from an **approver**, a person allowed to approve for the system. Any approver
 may approve a stop in any workflow. Which people may approve which workflow is permission
 management, and it is left out of the first version: for now an approver can approve, and
