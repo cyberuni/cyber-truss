@@ -87,6 +87,11 @@ It is narrower than distillation, one intent into one set's vocabulary, and it c
 evaluated per controller: hand one controller the same intent several times and compare the
 criteria and the answer.
 
+Within one criteria version, the handoff now adds a second condition:
+[the criteria Ask derives must not shrink](/cyber-truss/model/controller/#the-handoff) when
+the criteria it is referred to grow. That condition presupposes this one. A derivation that
+varies on the same input is not a function, so there is nothing for it to be monotone in.
+
 **What breaks if it resolves badly:** the replay starts at different sets for the same
 intent, and the criteria reaching a source differ between runs even when selection is
 unique. The failure is spread across controllers rather than concentrated, but each
@@ -214,8 +219,9 @@ draft is on [the Controller page](/cyber-truss/model/controller/#the-handoff): a
 asks a controller for criteria, asks it to write, or asks it to reconcile a change that
 landed in its set, and each call returns something different.
 
-This is the contract every controller ever written will encode, so it is expensive to
-change later. It is also the thing plugin ecosystems most reliably die on, which argues
+One clause is settled ahead of the rest: within a criteria version, Ask is monotone in the
+criteria it is referred to. This is the contract every controller ever written will encode,
+so it is expensive to change later. It is also the thing plugin ecosystems most reliably die on, which argues
 for settling it before there is more than one controller rather than after.
 
 ## What does an audit loop read?
@@ -239,7 +245,13 @@ run reports each step as additive, and nothing ever looks across the sets where 
   judgement it needs is not.
 - **What is a topology diff, operationally?** The model's
   [acceptance test](/cyber-truss/model/confluence/#how-the-claim-is-tested) depends on
-  comparing topologies across runs. The notion is clear; the operation is not.
+  comparing topologies across runs. The notion is clear; the operation is not. The
+  criteria part has a partial answer. Two criteria sets match when each criterion in one is
+  entailed by the other set, judged from the texts alone. Identical text is enough but not
+  needed, so identical texts are matched first and only the rest are judged. An agent does
+  the judging, so the diff takes the majority over several runs. Sampling is acceptable
+  here because this is an evaluation, not the run loop, where termination is at stake. The
+  rest of the topology, scenarios, actors, and edges, is still open.
 - **Do ACED and Quill express cleanly?** SDD does. Two more two-set instances, both
   differently shaped, should be run through the model before it is fixed.
 - **What form does provenance take** on deltas produced by canonical execution, so they
