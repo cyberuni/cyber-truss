@@ -53,6 +53,16 @@ Direction is a property of *where the delta landed*, and of
 not of the connection. Writing direction into the connection bakes in one workflow and
 makes the others second-class. That is precisely the situation the model exists to fix.
 
+*Undirected* is about traversal, not about the relation. Many relations are oriented: on
+the edge between `{spec, suite}` and `{code, test, stories}`, the spec constrains the code,
+which makes the spec the
+[specification](/cyber-truss/model/specification/#specifies-is-a-relation-not-a-layer)
+on that edge and the code its implementation. That orientation names the roles. It does
+not say which end a change starts from, and a workflow may restore the relation from
+either. Where an edge allows either reading, the orientation is left to the workflow too.
+Constraint propagation has the same arrangement: one constraint between two variables comes
+with a narrowing function for each side.
+
 **Status: Settled.**
 
 ## Declarative, never procedural
