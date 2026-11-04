@@ -47,6 +47,55 @@ which is why the claim above is stated over criteria.
 
 **Status: Settled** as the system's guarantee.
 
+## Confluence within a criteria version
+
+The join explains why merging criteria in any order gives one result. It does not explain
+how the criteria are produced. Each controller derives criteria from what has reached it so
+far, and in a different order it derives them from a different partial join. The claim needs
+more than the join to cover that.
+
+Within one [criteria version](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest),
+it comes from the Chaotic Iteration Theorem, as Apt states it in
+[*The Essence of Constraint Propagation*](https://arxiv.org/abs/cs/9811024), after Cousot &
+Cousot. Read in this model, the theorem says that every fair order of the steps that derive
+criteria reaches the same criteria: the least fixed point above the criteria the run started
+from. It rests on three conditions.
+
+- **Every criteria step is monotone.** More criteria in never means fewer criteria out. This
+  gives uniqueness: every order that terminates ends at the same criteria. For a controller
+  it is a contract on [the handoff](/cyber-truss/model/controller/#the-handoff).
+- **Every criteria step is inflationary.** A step keeps every criterion it was given. On a
+  finite set this gives termination. It matters here for a second reason: a run starts from
+  the standing criteria, not from an empty set, and from a non-empty start, steps that are
+  monotone but drop criteria can settle differently by order. Apt states the theorem from
+  the empty start; that it carries over to a start that only grows is inferred.
+- **The criteria a run can derive are finite.** Criteria are prose, and prose is
+  open-ended, so this is an assumption about how controllers derive, not a property of the
+  model.
+
+The run ledger is Apt's generic worklist algorithm, and Apt proves that every schedule of
+it that terminates gives the same result. That is
+[the ledger schedules, it does not decide](/cyber-truss/model/canonical-execution/#the-run-ledger-schedules-it-does-not-decide)
+stated as a theorem.
+
+Between versions the theorem does not apply, because the steps that break its conditions
+are the ones that start a version. A replacement, a removal, or a refusal takes a criterion
+away, so it is not inflationary, and a conflict leaves no state that meets the criteria.
+[Rule 1](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest) makes each of
+them a major bump, settled by a person or a recorded decision. Two routes reach the same
+criteria across versions because the same decisions are recorded, not because order does
+not matter. Distillation is outside the theorem too: reading a change for its intent has no
+order to be independent of, and canonical execution handles it by routing one root intent.
+
+The theorem is about criteria, not states. It says two routes reach the same criteria. The
+claim then treats the states that meet those criteria as equivalent, so the theorem
+supplies the half of the claim the join left open, and nothing more.
+
+**Status: Settled** that the criteria-layer claim is the theorem within a version and
+recorded decisions between versions. **Thesis:** that the conditions hold. Finiteness is
+assumed, the carry-over to a non-empty start is inferred, and monotone derivation is a
+contract each controller must keep.
+
 ## What confluence is claimed over
 
 Not byte-identity. A prototype-first route and a spec-first route will produce different
