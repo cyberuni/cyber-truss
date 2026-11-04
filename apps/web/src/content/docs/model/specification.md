@@ -144,11 +144,68 @@ pass a component is a real actor with a real goal, and the prop list they read s
 code as well as on the page. What the code holds there is a specification at a lower rung,
 written into implementation files. Name the rung, and the use cases move to it.
 
-**Status: Thesis**, including that use cases belong to the specification role.
-**Open:** grain. Whether a criterion covers a case can turn on one
-undefined term, such as whether *administration* includes a rate change. The chain is meant
-to catch that when the criterion is written, and a controller that meets it at run time has
-found strain in its own set.
+### The graph is an authoring instrument
+
+The chain exists to make each criterion a function: given the same state, it gives the same
+verdict. The decision graph does that by splitting a use case into paths until each path
+covers one case, and every path is covered once. A criterion's text, written to stand on its
+own, is what the graph produces.
+
+The graph serves the design in three places, all while criteria are written. Its paths are
+the cases a criterion is bracketed against (below). A criterion found at run time not to be a
+function, because a [stop](/cyber-truss/model/canonical-execution/#cycles-must-come-to-rest)
+showed its verdict flip on an unchanged state, is fixed by splitting its path, which is
+authoring that a run started. And the text of each criterion carries the context of its path,
+because the judge reads the text and nothing else.
+
+A run never reads the graph. It reads criteria texts and the references writes record. That
+is the test for any later proposal that gives the graph a job: a job at run time does not
+belong to it.
+
+### Bracketing a criterion when it is written
+
+When the chain writes a criterion, the controller states the strictest and the most lenient
+reading of it that are still reasonable. The idea comes from monotone co-design, which
+brackets an uncertain design problem between an optimistic and a pessimistic version and
+solves both (Censi, [*Uncertainty in Monotone Codesign Problems*](https://doi.org/10.1109/LRA.2017.2674970), 2017). If the two readings
+agree on every case the use case names, the criterion is crisp. If they disagree, the first
+question is where the criterion belongs, not how to tighten it. Tightening a high rung in
+prose is how it fills with detail that belongs below it.
+
+**Hold the outcome, vary the encoding.** An outcome is what the actor gets or can tell
+apart. An encoding is how it is spelled or carried: names, literal values and codes, exit
+numbers, output fields and formats, flag syntax, message wording, and the order of checks
+when every order gives the same kind of outcome. If the actor reaches the goal under any
+encoding that is stable and keeps distinct outcomes distinct, the encoding belongs to the
+rung below. The set keeps the outcome, and the property the actor needs from the encoding,
+such as *distinct per cause* or *stable*. An actor that is a program reads encodings but
+needs no particular one, so it is judged the same way. Only a case whose outcome differs
+between the two readings is a grain defect in this set. In fiction the same test reads:
+which reveal happens is outcome, and the words of the scene are encoding.
+
+**Decide in prose only what building cannot settle.** A prose rung holds what has to be
+judged: which goal is wanted, and which outcome. What writing and running the code settles
+goes to the rung that runs it, where a deterministic test is a function by construction.
+This is SDD's build-to-learn, stated as placement. A criterion that an agent interprets at
+every check is not a function by construction, and that is the churn SDD's first version
+paid for.
+
+In engineering the rungs are usually three: a design spec, a functional spec, and code and
+test. Those names are an example. The test is stated for any set and the rung below it.
+
+Misplacement leaves a trace after the fact. A case in a high rung that was revised in two or
+more review rounds and ended up as a test was misplaced, and that can be computed from
+history.
+
+**Status: Thesis**, including that use cases belong to the specification role, the
+placement test, and the bracket. The placement test agrees with one hand-made trim on about
+80% of its cases, but that was a fit to the trim, not a prediction, and it still needs a
+spec it was not fitted to. **Settled** that the graph is an authoring instrument the run
+never reads. **Open:** grain. Whether a criterion covers a case can turn on one undefined
+term, such as whether *administration* includes a rate change. Bracketing makes that an
+authoring step, with placement asked first: a term whose readings change the outcome is a
+defect in this set, and one that only changes the encoding moves down. A controller that
+meets it at run time has found strain in its own set.
 
 ## Specifications exist at every level
 
@@ -205,13 +262,25 @@ is outside the implementation workflow's span, a code change never asks it, and 
 fall back to being derived at the source by the controller that has already seen the change.
 Holding that rung is the whole reason the set exists.
 
-**No declared workflow may write it from the implementation.** The moment one does (a
-workflow that reads the code and regenerates the component spec), the set is revisable from
-the side it constrains, and a change can bring it along instead of stopping against it. This
-is why the
-[component library example](/cyber-truss/examples/component-library-bug-fix/#status-holds)
-rejected an API contract on an edge between two revisable sets. A component spec escapes that
-only while it is authored from above.
+**A write from the implementation may add to it, never change it.** Adding a criterion
+from the code and tests records a decision the build made, and every criterion already there
+still stands, so nothing is broken. Changing an existing criterion is breaking. It would make
+the set revisable from the side it constrains, so that a change could bring the set along
+instead of stopping against it. Such a write contradicts the set's standing specification,
+and the [leash](/cyber-truss/model/workflow/#leash) stops it. Within a run, text the run
+itself added may still be revised before the run ends, since it is not yet standing; it
+becomes standing when the run ends.
+
+The [component library example](/cyber-truss/examples/component-library-bug-fix/#status-holds)
+tests the limit. With a component spec above the code, removing `totalPages` changes an
+existing criterion, so the write stops and reaches the maintainer. The API contract that
+example rejected failed for the reason the limit removes: its edge joined two revisable
+sets and drew no line between adding and changing, so either side could carry the other
+along. A team that loosens the leash on the component spec loses the guard.
+
+The limit is what lets the rungs be worked at once. With design spec, functional spec, and
+code and test as three rungs, the build can add to the functional spec while the design
+spec is still being written, and nothing it adds can rewrite what the rung above decided.
 
 Membership follows the role, not the directory. `button.spec.md` sits next to `button.tsx`
 and is not in `{code, test}`. The same reading applies in the other direction: where a
@@ -225,7 +294,8 @@ outline, chapter-grain criteria have a home above the draft, and without one the
 manuscript, where the controller that reconciles the change also derives what the change is
 checked against.
 
-**Status: Thesis.**
+**Status: Thesis.** **Settled** that a write from the implementation may add to a lower rung
+and never change it. It is load-bearing: it is the line the rung's guard rests on.
 
 ## Some criteria are never stated
 
