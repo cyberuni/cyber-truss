@@ -119,7 +119,7 @@ A workflow meets a controller in three ways, and each has its own handoff.
 | **Write** | Every contribution collected for the set, each with its provenance and intent, references to the criteria of the sets above, and any changed input the workflow reads | The write, whether the criteria are met, and whether the write contradicts the set's standing specification |
 | **Reconcile** | The change that landed in the set, the intent, and references to the criteria of the sets above | What it kept of the change, what it changed, and what it added, any criteria it had to derive itself, and whether the result contradicts the set's standing specification |
 
-Two limits hold across all three.
+Three limits hold across all three.
 
 - **A controller above the source never receives the change.** It receives the intent, so
   the criteria it derives are not written from the change they will check. See
@@ -135,5 +135,23 @@ Two limits hold across all three.
 Every call also returns any change the controller made inside the set beyond what it was
 asked, so the reconciliation report can show it.
 
-**Status: Open**, and expensive to change later. See
+Ask carries one more contract. **Within one criteria version, the criteria a controller
+derives must not shrink when the criteria it is referred to grow.** It is the monotone
+condition that
+[confluence within a version](/cyber-truss/model/confluence/#confluence-within-a-criteria-version)
+rests on, and nothing else checks it: a derivation that goes wrong this way only adds less
+than it should, so no criterion is dropped and no leash stop sees it.
+
+- **The likely violation is a default conditioned on absence**: *if the spec says nothing
+  about X, assume Y.* When the spec later states X, the derived Y disappears.
+- **It is tested by adding, not by inspecting.** Add a criterion upstream, derive again, and
+  check that the new derived set contains the old one.
+- **It holds only within a version.** A person adding or removing criteria, or a recorded
+  decision, starts a new version, and the contract does not span the boundary.
+- **It presupposes determinism.** A derivation that varies between calls on the same input
+  is not a function, so there is nothing for it to be monotone in.
+
+**Status: Open**, and expensive to change later. **Settled** that Ask carries the monotone
+contract within a version. It is a clause of the interface, so it is settled ahead of the
+rest. See
 [Where does the controller interface sit?](/cyber-truss/model/open-questions/#where-does-the-controller-interface-sit)
