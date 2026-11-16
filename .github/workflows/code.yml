@@ -15,7 +15,7 @@ on:
 
 jobs:
   verify:
-    uses: cyberuni/.github/.github/workflows/pnpm-verify.yml@main
+    uses: repobuddy/.github/.github/workflows/pnpm-verify.yml@v2
     permissions:
       contents: read
     with:
@@ -34,6 +34,8 @@ jobs:
       REPOBUDDY_APP_ID: ${{ secrets.REPOBUDDY_APP_ID }}
       REPOBUDDY_APP_PRIVATE_KEY: ${{ secrets.REPOBUDDY_APP_PRIVATE_KEY }}
     with:
+      # dist/cli.js inlines commander, so a lock-file-only move ships too.
+      bundled: true
       # Only packages/cyber-truss is published; the root `pnpm build` would also build
       # the docs site for nothing. Its tsdown build emits the .d.ts the type check reads.
       build-command: pnpm ct build
