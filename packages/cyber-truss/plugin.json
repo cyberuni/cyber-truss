@@ -7,5 +7,23 @@
 	"homepage": "https://github.com/cyberuni/cyber-truss",
 	"repository": "https://github.com/cyberuni/cyber-truss.git",
 	"license": "MIT",
-	"keywords": ["truss", "lattice", "convergence", "cli", "agent", "sdd"]
+	"keywords": ["truss", "lattice", "convergence", "cli", "agent", "sdd"],
+	"extensions": {
+		"org.cyberuni.universal-plugin": {
+			"vendors": ["claude-code", "cursor", "codex", "copilot-cli"],
+			"harnesses": {
+				"claude-code": { "displayName": "Cyber Truss" },
+				"cursor": {
+					"category": "development",
+					"tags": ["truss", "convergence", "sdd"]
+				},
+				"codex": {
+					"interface": {
+						"displayName": "Cyber Truss",
+						"category": "development"
+					}
+				}
+			}
+		}
+	}
 }

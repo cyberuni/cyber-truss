@@ -5,9 +5,12 @@
 	"scripts": {
 		"build": "turbo run build",
 		"check": "biome check",
+		"check-version": "npx universal-plugin@0.22.0 publish check-version --root packages/cyber-truss",
 		"check:fix": "biome check --write",
 		"ct": "pnpm run --filter=./packages/cyber-truss",
 		"knip": "knip",
+		"plugin:build": "npx universal-plugin@0.22.0 plugin build --root packages/cyber-truss",
+		"plugin:check": "npx universal-plugin@0.22.0 plugin build --check --root packages/cyber-truss",
 		"prepare": "husky",
 		"release": "changeset publish",
 		"test": "turbo run test",
