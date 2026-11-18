@@ -28,3 +28,7 @@ onlyBuiltDependencies:
 # should carry its reason and the date it becomes removable.
 minimumReleaseAge: 1440 # 1 day
 minimumReleaseAgeStrict: true
+
+minimumReleaseAgeExclude:
+  # min-release-age: lift universal-plugin@0.22.0 until 2026-11-19T09:00:00Z
+  - 'universal-plugin@0.22.0'
